@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Confirmation | YourShop</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <main class="confirmation-page">
+
+        <div class="confirmation-container">
+
+            <!-- Success Icon -->
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <!-- Confirmation Message -->
+            <h1>Thank You for Your Order!</h1>
+
+            <p class="confirmation-message">
+                Your order has been placed successfully.
+                We appreciate your shopping with YourShop.
+            </p>
+
+            <!-- Order Information -->
+            <div class="order-information">
+                <h2>Order Details</h2>
+
+                <p>
+                    Order Number:
+                    <strong id="confirmation-order-id">Loading...</strong>
+                </p>
+
+                <p>
+                    Order Status:
+                    <strong id="confirmation-order-status">Pending</strong>
+                </p>
+
+                <p>
+                    Order Date:
+                    <strong id="confirmation-order-date">Loading...</strong>
+                </p>
+
+                <p>
+                    Total Amount:
+                    <strong id="confirmation-order-total">$0.00</strong>
+                </p>
+            </div>
+
+            <!-- Ordered Products -->
+            <div class="confirmation-products">
+                <h2>Ordered Products</h2>
+
+                <div id="confirmation-products-list">
+                    <!-- JavaScript will display products here -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="confirmation-buttons">
+
+                <a href="./index.html" class="continue-shopping-btn">
+                    Continue Shopping
+                </a>
+
+                <a href="./index.html" class="home-btn">
+                    Back to Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+<script src="./js/confirmation.js"></script>
+
+</body>
+</html>

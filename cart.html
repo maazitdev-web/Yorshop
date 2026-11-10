@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Your Shopping Cart | YourShop</title>
+
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body>
+
+    <!-- =================================
+         CART PAGE HEADER
+    ================================== -->
+
+    <header class="site-header">
+
+        <div class="header-main">
+
+            <!-- YourShop Logo -->
+            <a href="index.html" class="logo">
+
+                <span class="logo-icon">
+
+                    <svg viewBox="0 0 48 48" aria-hidden="true">
+
+                        <path
+                            d="M8 15h32l-3 25H11L8 15Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linejoin="round"
+                        />
+
+                        <path
+                            d="M17 17V12a7 7 0 0 1 14 0v5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="m19 28 4 4 7-8"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span class="logo-text">
+                    Your<span>Shop</span>
+                </span>
+
+            </a>
+
+
+            <!-- Cart Header Navigation -->
+            <div class="header-actions">
+
+                <a href="index.html" class="header-action">
+                    Continue Shopping
+                </a>
+
+                <a href="cart.html" class="header-action">
+                    🛒 Cart
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================
+         MAIN CART CONTENT
+    ================================== -->
+
+    <main class="cart-page">
+
+        <!-- Page Heading -->
+        <div class="cart-heading">
+
+            <span class="section-label">
+                YOURSHOP CHECKOUT
+            </span>
+
+            <h1>Shopping Cart</h1>
+
+            <p>
+                Review your selected products before checkout.
+            </p>
+
+        </div>
+
+
+        <!-- =================================
+             CART LAYOUT
+        ================================== -->
+
+        <section class="cart-layout">
+
+            <!-- LEFT: CART PRODUCTS -->
+            <div class="cart-products-section">
+
+                <div class="cart-section-heading">
+
+                    <h2>Your Products</h2>
+
+                    <span id="cart-items-count">
+                        0 Items
+                    </span>
+
+                </div>
+
+
+                <!-- Empty Cart Message -->
+                <div id="cart-empty-message" hidden>
+
+                    <h3>Your cart is empty!</h3>
+
+                    <p>
+                        You haven't added any products yet.
+                    </p>
+
+                    <a href="index.html" class="continue-shopping-button">
+                        Start Shopping
+                    </a>
+
+                </div>
+
+
+                <!-- Products Will Be Added Here By JavaScript -->
+                <div id="cart-items-container">
+
+                    <!-- JavaScript will display cart products here -->
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT: ORDER SUMMARY -->
+            <aside class="order-summary">
+
+                <h2>Order Summary</h2>
+
+
+                <!-- Subtotal -->
+                <div class="summary-row">
+
+                    <span>Subtotal</span>
+
+                    <span id="cart-subtotal">
+                        $0.00
+                    </span>
+
+                </div>
+
+
+                <!-- Shipping -->
+                <div class="summary-row">
+
+                    <span>Shipping</span>
+
+                    <span id="cart-shipping">
+                        $0.00
+                    </span>
+
+                </div>
+
+
+                <!-- Divider -->
+                <div class="summary-divider"></div>
+
+
+                <!-- Total -->
+                <div class="summary-row summary-total">
+
+                    <span>Total</span>
+
+                    <span id="cart-total">
+                        $0.00
+                    </span>
+
+                </div>
+
+
+                <!-- Checkout Button -->
+                <button
+                    type="button"
+                    class="checkout-button"
+                    id="checkout-button"
+                >
+                    Proceed to Checkout
+                </button>
+
+
+                <!-- Continue Shopping -->
+                <a href="index.html" class="back-to-shopping">
+                    ← Continue Shopping
+                </a>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+
+    <!-- =================================
+         FOOTER
+    ================================== -->
+
+    <footer id="footer">
+
+        <p>
+            © 2026 YourShop. All Rights Reserved.
+        </p>
+
+        <p>
+            Thoughtful Shopping. Everyday Essentials.
+        </p>
+
+    </footer>
+
+<script src="./js/products.js"></script>
+<script src="./js/cart.js"></script>
+
+
+</body>
+
+</html>

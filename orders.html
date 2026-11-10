@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders | YourShop</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="orders-header">
+
+    <div class="orders-header-container">
+
+        <!-- YourShop Logo -->
+        <a href="./index.html" class="orders-logo">
+            <span class="logo-icon">Y</span>
+            <span>Your<span>Shop</span></span>
+        </a>
+
+        <!-- Header Navigation -->
+        <nav class="orders-navigation">
+
+            <a href="./index.html">
+                <span>⌂</span> Home
+            </a>
+
+            <a href="./index.html#products-section">
+                <span>▦</span> Shop
+            </a>
+
+            <a href="./cart.html">
+                <span>🛒</span> Cart
+            </a>
+
+            <a href="./orders.html" class="active">
+                My Orders
+            </a>
+
+        </nav>
+
+        <!-- Continue Shopping -->
+        <a href="./index.html" class="orders-shop-button">
+            Continue Shopping →
+        </a>
+
+    </div>
+
+    </header>
+
+
+    <!-- ORDER HISTORY -->
+    <main class="orders-page">
+
+        <div class="orders-heading">
+
+            <h1>My Orders</h1>
+
+            <p>View and track your previous purchases.</p>
+
+        </div>
+
+
+        <!-- JavaScript will display orders here -->
+        <div id="orders-container">
+
+        </div>
+
+
+        <!-- Empty Orders Message -->
+        <div id="no-orders-message" hidden>
+
+            <h2>No Orders Yet</h2>
+
+            <p>You haven't placed any orders yet.</p>
+
+            <a href="./index.html">
+                Start Shopping
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="./js/orders.js"></script>
+
+</body>
+
+</html>

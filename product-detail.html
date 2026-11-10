@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Product Details | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <!-- Product Details Header -->
+    <header class="details-header">
+
+        <a href="./index.html" class="details-logo">
+            <span class="details-logo-icon">Y</span>
+            <span>Your<span>Shop</span></span>
+        </a>
+
+        <nav class="details-nav">
+            <a href="./index.html">Home</a>
+            <a href="./index.html#products-section">Shop</a>
+            <a href="./cart.html">Cart</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Main Product Details -->
+    <main class="product-details-page">
+
+        <div class="details-breadcrumb">
+            <a href="./index.html">Home</a>
+            <span> / </span>
+            <a href="./index.html#products-section">Products</a>
+            <span> / </span>
+            <span>Product Details</span>
+        </div>
+
+
+        <section class="product-details-container">
+
+            <!-- Product Image and Gallery -->
+            <div class="details-image-column">
+                <div class="details-image-box">
+                    <img
+                        id="detail-product-image"
+                        src=""
+                        alt="Product Image"
+                        class="zoomable-product-image"
+                    >
+
+                    <span id="detail-discount" class="details-discount"></span>
+                </div>
+
+                <div class="product-image-gallery" id="product-image-gallery">
+                    <!-- Thumbnails are added by JavaScript -->
+                </div>
+            </div>
+
+
+            <!-- Product Information -->
+            <div class="details-information">
+
+                <span id="detail-category" class="details-category">
+                    Product Category
+                </span>
+
+                <h1 id="detail-product-name">
+                    Product Name
+                </h1>
+
+                <div class="details-rating">
+                    ⭐ <span id="detail-rating">0</span> / 5
+                </div>
+
+                <div class="product-stock-status" id="detail-stock-status">
+    In Stock
+</div>
+
+                <div class="details-price-box">
+
+                    <span id="detail-price" class="details-current-price">
+                        $0.00
+                    </span>
+
+                    <span id="detail-old-price" class="details-old-price">
+                        $0.00
+                    </span>
+
+                </div>
+
+
+<div class="details-description-section">
+
+    <h3>Product Description</h3>
+
+    <p id="detail-description">
+        Discover quality and value with this YourShop product.
+    </p>
+
+</div>
+
+<div class="product-specifications">
+
+    <h3>Product Specifications</h3>
+
+    <table>
+        <tbody id="detail-specifications">
+            <!-- Specifications will be added by JavaScript -->
+        </tbody>
+    </table>
+
+</div>
+
+<div class="product-delivery-info">
+
+    <p>🚚 Delivery: Available at checkout</p>
+    <p>↩️ Returns: Contact customer support</p>
+    <p>🔒 Payment: Secure checkout experience</p>
+
+</div>
+
+
+
+                <!-- Quantity -->
+                <div class="details-quantity">
+
+                    <label for="detail-quantity">Quantity:</label>
+
+                    <div class="quantity-control">
+
+                        <button type="button" id="quantity-minus">−</button>
+
+                        <input
+                            type="number"
+                            id="detail-quantity"
+                            value="1"
+                            min="1"
+                            max="99"
+                        >
+
+                        <button type="button" id="quantity-plus">+</button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Action Buttons -->
+                <div class="details-buttons">
+
+                    <button
+                        type="button"
+                        id="detail-add-to-cart"
+                        class="details-add-button"
+                    >
+                        Add to Cart
+                    </button>
+
+                    <button
+                        type="button"
+                        id="detail-buy-now"
+                        class="details-buy-button"
+                    >
+                        Buy Now
+                    </button>
+
+                </div>
+
+                <div class="details-extra-info">
+                    <p>✓ Quality Products</p>
+                    <p>✓ Secure Shopping</p>
+                    <p>✓ Customer Support</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+
+<!-- CUSTOMER REVIEWS SECTION -->
+<section class="customer-reviews-section" id="customer-reviews">
+
+    <div class="reviews-heading">
+        <h2>Customer Reviews</h2>
+        <p>See what our customers think about this product.</p>
+    </div>
+
+    <div class="reviews-summary">
+        <div class="overall-rating">
+            <h3 id="reviews-average">4.8</h3>
+            <div class="review-stars">★★★★★</div>
+            <p id="reviews-count">Based on customer reviews</p>
+        </div>
+
+        <div class="rating-breakdown">
+            <p>5 Stars <span>★★★★★</span></p>
+            <p>4 Stars <span>★★★★</span></p>
+            <p>3 Stars <span>★★★</span></p>
+            <p>2 Stars <span>★★</span></p>
+            <p>1 Star <span>★</span></p>
+        </div>
+    </div>
+
+    <div class="review-list" id="review-list">
+        <!-- Customer reviews will appear here -->
+    </div>
+
+    <div class="reviews-sort">
+    <label for="review-sort">Sort Reviews:</label>
+    <select id="review-sort">
+        <option value="newest">Newest First</option>
+        <option value="highest">Highest Rating</option>
+        <option value="lowest">Lowest Rating</option>
+    </select>
+</div>
+
+
+<!-- WRITE A REVIEW FORM -->
+<div class="write-review-section">
+    <h3>Write a Review</h3>
+
+    <form id="review-form">
+
+        <label for="reviewer-name">Your Name</label>
+        <input
+            type="text"
+            id="reviewer-name"
+            placeholder="Enter your name"
+            required
+        >
+
+        <label for="review-rating">Your Rating</label>
+        <select id="review-rating" required>
+            <option value="5">★★★★★ - Excellent</option>
+            <option value="4">★★★★ - Very Good</option>
+            <option value="3">★★★ - Good</option>
+            <option value="2">★★ - Fair</option>
+            <option value="1">★ - Poor</option>
+        </select>
+
+        <label for="review-comment">Your Review</label>
+        <textarea
+            id="review-comment"
+            placeholder="Share your experience..."
+            rows="5"
+            required
+        ></textarea>
+
+        <button type="submit">Submit Review</button>
+
+    </form>
+</div>
+
+
+</section>
+
+
+<!-- Related Products -->
+<section class="related-products-section">
+
+    <div class="related-products-heading">
+        <h2>You May Also Like</h2>
+        <p>Discover more products in this category.</p>
+    </div>
+
+    <div class="product-grid" id="related-products-grid">
+        <!-- Related products will appear here -->
+    </div>
+
+</section>
+
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="details-footer">
+        <p>© 2026 YourShop. All rights reserved.</p>
+    </footer>
+
+
+    <script src="./js/products.js"></script>
+    <script src="./js/product-detail.js"></script>
+
+</body>
+
+</html>

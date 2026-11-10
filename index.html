@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YourShop | Online Shopping</title>
+
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <!-- Website Header -->
+
+<header class="site-header">
+
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        <p>Welcome to YourShop! Discover amazing deals every day.</p>
+    </div>
+
+    <!-- Main Header -->
+    <div class="header-main">
+
+        <!-- Custom Logo -->
+        <a href="index.html" class="logo">
+
+            <span class="logo-icon">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M8 15h32l-3 25H11L8 15Z"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                          stroke-linejoin="round"/>
+
+                    <path d="M17 17V12a7 7 0 0 1 14 0v5"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                          stroke-linecap="round"/>
+
+                    <path d="m19 28 4 4 7-8"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </span>
+
+            <span class="logo-text">
+                Your<span>Shop</span>
+            </span>
+
+        </a>
+
+        <!-- Search Bar -->
+        <form class="search-form" id="search-form">
+
+            <select id="search-category" aria-label="Choose search category">
+                <option value="all">All Categories</option>
+                <option value="smartphones">Smartphones</option>
+                <option value="headphones">Headphones</option>
+                <option value="laptops">Laptops</option>
+                <option value="smart-watches">Smart Watches</option>
+                <option value="accessories">Accessories</option>
+                <option value="gaming">Gaming</option>
+                <option value="cameras">Cameras</option>
+                <option value="home-appliances">Home Appliances</option>
+                <option value="mens-fashion">Men's Fashion</option>
+                <option value="womens-fashion">Women's Fashion</option>
+            </select>
+
+            <input
+                type="search"
+                id="product-search"
+                placeholder="Search for products..."
+                aria-label="Search products"
+            >
+
+            <button type="submit" class="search-button" aria-label="Search">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="10.8" cy="10.8" r="6.8"
+                            fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="m16 16 5 5"
+                          fill="none" stroke="currentColor" stroke-width="2"
+                          stroke-linecap="round"/>
+                </svg>
+            </button>
+
+        </form>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+
+            <!-- Account -->
+            <span class="header-action" aria-disabled="true">
+                <span class="action-icon">♙</span>
+                <span>Account (coming soon)</span>
+            </span>
+
+            <!-- Shopping Cart -->
+            <a href="cart.html" class="header-action cart-action">
+                <span class="action-icon">🛒</span>
+                <span>Cart</span>
+                <span class="cart-count" id="cart-count">0</span>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="main-navigation" aria-label="Main navigation">
+
+        <button
+            type="button"
+            class="menu-toggle"
+            id="menu-toggle"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+
+
+
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="#categories-sidebar">All Categories</a>
+            </li>
+
+            <li>
+                <a href="#products-section">Products</a>
+            </li>
+
+            <li>
+                <a href="#footer">Contact</a>
+            </li>
+
+
+                        <li>
+    <a href="./orders.html">My Orders</a>
+</li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+
+    <!-- Main Website Content -->
+    <main>
+
+        <!-- Hero Slider -->
+
+<!-- HERO IMAGE SLIDER -->
+<section class="hero-slider" id="hero">
+
+    <!-- Slide 1 -->
+    <div class="hero-slide active">
+
+        <div class="hero-content">
+            <span class="hero-label">WELCOME TO YOURSHOP</span>
+
+            <h1>
+                Everything You Need,
+                <span>All in One Place.</span>
+            </h1>
+
+            <p>
+                Discover amazing products and enjoy shopping
+                with great deals every day.
+            </p>
+
+            <a href="#products-section" class="hero-button">
+                Shop Now
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- Slide 2 -->
+    <div class="hero-slide">
+
+        <div class="hero-content">
+            <span class="hero-label">LATEST TECHNOLOGY</span>
+
+            <h1>
+                Upgrade Your
+                <span>Everyday Life.</span>
+            </h1>
+
+            <p>
+                Explore smartphones, laptops and smart gadgets
+                at amazing prices.
+            </p>
+
+            <a href="#products-section" class="hero-button">
+                Explore Products
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- Slide 3 -->
+    <div class="hero-slide">
+
+        <div class="hero-content">
+            <span class="hero-label">SPECIAL OFFERS</span>
+
+            <h1>
+                Big Deals.
+                <span>Better Shopping.</span>
+            </h1>
+
+            <p>
+                Find your favourite products and enjoy
+                exciting shopping offers.
+            </p>
+
+            <a href="#products-section" class="hero-button">
+                Discover Deals
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- Slider Navigation Dots -->
+    <div class="hero-dots">
+
+        <button class="hero-dot active"
+                type="button"
+                aria-label="Show slide 1"></button>
+
+        <button class="hero-dot"
+                type="button"
+                aria-label="Show slide 2"></button>
+
+        <button class="hero-dot"
+                type="button"
+                aria-label="Show slide 3"></button>
+
+    </div>
+
+</section>
+
+
+        <!-- Shopping Area -->
+        <section id="shopping">
+
+  
+<!-- CATEGORIES SIDEBAR -->
+<aside class="categories-sidebar" id="categories-sidebar">
+
+    <div class="sidebar-heading">
+        <h2>Shop By Category</h2>
+    </div>
+
+    <ul class="category-list">
+
+        <li><a href="#smartphones">Smartphones</a></li>
+
+        <li><a href="#headphones">Headphones</a></li>
+
+        <li><a href="#laptops">Laptops</a></li>
+
+        <li><a href="#smart-watches">Smart Watches</a></li>
+
+        <li><a href="#accessories">Accessories</a></li>
+
+        <li><a href="#gaming">Gaming</a></li>
+
+        <li><a href="#cameras">Cameras</a></li>
+
+        <li><a href="#home-appliances">Home Appliances</a></li>
+
+        <li><a href="#mens-fashion">Men's Fashion</a></li>
+
+        <li><a href="#womens-fashion">Women's Fashion</a></li>
+
+    </ul>
+
+</aside>
+
+
+<!-- PRODUCTS SECTION -->
+<section class="products-section" id="products-section">
+
+    <!-- Products Heading -->
+    <div class="products-heading">
+
+        <div>
+            <span class="section-label">EXPLORE YOURSHOP</span>
+            <h2>Featured Products</h2>
+            <p>Discover our popular products and latest deals.</p>
+        </div>
+
+    </div>
+
+    <!-- Product Sorting -->
+    <div class="products-toolbar">
+
+        <p>Our Products</p>
+
+        <div class="sort-container">
+            <label for="sort-products">Sort By:</label>
+
+            <select id="sort-products">
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Product Cards Will Be Added Here -->
+    <div class="product-grid" id="product-grid">
+
+        <!-- JavaScript will display products here -->
+
+    </div>
+
+</section>
+
+        </section>
+
+    </main>
+
+    <!-- Website Footer -->
+    <footer id="footer">
+        <!-- Footer content will be added here -->
+    </footer>
+
+    <!-- Main JavaScript -->
+
+    <script src="./js/products.js"></script>
+<script src="./js/main.js"></script>
+
+
+</body>
+</html>
+

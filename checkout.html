@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout | YourShop</title>
+
+    <!-- Google Font: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main CSS -->
+<link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+
+        <div class="header-main">
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-text">
+                    Your<span>Shop</span>
+                </span>
+
+            </a>
+
+            <div class="header-actions">
+
+                <a href="cart.html" class="header-action">
+                    ← Back to Cart
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN CHECKOUT PAGE -->
+    <main class="checkout-page">
+
+        <!-- PAGE HEADING -->
+        <div class="checkout-heading">
+
+            <span class="section-label">
+                YOURSHOP
+            </span>
+
+            <h1>Checkout</h1>
+
+            <p>
+                Enter your details to complete your order.
+            </p>
+
+        </div>
+
+
+        <!-- CHECKOUT LAYOUT -->
+        <div class="checkout-layout">
+
+
+            <!-- LEFT: CUSTOMER INFORMATION -->
+            <section class="checkout-form-section">
+
+                <h2>Delivery Information</h2>
+
+                <form id="checkout-form">
+
+                    <!-- Customer Name -->
+                    <div class="form-group">
+
+                        <label for="customer-name">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="customer-name"
+                            name="customerName"
+                            placeholder="Enter your full name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="form-group">
+
+                        <label for="customer-email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="customer-email"
+                            name="customerEmail"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Phone -->
+                    <div class="form-group">
+
+                        <label for="customer-phone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="customer-phone"
+                            name="customerPhone"
+                            placeholder="Enter your phone number"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Address -->
+                    <div class="form-group">
+
+                        <label for="customer-address">
+                            Delivery Address
+                        </label>
+
+                        <textarea
+                            id="customer-address"
+                            name="customerAddress"
+                            rows="4"
+                            placeholder="Enter your complete delivery address"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- City and Postal Code -->
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="customer-city">
+                                City
+                            </label>
+
+                            <input
+                                type="text"
+                                id="customer-city"
+                                name="customerCity"
+                                placeholder="Enter your city"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="customer-postal">
+                                Postal Code
+                            </label>
+
+                            <input
+                                type="text"
+                                id="customer-postal"
+                                name="customerPostal"
+                                placeholder="Postal code"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Payment Method -->
+                    <h2 class="payment-heading">
+                        Payment Method
+                    </h2>
+
+                    <div class="payment-option">
+
+                        <label>
+
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="cash"
+                                checked
+                            >
+
+                            Cash on Delivery
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="payment-option">
+
+                        <label>
+
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="online"
+                            >
+
+                            Online Payment (Coming Soon)
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- Place Order -->
+                    <button
+                        type="submit"
+                        class="place-order-button"
+                        id="place-order-button"
+                    >
+                        Place Order
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <!-- RIGHT: ORDER SUMMARY -->
+            <aside class="checkout-summary">
+
+                <h2>Your Order</h2>
+
+
+                <!-- Products Will Appear Here -->
+                <div id="checkout-items">
+
+                    <!-- JavaScript will display products here -->
+
+                </div>
+
+
+                <!-- Price Details -->
+                <div class="checkout-summary-details">
+
+                    <div class="checkout-summary-row">
+
+                        <span>Subtotal</span>
+
+                        <span id="checkout-subtotal">
+                            $0.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="checkout-summary-row">
+
+                        <span>Shipping</span>
+
+                        <span id="checkout-shipping">
+                            Free
+                        </span>
+
+                    </div>
+
+
+                    <div class="checkout-total-row">
+
+                        <strong>Total</strong>
+
+                        <strong id="checkout-total">
+                            $0.00
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer id="footer">
+
+        <p>
+            © 2026 YourShop. All Rights Reserved.
+        </p>
+
+        <p>
+            Thoughtful Shopping. Everyday Essentials.
+        </p>
+
+    </footer>
+
+
+    <!-- Product Data -->
+    <script src="./js/products.js"></script>
+
+    <!-- Checkout JavaScript -->
+    <script src="./js/checkout.js"></script>
+
+</body>
+
+</html>
