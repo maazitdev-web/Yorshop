@@ -4211,3 +4211,787 @@ select {
         grid-column: auto;
     }
 }
+/* =====================================
+   YOURSHOP - HOMEPAGE FOOTER
+===================================== */
+
+.site-footer {
+    background: #102a56;
+    color: #ffffff;
+    padding: 55px 7% 20px;
+    margin-top: 60px;
+}
+
+.site-footer .contact-footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr;
+    gap: 50px;
+}
+
+.site-footer .contact-footer-brand h2 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.site-footer .contact-footer-brand h2 span {
+    color: #60a5fa;
+}
+
+.site-footer .contact-footer-brand p {
+    max-width: 350px;
+    color: #d1dced;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.site-footer .contact-footer-column h3 {
+    font-size: 17px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.site-footer .contact-footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.site-footer .contact-footer-column ul li {
+    margin-bottom: 12px;
+}
+
+.site-footer .contact-footer-column ul li a {
+    color: #d1dced;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.site-footer .contact-footer-column ul li a:hover {
+    color: #60a5fa;
+    padding-left: 5px;
+}
+
+.site-footer .contact-footer-bottom {
+    max-width: 1400px;
+    margin: 40px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.site-footer .contact-footer-bottom p {
+    color: #cbd5e1;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .site-footer .contact-footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 35px;
+    }
+
+    .site-footer .contact-footer-brand {
+        grid-column: 1 / -1;
+    }
+
+    .site-footer .contact-footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-footer .contact-footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .site-footer .contact-footer-brand {
+        grid-column: auto;
+    }
+}
+/* =====================================
+   YOURSHOP - PRIVACY POLICY PAGE
+===================================== */
+
+.privacy-page {
+    font-family: 'Poppins', sans-serif;
+    background: #f8faff;
+    color: #263449;
+}
+
+/* Privacy Hero */
+.privacy-hero {
+    background: linear-gradient(135deg, #102a56, #1e4b8f);
+    padding: 75px 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.privacy-hero-content {
+    max-width: 750px;
+    margin: auto;
+}
+
+.privacy-hero-content span {
+    display: inline-block;
+    color: #93c5fd;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.privacy-hero-content h1 {
+    font-size: 46px;
+    margin: 0 0 15px;
+}
+
+.privacy-hero-content h1 strong {
+    color: #60a5fa;
+}
+
+.privacy-hero-content p {
+    color: #dbeafe;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* Main Container */
+.privacy-container {
+    max-width: 1050px;
+    margin: 55px auto;
+    padding: 0 25px;
+}
+
+/* Introduction */
+.privacy-intro {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    border-left: 5px solid #2563eb;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 25px rgba(16, 42, 86, 0.05);
+}
+
+.privacy-intro h2 {
+    color: #102a56;
+    font-size: 25px;
+    margin: 0 0 15px;
+}
+
+.privacy-intro p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.privacy-intro small {
+    display: inline-block;
+    margin-top: 12px;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+/* Policy Sections */
+.privacy-section {
+    background: #ffffff;
+    padding: 28px 32px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(16, 42, 86, 0.04);
+}
+
+.privacy-section h2 {
+    color: #102a56;
+    font-size: 19px;
+    margin: 0 0 12px;
+}
+
+.privacy-section p,
+.privacy-section li {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.privacy-section ul {
+    padding-left: 22px;
+    margin-bottom: 0;
+}
+
+.privacy-section li {
+    margin-bottom: 7px;
+}
+
+/* Contact Box */
+.privacy-contact {
+    background: #eaf2ff;
+    padding: 40px 25px;
+    text-align: center;
+    border-radius: 12px;
+    margin-top: 35px;
+}
+
+.privacy-contact h2 {
+    color: #102a56;
+    font-size: 23px;
+    margin: 0 0 10px;
+}
+
+.privacy-contact p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.privacy-contact a {
+    display: inline-block;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.privacy-contact a:hover {
+    background: #102a56;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .privacy-hero {
+        padding: 55px 20px;
+    }
+
+    .privacy-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .privacy-container {
+        margin: 35px auto;
+        padding: 0 16px;
+    }
+
+    .privacy-intro,
+    .privacy-section {
+        padding: 24px 20px;
+    }
+
+    .privacy-section h2 {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 480px) {
+    .privacy-hero-content h1 {
+        font-size: 29px;
+    }
+
+    .privacy-hero-content p {
+        font-size: 13px;
+    }
+}
+
+/* =====================================
+   YOURSHOP - TERMS & CONDITIONS PAGE
+===================================== */
+
+.terms-page {
+    font-family: 'Poppins', sans-serif;
+    background: #f8faff;
+    color: #263449;
+}
+
+/* Hero Section */
+.terms-hero {
+    background: linear-gradient(135deg, #102a56, #1e4b8f);
+    padding: 75px 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.terms-hero-content {
+    max-width: 750px;
+    margin: auto;
+}
+
+.terms-hero-content span {
+    display: inline-block;
+    color: #93c5fd;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.terms-hero-content h1 {
+    font-size: 46px;
+    margin: 0 0 15px;
+}
+
+.terms-hero-content h1 strong {
+    color: #60a5fa;
+}
+
+.terms-hero-content p {
+    color: #dbeafe;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* Main Container */
+.terms-container {
+    max-width: 1050px;
+    margin: 55px auto;
+    padding: 0 25px;
+}
+
+/* Introduction */
+.terms-intro {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    border-left: 5px solid #2563eb;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 25px rgba(16, 42, 86, 0.05);
+}
+
+.terms-intro h2 {
+    color: #102a56;
+    font-size: 25px;
+    margin: 0 0 15px;
+}
+
+.terms-intro p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.terms-intro small {
+    display: inline-block;
+    margin-top: 12px;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+/* Terms Sections */
+.terms-section {
+    background: #ffffff;
+    padding: 28px 32px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 18px rgba(16, 42, 86, 0.04);
+}
+
+.terms-section h2 {
+    color: #102a56;
+    font-size: 19px;
+    margin: 0 0 12px;
+}
+
+.terms-section p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.terms-inline-link {
+    display: inline-block;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.terms-inline-link:hover {
+    color: #102a56;
+    text-decoration: underline;
+}
+
+/* Bottom Contact Box */
+.terms-contact {
+    background: #eaf2ff;
+    padding: 40px 25px;
+    text-align: center;
+    border-radius: 12px;
+    margin-top: 35px;
+}
+
+.terms-contact h2 {
+    color: #102a56;
+    font-size: 23px;
+    margin: 0 0 10px;
+}
+
+.terms-contact p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.terms-contact a {
+    display: inline-block;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.terms-contact a:hover {
+    background: #102a56;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .terms-hero {
+        padding: 55px 20px;
+    }
+
+    .terms-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .terms-container {
+        margin: 35px auto;
+        padding: 0 16px;
+    }
+
+    .terms-intro,
+    .terms-section {
+        padding: 24px 20px;
+    }
+
+    .terms-section h2 {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 480px) {
+    .terms-hero-content h1 {
+        font-size: 29px;
+    }
+
+    .terms-hero-content p {
+        font-size: 13px;
+    }
+}
+
+/* =====================================
+   YOURSHOP - SHIPPING & DELIVERY PAGE
+===================================== */
+
+.shipping-page {
+    font-family: 'Poppins', sans-serif;
+    background: #f8faff;
+    color: #263449;
+}
+
+/* Hero */
+.shipping-hero {
+    background: linear-gradient(135deg, #102a56, #1e4b8f);
+    padding: 75px 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.shipping-hero-content {
+    max-width: 750px;
+    margin: auto;
+}
+
+.shipping-hero-content span {
+    display: inline-block;
+    color: #93c5fd;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+}
+
+.shipping-hero-content h1 {
+    font-size: 46px;
+    margin: 0 0 15px;
+}
+
+.shipping-hero-content h1 strong {
+    color: #60a5fa;
+}
+
+.shipping-hero-content p {
+    color: #dbeafe;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+/* Main Container */
+.shipping-container {
+    max-width: 1100px;
+    margin: 55px auto;
+    padding: 0 25px;
+}
+
+/* Introduction */
+.shipping-intro {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    border-left: 5px solid #2563eb;
+    margin-bottom: 45px;
+    box-shadow: 0 5px 25px rgba(16, 42, 86, 0.05);
+}
+
+.shipping-intro h2 {
+    color: #102a56;
+    font-size: 25px;
+    margin: 0 0 15px;
+}
+
+.shipping-intro p {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+/* Section Titles */
+.shipping-section-title {
+    color: #102a56;
+    text-align: center;
+    font-size: 27px;
+    margin-bottom: 30px;
+}
+
+/* Delivery Steps */
+.shipping-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.shipping-step {
+    background: #ffffff;
+    padding: 28px 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(16, 42, 86, 0.05);
+    transition: 0.3s;
+}
+
+.shipping-step:hover {
+    transform: translateY(-5px);
+}
+
+.shipping-step-number {
+    width: 55px;
+    height: 55px;
+    background: #eaf2ff;
+    color: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.shipping-step h3 {
+    color: #102a56;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.shipping-step p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* Delivery Information Cards */
+.shipping-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin: 50px 0;
+}
+
+.shipping-card {
+    background: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(16, 42, 86, 0.05);
+    transition: 0.3s;
+}
+
+.shipping-card:hover {
+    transform: translateY(-5px);
+}
+
+.shipping-card-icon {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.shipping-card h3 {
+    color: #102a56;
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.shipping-card p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+/* Information Sections */
+.shipping-info-section {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 5px 20px rgba(16, 42, 86, 0.04);
+}
+
+.shipping-info-section h2 {
+    color: #102a56;
+    font-size: 21px;
+    margin: 0 0 15px;
+}
+
+.shipping-info-section p,
+.shipping-info-section li {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.shipping-info-section ul {
+    padding-left: 22px;
+}
+
+.shipping-info-section li {
+    margin-bottom: 9px;
+}
+
+/* Buttons */
+.shipping-button {
+    display: inline-block;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: 0.3s;
+}
+
+.shipping-button:hover {
+    background: #102a56;
+    transform: translateY(-2px);
+}
+
+/* FAQ Contact Box */
+.shipping-faq {
+    background: #eaf2ff;
+    padding: 40px 25px;
+    text-align: center;
+    border-radius: 12px;
+    margin-top: 35px;
+}
+
+.shipping-faq h2 {
+    color: #102a56;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.shipping-faq p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.shipping-faq a {
+    display: inline-block;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.shipping-faq a:hover {
+    background: #102a56;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .shipping-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .shipping-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .shipping-hero {
+        padding: 55px 20px;
+    }
+
+    .shipping-hero-content h1 {
+        font-size: 34px;
+    }
+
+    .shipping-container {
+        margin: 35px auto;
+        padding: 0 16px;
+    }
+
+    .shipping-intro,
+    .shipping-info-section {
+        padding: 24px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .shipping-hero-content h1 {
+        font-size: 29px;
+    }
+
+    .shipping-hero-content p {
+        font-size: 13px;
+    }
+
+    .shipping-steps {
+        grid-template-columns: 1fr;
+    }
+}
