@@ -349,3 +349,36 @@ const products = [
 
 // Make products available to main.js
 console.log("YourShop products loaded:", products.length);
+
+
+// ============================================
+// DEMO SALES DATA FOR BEST SELLERS
+// ============================================
+
+const demoSales = {
+    1: 245,
+    2: 220,
+    3: 190,
+    4: 175,
+    5: 160,
+    6: 145,
+    7: 135,
+    8: 120,
+    9: 110,
+    10: 100,
+    11: 95,
+    12: 90,
+    13: 85,
+    14: 80,
+    15: 75,
+    16: 70,
+    17: 65,
+    18: 60,
+    19: 55,
+    20: 50
+};
+
+// Attach demo sales figures to products
+products.forEach(product => {
+    product.soldCount = demoSales[product.id] || 0;
+});

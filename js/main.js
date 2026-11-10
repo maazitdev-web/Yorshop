@@ -132,9 +132,7 @@ function displayProducts(productList) {
 
     productList.forEach((product) => {
 
-        const discountedPrice =
-            product.price -
-            (product.price * product.discount / 100);
+        const discountedPrice = getDiscountedPrice(product);
 
         const productCard = document.createElement("div");
         
@@ -201,9 +199,92 @@ function displayProducts(productList) {
 
 }
 
+function getDiscountedPrice(product) {
+    return product.price * (1 - product.discount / 100);
+}
+
 
     // Display all products
     displayProducts(products);
+    // ========================================
+// 8. BEST SELLERS SECTION
+// ========================================
+
+const bestSellersGrid = document.getElementById("best-sellers-grid");
+const newArrivalsGrid = document.getElementById("new-arrivals-grid");
+
+
+// Demo best seller product IDs
+const bestSellerIds = [1, 3, 5, 7, 11, 13];
+
+if (bestSellersGrid) {
+
+    const bestSellerProducts = products.filter(product =>
+        bestSellerIds.includes(product.id)
+    );
+
+    bestSellerProducts.forEach(product => {
+
+        const discountedPrice = getDiscountedPrice(product);
+
+        const productCard = document.createElement("div");
+
+        productCard.classList.add("product-card");
+        productCard.dataset.productId = product.id;
+
+        productCard.innerHTML = `
+            <div class="product-image-container">
+
+                <img
+                    src="${product.image}"
+                    alt="${product.name}"
+                    loading="lazy"
+                >
+
+                <span class="discount-badge">
+                    ${product.discount}% OFF
+                </span>
+
+            </div>
+
+            <div class="product-info">
+
+                <span class="product-category">
+                    ${product.category.replaceAll("-", " ")}
+                </span>
+
+                <h3>${product.name}</h3>
+
+                <div class="product-rating">
+                    ⭐ ${product.rating} / 5
+                </div>
+
+                <div class="product-prices">
+                    <span class="product-price">
+                        $${discountedPrice.toFixed(2)}
+                    </span>
+
+                    <span class="old-price">
+                        $${product.price.toFixed(2)}
+                    </span>
+                </div>
+
+                <button
+                    type="button"
+                    class="add-to-cart-button"
+                    data-product-id="${product.id}"
+                >
+                    Add to Cart
+                </button>
+
+            </div>
+        `;
+
+        bestSellersGrid.appendChild(productCard);
+
+    });
+
+}
 
     function displayFilteredProducts() {
 
@@ -223,10 +304,14 @@ function displayProducts(productList) {
         if (sortSelect) {
             switch (sortSelect.value) {
                 case "price-low":
-                    visibleProducts.sort((a, b) => a.price - b.price);
+                    visibleProducts.sort(
+                        (a, b) => getDiscountedPrice(a) - getDiscountedPrice(b)
+                    );
                     break;
                 case "price-high":
-                    visibleProducts.sort((a, b) => b.price - a.price);
+                    visibleProducts.sort(
+                        (a, b) => getDiscountedPrice(b) - getDiscountedPrice(a)
+                    );
                     break;
                 case "rating":
                     visibleProducts.sort((a, b) => b.rating - a.rating);
@@ -324,10 +409,15 @@ function displayProducts(productList) {
     // ========================================
     // 7. ADD PRODUCTS TO CART
     // ========================================
+const productContainers = [
+    productGrid,
+    bestSellersGrid,
+    newArrivalsGrid
+].filter(container => container !== null);
 
-if (productGrid) {
+productContainers.forEach(container => {
 
-    productGrid.addEventListener("click", (event) => {
+    container.addEventListener("click", (event) => {
 
         if (event.target.closest("#reset-search")) {
             if (searchInput) searchInput.value = "";
@@ -392,9 +482,157 @@ if (productGrid) {
 
         }
 
+     });
+
+});
+
+// ========================================
+// YOURSHOP - BACK TO TOP BUTTON
+// ========================================
+
+const backToTopButton = document.createElement("button");
+
+backToTopButton.className = "back-to-top";
+backToTopButton.innerHTML = "↑";
+backToTopButton.setAttribute("aria-label", "Back to top");
+backToTopButton.type = "button";
+
+document.body.appendChild(backToTopButton);
+
+// Show button when scrolling down
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+        backToTopButton.classList.add("show");
+    } else {
+        backToTopButton.classList.remove("show");
+    }
+});
+
+// Scroll smoothly to the top
+backToTopButton.addEventListener("click", () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+
+// ========================================
+// 9. NEW ARRIVALS SECTION
+// ========================================
+
+
+// Demo new arrival product IDs
+const newArrivalIds = [2, 4, 6, 8, 10, 12];
+
+if (newArrivalsGrid) {
+
+    const newArrivalProducts = products.filter(product =>
+        newArrivalIds.includes(product.id)
+    );
+
+    newArrivalProducts.forEach(product => {
+
+        const discountedPrice = getDiscountedPrice(product);
+
+        const productCard = document.createElement("div");
+
+        productCard.classList.add("product-card");
+        productCard.dataset.productId = product.id;
+
+        productCard.innerHTML = `
+            <div class="product-image-container">
+
+                <img
+                    src="${product.image}"
+                    alt="${product.name}"
+                    loading="lazy"
+                >
+
+                <span class="new-arrival-badge">
+                    NEW
+                </span>
+
+            </div>
+
+            <div class="product-info">
+
+                <span class="product-category">
+                    ${product.category.replaceAll("-", " ")}
+                </span>
+
+                <h3>${product.name}</h3>
+
+                <div class="product-rating">
+                    ⭐ ${product.rating} / 5
+                </div>
+
+                <div class="product-prices">
+
+                    <span class="product-price">
+                        $${discountedPrice.toFixed(2)}
+                    </span>
+
+                    <span class="old-price">
+                        $${product.price.toFixed(2)}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="add-to-cart-button"
+                    data-product-id="${product.id}"
+                >
+                    Add to Cart
+                </button>
+
+            </div>
+        `;
+
+        newArrivalsGrid.appendChild(productCard);
+
     });
 
 }
+
+// ========================================
+// NEWSLETTER SUBSCRIPTION
+// ========================================
+
+const newsletterForm = document.getElementById("newsletter-form");
+const newsletterEmail = document.getElementById("newsletter-email");
+const newsletterMessage = document.getElementById("newsletter-message");
+
+if (newsletterForm) {
+    newsletterForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const email = newsletterEmail.value.trim().toLowerCase();
+
+        let subscribers = JSON.parse(
+            localStorage.getItem("yourshop-subscribers")
+        ) || [];
+
+        if (subscribers.includes(email)) {
+            newsletterMessage.textContent =
+                "This email is already subscribed.";
+            return;
+        }
+
+        subscribers.push(email);
+
+        localStorage.setItem(
+            "yourshop-subscribers",
+            JSON.stringify(subscribers)
+        );
+
+        newsletterMessage.textContent =
+            "Thank you for subscribing!";
+
+        newsletterForm.reset();
+    });
+}
+
 
 });
 

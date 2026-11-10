@@ -267,6 +267,7 @@
         <section id="shopping">
 
   
+
 <!-- CATEGORIES SIDEBAR -->
 <aside class="categories-sidebar" id="categories-sidebar">
 
@@ -276,36 +277,98 @@
 
     <ul class="category-list">
 
-        <li><a href="#smartphones">Smartphones</a></li>
+        <li><a href="./category.html?category=smartphones">Smartphones</a></li>
 
-        <li><a href="#headphones">Headphones</a></li>
+        <li><a href="./category.html?category=headphones">Headphones</a></li>
 
-        <li><a href="#laptops">Laptops</a></li>
+        <li><a href="./category.html?category=laptops">Laptops</a></li>
 
-        <li><a href="#smart-watches">Smart Watches</a></li>
+        <li><a href="./category.html?category=smart-watches">Smart Watches</a></li>
 
-        <li><a href="#accessories">Accessories</a></li>
+        <li><a href="./category.html?category=accessories">Accessories</a></li>
 
-        <li><a href="#gaming">Gaming</a></li>
+        <li><a href="./category.html?category=gaming">Gaming</a></li>
 
-        <li><a href="#cameras">Cameras</a></li>
+        <li><a href="./category.html?category=cameras">Cameras</a></li>
 
-        <li><a href="#home-appliances">Home Appliances</a></li>
+        <li><a href="./category.html?category=home-appliances">Home Appliances</a></li>
 
-        <li><a href="#mens-fashion">Men's Fashion</a></li>
+        <li><a href="./category.html?category=mens-fashion">Men's Fashion</a></li>
 
-        <li><a href="#womens-fashion">Women's Fashion</a></li>
+        <li><a href="./category.html?category=womens-fashion">Women's Fashion</a></li>
 
     </ul>
 
 </aside>
-
 
 <!-- PRODUCTS SECTION -->
 <section class="products-section" id="products-section">
 
     <!-- Products Heading -->
     <div class="products-heading">
+
+        <!-- ========================================
+     BEST SELLERS SECTION
+======================================== -->
+
+<section class="best-sellers-section" id="best-sellers">
+
+    <div class="section-heading">
+        <span class="section-label">CUSTOMER FAVORITES</span>
+        <h2>Our Best Sellers</h2>
+        <p>Explore some of our most popular product picks.</p>
+    </div>
+
+    <div class="best-sellers-grid" id="best-sellers-grid">
+        <!-- Best seller products will load here -->
+    </div>
+
+</section>
+
+<!-- ========================================
+     NEW ARRIVALS SECTION
+======================================== -->
+
+<section class="new-arrivals-section" id="new-arrivals">
+
+    <div class="section-heading">
+        <span class="section-label">JUST ARRIVED</span>
+        <h2>New Arrivals</h2>
+        <p>Discover the latest additions to YourShop.</p>
+    </div>
+
+    <div class="new-arrivals-grid" id="new-arrivals-grid">
+        <!-- New arrival products will load here -->
+    </div>
+
+</section>
+
+<!-- ========================================
+     SPECIAL OFFERS SECTION
+======================================== -->
+<section class="special-offers-section" id="special-offers">
+
+    <div class="section-heading">
+        <span class="section-label">LIMITED TIME DEALS</span>
+        <h2>Special Offers</h2>
+        <p>Enjoy amazing discounts on selected products.</p>
+    </div>
+
+    <div class="special-offers-content">
+
+        <div class="offer-banner">
+            <span class="offer-tag">SPECIAL DEAL</span>
+            <h3>Save More on Your Favorites!</h3>
+            <p>Discover selected products at amazing prices.</p>
+            <a href="#products-section" class="offer-button">
+                Shop Now
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
 
         <div>
             <span class="section-label">EXPLORE YOURSHOP</span>
@@ -345,6 +408,38 @@
         </section>
 
     </main>
+
+<!-- ========================================
+     NEWSLETTER SECTION
+======================================== -->
+<section class="newsletter-section" id="newsletter">
+
+    <div class="newsletter-content">
+        <div class="newsletter-text">
+            <span>STAY CONNECTED</span>
+            <h2>Subscribe to Our Newsletter</h2>
+            <p>
+                Get updates about new arrivals, exclusive offers,
+                and special discounts.
+            </p>
+        </div>
+
+        <form id="newsletter-form" class="newsletter-form">
+            <input
+                type="email"
+                id="newsletter-email"
+                placeholder="Enter your email address"
+                required
+            >
+
+            <button type="submit">Subscribe</button>
+        </form>
+
+        <p id="newsletter-message" class="newsletter-message"></p>
+    </div>
+
+</section>
+
 <!-- Website Footer -->
 <footer id="footer" class="site-footer">
 

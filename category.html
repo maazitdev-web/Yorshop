@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Category | YourShop</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+
+        <div class="announcement-bar">
+            <p>Welcome to YourShop! Discover amazing deals every day.</p>
+        </div>
+
+        <div class="header-main">
+
+            <a href="./index.html" class="logo">
+                YourShop
+            </a>
+
+            <form class="search-form" id="search-form">
+                <select id="search-category">
+                    <option value="all">All Categories</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="headphones">Headphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="smart-watches">Smart Watches</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="home-appliances">Home Appliances</option>
+                    <option value="mens-fashion">Men's Fashion</option>
+                    <option value="womens-fashion">Women's Fashion</option>
+                </select>
+
+                <input type="search" id="product-search" placeholder="Search products...">
+
+                <button type="submit">Search</button>
+            </form>
+
+            <div class="header-actions">
+                <a href="./cart.html" class="header-action">
+                    Cart (<span id="cart-count">0</span>)
+                </a>
+            </div>
+
+        </div>
+
+        <nav class="main-nav">
+            <a href="./index.html">Home</a>
+            <a href="./index.html#categories-sidebar">Categories</a>
+            <a href="./index.html#best-sellers">Best Sellers</a>
+            <a href="./index.html#new-arrivals">New Arrivals</a>
+            <a href="./contact.html">Contact</a>
+            <a href="./orders.html">My Orders</a>
+        </nav>
+
+    </header>
+
+    <!-- CATEGORY HERO -->
+    <section class="category-page-hero">
+        <div class="category-breadcrumb">
+            <a href="./index.html">Home</a>
+            <span>/</span>
+            <span id="category-breadcrumb-name">Category</span>
+        </div>
+
+        <h1 id="category-title">Explore Products</h1>
+
+        <p id="category-description">
+            Discover quality products at amazing prices.
+        </p>
+    </section>
+
+    <!-- CATEGORY PRODUCTS -->
+    <main class="category-page-container">
+
+        <div class="category-toolbar">
+            <p id="category-product-count">Loading products...</p>
+
+            <select id="category-sort">
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+            </select>
+        </div>
+
+        <div class="category-product-grid" id="category-product-grid">
+            <!-- Products will load here -->
+        </div>
+
+        <p id="category-empty-message" hidden>
+            No products found in this category.
+        </p>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer" id="footer">
+
+        <div class="contact-footer-content">
+
+            <div class="footer-brand">
+                <h2>YourShop</h2>
+                <p>Your destination for quality products and amazing deals.</p>
+            </div>
+
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <a href="./index.html">Home</a>
+                <a href="./about.html">About Us</a>
+                <a href="./contact.html">Contact Us</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Customer Service</h3>
+                <a href="./faq.html">FAQs</a>
+                <a href="./shipping.html">Shipping</a>
+                <a href="./returns.html">Returns</a>
+                <a href="./privacy.html">Privacy Policy</a>
+                <a href="./terms.html">Terms & Conditions</a>
+            </div>
+
+        </div>
+
+        <div class="contact-footer-bottom">
+            <p>&copy; 2026 YourShop. All rights reserved.</p>
+        </div>
+
+    </footer>
+
+<script src="./js/products.js"></script>
+<script src="./js/category.js"></script>
+
+</body>
+</html>
