@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Coupon Management | YourShop Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-coupons.css">
+</head>
+
+<body>
+
+    <!-- ADMIN SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <div class="admin-logo">
+            <h2>Your<span>Shop</span></h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="./admin.html">📊 Dashboard</a>
+            <a href="./admin-products.html">📦 Products</a>
+            <a href="./admin-orders.html">🛒 Orders</a>
+            <a href="./admin-customers.html">👥 Customers</a>
+            <a href="./admin-analytics.html">📈 Analytics</a>
+            <a href="./admin-coupons.html" class="active">🎟️ Coupons</a>
+            <a href="./admin-settings.html">⚙️ Settings</a>
+        </nav>
+
+        <a href="./index.html" class="back-to-store">
+            ← Back to Store
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <header class="coupon-page-header">
+            <div>
+                <span class="coupon-eyebrow">YOURSHOP ADMINISTRATION</span>
+                <h1>Coupon Management</h1>
+                <p>Create and manage your store discount codes.</p>
+            </div>
+        </header>
+
+
+        <!-- STATISTICS -->
+        <section class="coupon-stats">
+
+            <div class="coupon-stat-card">
+                <span>Total Coupons</span>
+                <strong id="coupon-total">0</strong>
+            </div>
+
+            <div class="coupon-stat-card">
+                <span>Active Coupons</span>
+                <strong id="coupon-active">0</strong>
+            </div>
+
+            <div class="coupon-stat-card">
+                <span>Inactive Coupons</span>
+                <strong id="coupon-inactive">0</strong>
+            </div>
+
+            <div class="coupon-stat-card">
+                <span>Total Uses</span>
+                <strong id="coupon-uses">0</strong>
+            </div>
+
+        </section>
+
+
+        <!-- CREATE / EDIT COUPON -->
+        <section class="coupon-panel">
+
+            <div class="coupon-panel-heading">
+                <div>
+                    <h2 id="coupon-form-title">Create New Coupon</h2>
+                    <p>Add a discount code for your customers.</p>
+                </div>
+            </div>
+
+
+            <form id="coupon-form">
+
+                <input type="hidden" id="coupon-edit-code">
+
+                <div class="coupon-form-grid">
+
+                    <!-- Coupon Code -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-admin-code">
+                            Coupon Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="coupon-admin-code"
+                            placeholder="Example: SUMMER10"
+                            maxlength="30"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Discount Type -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-type">
+                            Discount Type
+                        </label>
+
+                        <select id="coupon-type" required>
+                            <option value="percentage">Percentage (%)</option>
+                            <option value="fixed">Fixed Amount ($)</option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- Discount Value -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-value">
+                            Discount Value
+                        </label>
+
+                        <input
+                            type="number"
+                            id="coupon-value"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="Example: 10"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Minimum Order -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-min-order">
+                            Minimum Order Amount ($)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="coupon-min-order"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Maximum Discount -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-max-discount">
+                            Maximum Discount ($)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="coupon-max-discount"
+                            min="0"
+                            step="0.01"
+                            placeholder="Leave empty for no limit"
+                        >
+
+                    </div>
+
+
+                    <!-- Expiry -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-expiry">
+                            Expiry Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="coupon-expiry"
+                        >
+
+                    </div>
+
+
+                    <!-- Usage Limit -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-usage-limit">
+                            Usage Limit
+                        </label>
+
+                        <input
+                            type="number"
+                            id="coupon-usage-limit"
+                            min="0"
+                            step="1"
+                            value="100"
+                            required
+                        >
+
+                        <small>Enter 0 for unlimited usage.</small>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="coupon-form-group">
+
+                        <label for="coupon-status">
+                            Coupon Status
+                        </label>
+
+                        <select id="coupon-status">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="coupon-form-actions">
+
+                    <button type="submit" id="coupon-save-button">
+                        Create Coupon
+                    </button>
+
+                    <button
+                        type="button"
+                        id="coupon-cancel-edit"
+                        class="coupon-cancel-button"
+                        hidden
+                    >
+                        Cancel Edit
+                    </button>
+
+                </div>
+
+                <p id="coupon-form-message"></p>
+
+            </form>
+
+        </section>
+
+
+        <!-- COUPON LIST -->
+        <section class="coupon-panel coupon-list-panel">
+
+            <div class="coupon-list-heading">
+
+                <div>
+                    <h2>All Coupons</h2>
+                    <p>Manage your existing discount codes.</p>
+                </div>
+
+                <input
+                    type="search"
+                    id="coupon-search"
+                    placeholder="Search coupon..."
+                >
+
+            </div>
+
+
+            <div class="coupon-table-wrapper">
+
+                <table class="coupon-table">
+
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Discount</th>
+                            <th>Minimum Order</th>
+                            <th>Expiry</th>
+                            <th>Usage</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="coupon-table-body">
+                        <tr>
+                            <td colspan="7">Loading coupons...</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <p id="coupon-results-count"></p>
+
+        </section>
+
+    </main>
+
+
+    <script src="./js/admin-coupons.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+
+/* ==========================================
+   YOURSHOP ADMIN COUPON MANAGEMENT
+========================================== */
+
+.admin-main {
+    margin-left: 260px;
+    padding: 35px;
+    min-height: 100vh;
+    background: #f5f7fc;
+    font-family: "Poppins", sans-serif;
+    color: #172554;
+}
+
+.coupon-page-header {
+    margin-bottom: 28px;
+}
+
+.coupon-eyebrow {
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.coupon-page-header h1 {
+    margin-top: 7px;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+.coupon-page-header p,
+.coupon-panel-heading p,
+.coupon-list-heading p {
+    margin-top: 5px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   STATISTICS
+========================================== */
+
+.coupon-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.coupon-stat-card {
+    background: #fff;
+    padding: 22px;
+    border: 1px solid #e5eaf3;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+}
+
+.coupon-stat-card span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.coupon-stat-card strong {
+    display: block;
+    margin-top: 8px;
+    color: #102a56;
+    font-size: 27px;
+}
+
+
+/* ==========================================
+   PANELS
+========================================== */
+
+.coupon-panel {
+    background: #fff;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid #e5eaf3;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+}
+
+.coupon-panel-heading,
+.coupon-list-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.coupon-panel h2,
+.coupon-list-heading h2 {
+    font-size: 19px;
+    color: #102a56;
+}
+
+
+/* ==========================================
+   FORM
+========================================== */
+
+.coupon-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.coupon-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.coupon-form-group label {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.coupon-form-group input,
+.coupon-form-group select,
+#coupon-search {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #dbe2ed;
+    border-radius: 7px;
+    outline: none;
+    background: #fff;
+    color: #172554;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.coupon-form-group input:focus,
+.coupon-form-group select:focus,
+#coupon-search:focus {
+    border-color: #2563eb;
+}
+
+.coupon-form-group small {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.coupon-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+#coupon-save-button,
+.coupon-cancel-button {
+    padding: 11px 20px;
+    border: none;
+    border-radius: 7px;
+    background: #102a56;
+    color: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#coupon-save-button:hover {
+    background: #2563eb;
+}
+
+.coupon-cancel-button {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+#coupon-form-message {
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   COUPON TABLE
+========================================== */
+
+.coupon-list-heading {
+    flex-wrap: wrap;
+}
+
+#coupon-search {
+    max-width: 250px;
+}
+
+.coupon-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.coupon-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+}
+
+.coupon-table th {
+    padding: 14px 12px;
+    background: #f5f8ff;
+    color: #475569;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.coupon-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #edf0f5;
+    color: #475569;
+    font-size: 12px;
+}
+
+.coupon-table tbody tr:hover {
+    background: #fafcff;
+}
+
+.coupon-code-label {
+    color: #102a56;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.coupon-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.coupon-status.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.coupon-status.inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.coupon-status.expired {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.coupon-action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.coupon-action-buttons button {
+    padding: 6px 9px;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.coupon-edit-button {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.coupon-toggle-button {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.coupon-delete-button {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+#coupon-results-count {
+    margin-top: 15px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1100px) {
+    .coupon-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-main {
+        margin-left: 0;
+        padding: 22px 15px;
+    }
+
+    .coupon-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .coupon-list-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #coupon-search {
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .coupon-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .coupon-panel {
+        padding: 17px;
+    }
+
+    .coupon-form-actions {
+        flex-direction: column;
+    }
+
+    #coupon-save-button,
+    .coupon-cancel-button {
+        width: 100%;
+    }
+}

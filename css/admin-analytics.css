@@ -1,0 +1,279 @@
+
+/* ==========================================
+   YOURSHOP - ADMIN ANALYTICS
+========================================== */
+
+.analytics-management {
+    width: 100%;
+}
+
+/* PAGE HEADING */
+
+.analytics-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.analytics-heading h2 {
+    color: #102a56;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.analytics-heading p {
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.analytics-heading button {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 11px 17px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.analytics-heading button:hover {
+    background: #1d4ed8;
+}
+
+/* STATISTICS */
+
+.analytics-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.analytics-card {
+    background: #fff;
+    padding: 23px;
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(16, 42, 86, 0.04);
+}
+
+.analytics-card span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.analytics-card h3 {
+    color: #102a56;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 12px 0 7px;
+    overflow-wrap: anywhere;
+}
+
+.analytics-card p {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+/* ANALYTICS PANELS */
+
+.analytics-panel {
+    background: #fff;
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(16, 42, 86, 0.04);
+    min-width: 0;
+}
+
+.analytics-panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.analytics-panel-heading h3 {
+    color: #102a56;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.analytics-panel-heading p {
+    color: #94a3b8;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+/* SALES CHART */
+
+.sales-chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+}
+
+/* BOTTOM GRID */
+
+.analytics-bottom-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+/* ANALYTICS TABLE */
+
+.analytics-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.analytics-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 350px;
+}
+
+.analytics-table th {
+    text-align: left;
+    padding: 14px 10px;
+    background: #f8faff;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.analytics-table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid #edf0f5;
+    color: #475569;
+    font-size: 12px;
+}
+
+.analytics-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.analytics-table tbody td[colspan] {
+    text-align: center;
+    padding: 25px;
+    color: #94a3b8;
+}
+
+/* ORDER STATUS */
+
+.order-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.order-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-status-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.order-status-name {
+    color: #475569;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.order-status-count {
+    color: #102a56;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* STATUS COLORS */
+
+.status-pending {
+    background: #f59e0b;
+}
+
+.status-processing {
+    background: #3b82f6;
+}
+
+.status-shipped {
+    background: #8b5cf6;
+}
+
+.status-delivered {
+    background: #16a34a;
+}
+
+.status-completed {
+    background: #16a34a;
+}
+
+.status-cancelled {
+    background: #ef4444;
+}
+
+/* EMPTY STATE */
+
+.analytics-empty {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    padding: 25px 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+    .analytics-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .analytics-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .analytics-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .analytics-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-card {
+        padding: 18px;
+    }
+
+    .analytics-panel {
+        padding: 15px;
+    }
+
+    .sales-chart-container {
+        height: 250px;
+    }
+}

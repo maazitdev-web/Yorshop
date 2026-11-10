@@ -5,7 +5,10 @@
 
 const products = [
 
+    // ========================================
     // 1. SMARTPHONES
+    // ========================================
+
     {
         id: 1,
         name: "iPhone 15 Pro",
@@ -22,6 +25,7 @@ const products = [
             "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600"
         ]
     },
+
     {
         id: 2,
         name: "Samsung Galaxy S24",
@@ -39,7 +43,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 2. HEADPHONES
+    // ========================================
+
     {
         id: 3,
         name: "Sony Wireless Headphones",
@@ -56,6 +63,7 @@ const products = [
             "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600"
         ]
     },
+
     {
         id: 4,
         name: "Premium Bluetooth Headphones",
@@ -73,7 +81,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 3. LAPTOPS
+    // ========================================
+
     {
         id: 5,
         name: "Apple MacBook",
@@ -90,6 +101,7 @@ const products = [
             "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600"
         ]
     },
+
     {
         id: 6,
         name: "Modern Laptop",
@@ -107,7 +119,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 4. SMART WATCHES
+    // ========================================
+
     {
         id: 7,
         name: "Apple Smart Watch",
@@ -124,6 +139,7 @@ const products = [
             "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=600"
         ]
     },
+
     {
         id: 8,
         name: "Fitness Smart Watch",
@@ -141,7 +157,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 5. ACCESSORIES
+    // ========================================
+
     {
         id: 9,
         name: "Wireless Computer Mouse",
@@ -153,11 +172,12 @@ const products = [
         image: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600",
         images: [
             "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600",
-            "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=600",
+            "https://images.unsplash.com/photo-1615663245857-acd977736f90?w=600",
             "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600",
             "https://images.unsplash.com/photo-1613141412501-9012977f1969?w=600"
         ]
     },
+
     {
         id: 10,
         name: "Modern Keyboard",
@@ -175,7 +195,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 6. GAMING
+    // ========================================
+
     {
         id: 11,
         name: "Gaming Controller",
@@ -192,6 +215,7 @@ const products = [
             "https://images.unsplash.com/photo-1603481546238-487240415921?w=600"
         ]
     },
+
     {
         id: 12,
         name: "Gaming Headset",
@@ -209,7 +233,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 7. CAMERAS
+    // ========================================
+
     {
         id: 13,
         name: "Professional Digital Camera",
@@ -226,6 +253,7 @@ const products = [
             "https://images.unsplash.com/photo-1519183071298-a2962be90b8e?w=600"
         ]
     },
+
     {
         id: 14,
         name: "Compact Camera",
@@ -243,7 +271,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 8. HOME APPLIANCES
+    // ========================================
+
     {
         id: 15,
         name: "Modern Coffee Maker",
@@ -260,6 +291,7 @@ const products = [
             "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600"
         ]
     },
+
     {
         id: 16,
         name: "Kitchen Appliance",
@@ -277,7 +309,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 9. MEN'S FASHION
+    // ========================================
+
     {
         id: 17,
         name: "Men's Casual Jacket",
@@ -294,6 +329,7 @@ const products = [
             "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=600"
         ]
     },
+
     {
         id: 18,
         name: "Men's Casual Shoes",
@@ -311,7 +347,10 @@ const products = [
         ]
     },
 
+    // ========================================
     // 10. WOMEN'S FASHION
+    // ========================================
+
     {
         id: 19,
         name: "Women's Fashion Outfit",
@@ -328,6 +367,7 @@ const products = [
             "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?w=600"
         ]
     },
+
     {
         id: 20,
         name: "Women's Handbag",
@@ -346,9 +386,6 @@ const products = [
     }
 
 ];
-
-// Make products available to main.js
-console.log("YourShop products loaded:", products.length);
 
 
 // ============================================
@@ -378,7 +415,100 @@ const demoSales = {
     20: 50
 };
 
-// Attach demo sales figures to products
+
+// ============================================
+// LOAD ADMIN PRODUCTS FROM LOCAL STORAGE
+// ============================================
+
+let adminProducts = [];
+
+try {
+
+    adminProducts = JSON.parse(
+        localStorage.getItem("yourshop-admin-products") || "[]"
+    );
+
+    if (!Array.isArray(adminProducts)) {
+        adminProducts = [];
+    }
+
+} catch (error) {
+
+    console.error("Could not load admin products:", error);
+
+    adminProducts = [];
+
+}
+
+
+// ============================================
+// MERGE ORIGINAL PRODUCTS WITH ADMIN PRODUCTS
+// ============================================
+
+const productMap = new Map();
+
+// Add original products
 products.forEach(product => {
-    product.soldCount = demoSales[product.id] || 0;
+
+    productMap.set(
+        String(product.id),
+        product
+    );
+
 });
+
+// Add admin products
+// Matching IDs update original products.
+// New IDs are added to the list.
+
+adminProducts.forEach(product => {
+
+    if (
+        product &&
+        product.id !== undefined &&
+        product.id !== null
+    ) {
+
+        productMap.set(
+            String(product.id),
+            product
+        );
+
+    }
+
+});
+
+
+// ============================================
+// UPDATE MAIN PRODUCT ARRAY
+// ============================================
+
+products.splice(
+    0,
+    products.length,
+    ...productMap.values()
+);
+
+
+// ============================================
+// ADD SALES COUNT TO ALL PRODUCTS
+// ============================================
+
+products.forEach(product => {
+
+    product.soldCount = demoSales[product.id] || 0;
+
+});
+
+
+// ============================================
+// FINAL DATABASE STATUS
+// ============================================
+
+console.log("YourShop products loaded:", products.length);
+
+console.log("Original products:", 20);
+
+console.log("Admin products loaded:", adminProducts.length);
+
+console.log("Total products available:", products.length);

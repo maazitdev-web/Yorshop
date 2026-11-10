@@ -32,6 +32,23 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/[^a-z0-9]/g, "");
     }
 
+    function getCart() {
+        try {
+            const storedCart = localStorage.getItem("yourshop-cart");
+            const parsedCart = storedCart ? JSON.parse(storedCart) : [];
+
+            return Array.isArray(parsedCart) ? parsedCart : [];
+        } catch (error) {
+            console.warn("YourShop: Invalid cart data detected. Resetting cart.", error);
+            localStorage.setItem("yourshop-cart", JSON.stringify([]));
+            return [];
+        }
+    }
+
+    function saveCart(cart) {
+        localStorage.setItem("yourshop-cart", JSON.stringify(cart));
+    }
+
     // ========================================
     // 3. GET CATEGORY FROM URL
     // ========================================
@@ -302,23 +319,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!cartCount) return;
 
-        let cart = [];
-
-        try {
-
-            cart = JSON.parse(
-                localStorage.getItem("yourshop-cart") || "[]"
-            );
-
-        } catch (error) {
-
-            console.error("Could not read cart data:", error);
-        }
+        const cart = getCart();
 
         const total = cart.reduce(function (sum, item) {
-
             return sum + Number(item.quantity || 0);
-
         }, 0);
 
         cartCount.textContent = total;
@@ -344,18 +348,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!selectedProduct) return;
 
-            let cart = [];
-
-            try {
-
-                cart = JSON.parse(
-                    localStorage.getItem("yourshop-cart") || "[]"
-                );
-
-            } catch (error) {
-
-                cart = [];
-            }
+            const cart = getCart();
 
             const existingProduct = cart.find(function (item) {
                 return Number(item.id) === productId;
@@ -384,10 +377,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            localStorage.setItem(
-                "yourshop-cart",
-                JSON.stringify(cart)
-            );
+            saveCart(cart);
 
             updateCartCount();
 

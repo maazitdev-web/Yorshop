@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers Management | YourShop Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-customers.css">
+</head>
+<body>
+
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+
+    <div class="admin-logo">
+        <h2>Your<span>Shop</span></h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <nav class="admin-nav">
+        <a href="./admin.html">📊 Dashboard</a>
+        <a href="./admin-products.html">📦 Products</a>
+        <a href="./admin-orders.html">🛒 Orders</a>
+        <a href="./admin-customers.html" class="active">👥 Customers</a>
+        <a href="./admin-analytics.html">📈 Analytics</a>
+        <a href="./admin-settings.html">⚙️ Settings</a>
+    </nav>
+
+    <a href="./index.html" class="back-to-store">
+        ← Back to Store
+    </a>
+
+</aside>
+
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+            <div>
+                <h1>Customers</h1>
+                <p>Manage and view your store customers.</p>
+            </div>
+
+            <div class="admin-profile">
+                <div class="admin-avatar">A</div>
+                <span>Administrator</span>
+            </div>
+        </header>
+
+        <section class="customers-management">
+
+            <div class="customers-heading">
+                <div>
+                    <h2>Customer Management</h2>
+                    <p>View customer information and their order activity.</p>
+                </div>
+            </div>
+
+            <!-- CUSTOMER STATISTICS -->
+            <div class="customers-stats">
+
+                <div class="customer-stat-card">
+                    <span>Total Customers</span>
+                    <h3 id="customer-total-count">0</h3>
+                </div>
+
+                <div class="customer-stat-card">
+                    <span>Total Orders</span>
+                    <h3 id="customer-total-orders">0</h3>
+                </div>
+
+                <div class="customer-stat-card">
+                    <span>Active Customers</span>
+                    <h3 id="customer-active-count">0</h3>
+                </div>
+
+                <div class="customer-stat-card">
+                    <span>Total Revenue</span>
+                    <h3 id="customer-total-revenue">$0.00</h3>
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+            <div class="customers-toolbar">
+                <input
+                    type="search"
+                    id="customer-search"
+                    placeholder="Search by customer name, email or phone..."
+                >
+            </div>
+
+            <!-- CUSTOMERS TABLE -->
+            <div class="customers-table-panel">
+
+                <div class="customers-table-heading">
+                    <h3>All Customers</h3>
+                    <span id="customer-results-count">0 customers</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="customers-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Total Orders</th>
+                                <th>Total Spent</th>
+                                <th>Last Order</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="admin-customers-list">
+                            <tr>
+                                <td colspan="7">Loading customers...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./js/admin-customers.js"></script>
+</body>
+</html>

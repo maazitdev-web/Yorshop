@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Management | YourShop Admin</title>
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-orders.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+<!-- SIDEBAR -->
+
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+
+    <div class="admin-logo">
+        <h2>Your<span>Shop</span></h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <nav class="admin-nav">
+        <a href="./admin.html">📊 Dashboard</a>
+        <a href="./admin-products.html">📦 Products</a>
+        <a href="./admin-orders.html" class="active">🛒 Orders</a>
+        <a href="./admin-customers.html">👥 Customers</a>
+        <a href="./admin-analytics.html">📈 Analytics</a>
+        <a href="./admin-settings.html">⚙️ Settings</a>
+    </nav>
+
+    <a href="./index.html" class="back-to-store">
+        ← Back to Store
+    </a>
+
+</aside>
+
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+
+            <h1>Order Management</h1>
+
+            <div class="admin-profile">
+                <span>Admin</span>
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </header>
+
+        <!-- ORDERS CONTENT -->
+        <section class="orders-management">
+
+            <div class="orders-heading">
+                <h2>All Orders</h2>
+                <p>View and manage your customer orders.</p>
+            </div>
+
+            <!-- STATISTICS -->
+            <div class="order-stats">
+
+                <div class="order-stat-card">
+                    <span>Total Orders</span>
+                    <h3 id="admin-total-orders">0</h3>
+                </div>
+
+                <div class="order-stat-card">
+                    <span>Pending</span>
+                    <h3 id="admin-pending-orders">0</h3>
+                </div>
+
+                <div class="order-stat-card">
+                    <span>Completed</span>
+                    <h3 id="admin-completed-orders">0</h3>
+                </div>
+
+                <div class="order-stat-card">
+                    <span>Cancelled</span>
+                    <h3 id="admin-cancelled-orders">0</h3>
+                </div>
+
+            </div>
+
+            <!-- SEARCH AND FILTER -->
+            <div class="orders-toolbar">
+
+                <input
+                    type="search"
+                    id="order-search"
+                    placeholder="Search order or customer..."
+                >
+
+                <select id="order-status-filter">
+                    <option value="all">All Orders</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+
+            </div>
+
+            <!-- ORDERS TABLE -->
+            <div class="admin-panel">
+
+                <div class="panel-header">
+                    <h2>Recent Orders</h2>
+                </div>
+
+                <div class="admin-table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="admin-orders-list">
+
+                            <tr>
+                                <td colspan="6" class="no-admin-orders">
+                                    Loading orders...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./js/admin-orders.js"></script>
+
+</body>
+</html>

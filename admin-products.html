@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YourShop | Product Management</title>
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-products.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <div class="admin-logo">
+            <h2>Your<span>Shop</span></h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="./admin.html">📊 Dashboard</a>
+            <a href="./admin-products.html" class="active">📦 Products</a>
+            <a href="./admin-orders.html">🛒 Orders</a>
+            <a href="./admin-customers.html">👥 Customers</a>
+            <a href="./admin-analytics.html">📈 Analytics</a>
+            <a href="#settings">⚙️ Settings</a>
+        </nav>
+
+        <a href="./index.html" class="back-to-store">
+            ← Back to Store
+        </a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+
+            <div>
+                <h1>Product Management</h1>
+                <p>Manage your YourShop products</p>
+            </div>
+
+            <div class="admin-profile">
+                <span>Administrator</span>
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </header>
+
+        <!-- PRODUCT MANAGEMENT -->
+        <section class="product-management">
+
+            <!-- PAGE HEADING -->
+            <div class="product-page-heading">
+
+                <div>
+                    <h2>All Products</h2>
+                    <p>View, add, edit and manage your products.</p>
+                </div>
+
+                <button
+                    type="button"
+                    id="add-product-button"
+                    class="add-product-button">
+                    + Add New Product
+                </button>
+
+            </div>
+
+            <!-- STATISTICS -->
+            <div class="product-stats">
+
+                <div class="product-stat-card">
+                    <span>Total Products</span>
+                    <h3 id="product-total-count">0</h3>
+                </div>
+
+                <div class="product-stat-card">
+                    <span>In Stock</span>
+                    <h3 id="product-in-stock">0</h3>
+                </div>
+
+                <div class="product-stat-card">
+                    <span>Low Stock</span>
+                    <h3 id="product-low-stock">0</h3>
+                </div>
+
+                <div class="product-stat-card">
+                    <span>Out of Stock</span>
+                    <h3 id="product-out-stock">0</h3>
+                </div>
+
+            </div>
+
+            <!-- SEARCH AND FILTER -->
+            <div class="product-toolbar">
+
+                <input
+                    type="search"
+                    id="product-search"
+                    placeholder="Search products by name..."
+                    aria-label="Search products">
+
+                <select
+                    id="product-category-filter"
+                    aria-label="Filter by category">
+
+                    <option value="all">All Categories</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="headphones">Headphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="smart-watches">Smart Watches</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="home-appliances">Home Appliances</option>
+                    <option value="men-fashion">Men's Fashion</option>
+                    <option value="women-fashion">Women's Fashion</option>
+
+                </select>
+
+            </div>
+
+            <!-- PRODUCT TABLE -->
+            <div class="admin-panel">
+
+                <div class="panel-header">
+                    <h2>Product Inventory</h2>
+                    <span id="product-results-count">0 products</span>
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="admin-products-list">
+                            <tr>
+                                <td colspan="6" class="no-admin-products">
+                                    Loading products...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./js/products.js"></script>
+    <script src="./js/admin-products.js"></script>
+
+</body>
+</html>

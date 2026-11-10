@@ -1,0 +1,265 @@
+
+/* ==========================================
+   YOURSHOP - ADMIN SETTINGS
+========================================== */
+
+.settings-management {
+    width: 100%;
+}
+
+/* PAGE HEADING */
+
+.settings-heading {
+    margin-bottom: 25px;
+}
+
+.settings-heading h2 {
+    color: #102a56;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.settings-heading p {
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* SETTINGS PANEL */
+
+.settings-panel {
+    background: #fff;
+    border: 1px solid #e5eaf2;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 12px rgba(16, 42, 86, 0.04);
+}
+
+.settings-panel-heading {
+    margin-bottom: 23px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.settings-panel-heading h3 {
+    color: #102a56;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.settings-panel-heading p {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* FORM GRID */
+
+.settings-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.settings-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.settings-field label {
+    color: #334155;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.settings-field input,
+.settings-field select,
+.settings-field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dce3ed;
+    border-radius: 8px;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    transition: 0.2s;
+}
+
+.settings-field input:focus,
+.settings-field select:focus,
+.settings-field textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.settings-field textarea {
+    resize: vertical;
+}
+
+/* SETTINGS TOGGLE ROW */
+
+.settings-toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.settings-toggle-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-toggle-row h4 {
+    color: #102a56;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-toggle-row p {
+    color: #94a3b8;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+/* CUSTOM SWITCH */
+
+.settings-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 25px;
+    flex-shrink: 0;
+}
+
+.settings-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.settings-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #cbd5e1;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
+.settings-slider::before {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.settings-switch input:checked + .settings-slider {
+    background: #2563eb;
+}
+
+.settings-switch input:checked + .settings-slider::before {
+    transform: translateX(23px);
+}
+
+.settings-switch input:focus-visible + .settings-slider {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 3px;
+}
+
+/* ACTION BUTTONS */
+
+.settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.settings-actions button {
+    padding: 12px 22px;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.settings-reset-btn {
+    background: #fff;
+    color: #475569;
+    border: 1px solid #dce3ed;
+}
+
+.settings-reset-btn:hover {
+    background: #f1f5f9;
+}
+
+.settings-save-btn {
+    background: #2563eb;
+    color: #fff;
+    border: 1px solid #2563eb;
+}
+
+.settings-save-btn:hover {
+    background: #1d4ed8;
+}
+
+/* SUCCESS / ERROR MESSAGE */
+
+#settings-message {
+    margin-top: 15px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+}
+
+#settings-message.success {
+    color: #15803d;
+}
+
+#settings-message.error {
+    color: #dc2626;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+    .settings-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-panel {
+        padding: 18px;
+    }
+
+    .settings-actions {
+        flex-direction: column-reverse;
+    }
+
+    .settings-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 450px) {
+    .settings-toggle-row {
+        align-items: flex-start;
+    }
+}

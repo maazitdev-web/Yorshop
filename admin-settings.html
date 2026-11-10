@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | YourShop Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-settings.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+
+    <div class="admin-logo">
+        <h2>Your<span>Shop</span></h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <nav class="admin-nav">
+        <a href="./admin.html">📊 Dashboard</a>
+        <a href="./admin-products.html">📦 Products</a>
+        <a href="./admin-orders.html">🛒 Orders</a>
+        <a href="./admin-customers.html">👥 Customers</a>
+        <a href="./admin-analytics.html">📈 Analytics</a>
+        <a href="./admin-settings.html" class="active">⚙️ Settings</a>
+    </nav>
+
+    <a href="./index.html" class="back-to-store">
+        ← Back to Store
+    </a>
+
+</aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+
+            <div>
+                <h1>Settings</h1>
+                <p>Manage your store information and preferences.</p>
+            </div>
+
+            <div class="admin-profile">
+                <div class="admin-avatar">A</div>
+                <span>Administrator</span>
+            </div>
+
+        </header>
+
+        <section class="settings-management">
+
+            <div class="settings-heading">
+                <h2>Store Settings</h2>
+                <p>Update your YourShop store configuration.</p>
+            </div>
+
+            <!-- STORE INFORMATION -->
+
+            <form id="store-settings-form">
+
+                <div class="settings-panel">
+
+                    <div class="settings-panel-heading">
+                        <h3>Store Information</h3>
+                        <p>Basic information about your online store.</p>
+                    </div>
+
+                    <div class="settings-form-grid">
+
+                        <div class="settings-field">
+                            <label for="store-name">Store Name</label>
+                            <input
+                                type="text"
+                                id="store-name"
+                                placeholder="YourShop"
+                                required
+                            >
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="store-email">Store Email</label>
+                            <input
+                                type="email"
+                                id="store-email"
+                                placeholder="support@yourshop.com"
+                            >
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="store-phone">Phone Number</label>
+                            <input
+                                type="tel"
+                                id="store-phone"
+                                placeholder="+1 234 567 890"
+                            >
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="store-currency">Currency</label>
+                            <select id="store-currency">
+                                <option value="USD">USD ($)</option>
+                                <option value="PKR">PKR (Rs)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="EUR">EUR (€)</option>
+                            </select>
+                        </div>
+
+                        <div class="settings-field full-width">
+                            <label for="store-address">Store Address</label>
+                            <textarea
+                                id="store-address"
+                                rows="3"
+                                placeholder="Enter your store address"
+                            ></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ADMIN PROFILE -->
+
+                <div class="settings-panel">
+
+                    <div class="settings-panel-heading">
+                        <h3>Admin Profile</h3>
+                        <p>Administrator contact information.</p>
+                    </div>
+
+                    <div class="settings-form-grid">
+
+                        <div class="settings-field">
+                            <label for="admin-name">Admin Name</label>
+                            <input
+                                type="text"
+                                id="admin-name"
+                                placeholder="Administrator"
+                            >
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="admin-email">Admin Email</label>
+                            <input
+                                type="email"
+                                id="admin-email"
+                                placeholder="admin@yourshop.com"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- STORE AVAILABILITY -->
+
+                <div class="settings-panel">
+
+                    <div class="settings-panel-heading">
+                        <h3>Store Preferences</h3>
+                        <p>Control your store availability.</p>
+                    </div>
+
+                    <div class="settings-toggle-row">
+                        <div>
+                            <h4>Store Availability</h4>
+                            <p>Allow customers to access your store.</p>
+                        </div>
+
+                        <label class="settings-switch">
+                            <input
+                                type="checkbox"
+                                id="store-availability"
+                                checked
+                            >
+                            <span class="settings-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-toggle-row">
+                        <div>
+                            <h4>Newsletter Subscription</h4>
+                            <p>Allow visitors to subscribe to your newsletter.</p>
+                        </div>
+
+                        <label class="settings-switch">
+                            <input
+                                type="checkbox"
+                                id="newsletter-enabled"
+                                checked
+                            >
+                            <span class="settings-slider"></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- SAVE BUTTON -->
+
+                <div class="settings-actions">
+                    <button type="reset" class="settings-reset-btn">
+                        Reset Form
+                    </button>
+
+                    <button type="submit" class="settings-save-btn">
+                        Save Settings
+                    </button>
+                </div>
+
+                <p id="settings-message" aria-live="polite"></p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+<script src="./js/products.js"></script>
+<script src="./js/main.js"></script>
+<script src="./js/storefront-settings.js"></script>
+
+</body>
+</html>

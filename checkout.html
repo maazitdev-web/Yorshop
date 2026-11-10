@@ -3,7 +3,6 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -19,7 +18,7 @@
     >
 
     <!-- Main CSS -->
-<link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
 
 </head>
 
@@ -30,20 +29,16 @@
 
         <div class="header-main">
 
-            <a href="index.html" class="logo">
-
+            <a href="./index.html" class="logo">
                 <span class="logo-text">
                     Your<span>Shop</span>
                 </span>
-
             </a>
 
             <div class="header-actions">
-
-                <a href="cart.html" class="header-action">
+                <a href="./cart.html" class="header-action">
                     ← Back to Cart
                 </a>
-
             </div>
 
         </div>
@@ -57,9 +52,7 @@
         <!-- PAGE HEADING -->
         <div class="checkout-heading">
 
-            <span class="section-label">
-                YOURSHOP
-            </span>
+            <span class="section-label">YOURSHOP</span>
 
             <h1>Checkout</h1>
 
@@ -200,7 +193,6 @@
                     <div class="payment-option">
 
                         <label>
-
                             <input
                                 type="radio"
                                 name="paymentMethod"
@@ -209,7 +201,6 @@
                             >
 
                             Cash on Delivery
-
                         </label>
 
                     </div>
@@ -218,7 +209,6 @@
                     <div class="payment-option">
 
                         <label>
-
                             <input
                                 type="radio"
                                 name="paymentMethod"
@@ -226,7 +216,6 @@
                             >
 
                             Online Payment (Coming Soon)
-
                         </label>
 
                     </div>
@@ -252,17 +241,52 @@
                 <h2>Your Order</h2>
 
 
-                <!-- Products Will Appear Here -->
+                <!-- Products -->
                 <div id="checkout-items">
+                    <!-- JavaScript displays products here -->
+                </div>
 
-                    <!-- JavaScript will display products here -->
+
+                <!-- COUPON SECTION -->
+                <div class="checkout-coupon">
+
+                    <h3>Have a Discount Code?</h3>
+
+                    <div class="coupon-input-row">
+
+                        <input
+                            type="text"
+                            id="coupon-code"
+                            placeholder="Enter coupon code"
+                            autocomplete="off"
+                        >
+
+                        <button
+                            type="button"
+                            id="apply-coupon"
+                        >
+                            Apply
+                        </button>
+
+                    </div>
+
+                    <p id="coupon-message"></p>
+
+                    <button
+                        type="button"
+                        id="remove-coupon"
+                        hidden
+                    >
+                        Remove Coupon
+                    </button>
 
                 </div>
 
 
-                <!-- Price Details -->
+                <!-- PRICE DETAILS -->
                 <div class="checkout-summary-details">
 
+                    <!-- Subtotal -->
                     <div class="checkout-summary-row">
 
                         <span>Subtotal</span>
@@ -274,6 +298,19 @@
                     </div>
 
 
+                    <!-- Discount -->
+                    <div class="checkout-summary-row">
+
+                        <span>Discount</span>
+
+                        <span id="checkout-discount">
+                            -$0.00
+                        </span>
+
+                    </div>
+
+
+                    <!-- Shipping -->
                     <div class="checkout-summary-row">
 
                         <span>Shipping</span>
@@ -285,6 +322,7 @@
                     </div>
 
 
+                    <!-- Total -->
                     <div class="checkout-total-row">
 
                         <strong>Total</strong>
@@ -319,10 +357,9 @@
     </footer>
 
 
-    <!-- Product Data -->
+    <!-- JAVASCRIPT -->
     <script src="./js/products.js"></script>
-
-    <!-- Checkout JavaScript -->
+    <script src="./js/currency.js"></script>
     <script src="./js/checkout.js"></script>
 
 </body>

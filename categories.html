@@ -1,0 +1,142 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Categories | YourShop</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="announcement-bar">
+        <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
+    </div>
+
+    <div class="header-main">
+        <a href="./index.html" class="logo">
+            <span class="logo-text">Your<span>Shop</span></span>
+        </a>
+
+        <div class="header-actions">
+            <a href="./cart.html" class="header-action cart-action">
+                <span class="action-icon">🛒</span>
+                <span>Cart</span>
+                <span class="cart-count" id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="main-navigation">
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./categories.html">All Categories</a></li>
+            <li><a href="./index.html#best-sellers">Best Sellers</a></li>
+            <li><a href="./index.html#new-arrivals">New Arrivals</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./orders.html">My Orders</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="all-categories-page">
+
+    <section class="categories-page-heading">
+        <span>EXPLORE YOURSHOP</span>
+        <h1>All Categories</h1>
+        <p>Discover products from all your favorite shopping categories.</p>
+    </section>
+
+    <section class="all-categories-grid">
+
+        <a href="./category.html?category=smartphones" class="category-card">
+            <div class="category-icon">📱</div>
+            <h3>Smartphones</h3>
+            <p>Explore smartphones</p>
+        </a>
+
+        <a href="./category.html?category=headphones" class="category-card">
+            <div class="category-icon">🎧</div>
+            <h3>Headphones</h3>
+            <p>Explore headphones</p>
+        </a>
+
+        <a href="./category.html?category=laptops" class="category-card">
+            <div class="category-icon">💻</div>
+            <h3>Laptops</h3>
+            <p>Explore laptops</p>
+        </a>
+
+        <a href="./category.html?category=smart-watches" class="category-card">
+            <div class="category-icon">⌚</div>
+            <h3>Smart Watches</h3>
+            <p>Explore smart watches</p>
+        </a>
+
+        <a href="./category.html?category=accessories" class="category-card">
+            <div class="category-icon">🎒</div>
+            <h3>Accessories</h3>
+            <p>Explore accessories</p>
+        </a>
+
+        <a href="./category.html?category=gaming" class="category-card">
+            <div class="category-icon">🎮</div>
+            <h3>Gaming</h3>
+            <p>Explore gaming products</p>
+        </a>
+
+        <a href="./category.html?category=cameras" class="category-card">
+            <div class="category-icon">📷</div>
+            <h3>Cameras</h3>
+            <p>Explore cameras</p>
+        </a>
+
+        <a href="./category.html?category=home-appliances" class="category-card">
+            <div class="category-icon">🏠</div>
+            <h3>Home Appliances</h3>
+            <p>Explore home appliances</p>
+        </a>
+
+        <a href="./category.html?category=mens-fashion" class="category-card">
+            <div class="category-icon">👔</div>
+            <h3>Men's Fashion</h3>
+            <p>Explore men's fashion</p>
+        </a>
+
+        <a href="./category.html?category=womens-fashion" class="category-card">
+            <div class="category-icon">👗</div>
+            <h3>Women's Fashion</h3>
+            <p>Explore women's fashion</p>
+        </a>
+
+    </section>
+
+</main>
+
+<footer id="footer" class="site-footer">
+    <div class="contact-footer-bottom">
+        <p>&copy; 2026 YourShop. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    const cart = JSON.parse(localStorage.getItem("yourshop-cart")) || [];
+    const cartCount = document.getElementById("cart-count");
+
+    if (cartCount) {
+        cartCount.textContent = cart.reduce(
+            (total, item) => total + Number(item.quantity || 0),
+            0
+        );
+    }
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,121 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist | YourShop</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="announcement-bar">
+        <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
+    </div>
+
+    <div class="header-main">
+        <a href="./index.html" class="logo">
+            <span class="logo-icon">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M8 15h32l-3 25H11L8 15Z"
+                          fill="none" stroke="currentColor"
+                          stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M17 17V12a7 7 0 0 1 14 0v5"
+                          fill="none" stroke="currentColor"
+                          stroke-width="3" stroke-linecap="round"/>
+                    <path d="m19 28 4 4 7-8"
+                          fill="none" stroke="currentColor"
+                          stroke-width="3" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <span class="logo-text">Your<span>Shop</span></span>
+        </a>
+
+        <div class="header-actions">
+            <a href="./wishlist.html" class="header-action wishlist-action">
+                <span class="action-icon">♡</span>
+                <span>Wishlist</span>
+                <span class="wishlist-count" id="wishlist-count">0</span>
+            </a>
+
+            <a href="./cart.html" class="header-action cart-action">
+                <span class="action-icon">🛒</span>
+                <span>Cart</span>
+                <span class="cart-count" id="cart-count">0</span>
+            </a>
+        </div>
+    </div>
+
+    <nav class="main-navigation" aria-label="Main navigation">
+        <ul class="nav-links">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./categories.html">All Categories</a></li>
+            <li><a href="./index.html#best-sellers">Best Sellers</a></li>
+            <li><a href="./index.html#new-arrivals">New Arrivals</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="./orders.html">My Orders</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="wishlist-page">
+    <div class="wishlist-heading">
+        <span class="section-label">YOUR FAVORITES</span>
+        <h1>My Wishlist</h1>
+        <p>Keep all your favorite products in one place.</p>
+    </div>
+
+    <div id="wishlist-grid" class="wishlist-grid"></div>
+
+    <div id="wishlist-empty" class="wishlist-empty" hidden>
+        <div class="empty-heart">♡</div>
+        <h2>Your wishlist is empty</h2>
+        <p>You haven't saved any products yet.</p>
+        <a href="./index.html#products-section" class="wishlist-shop-button">
+            Explore Products
+        </a>
+    </div>
+</main>
+
+<footer id="footer" class="site-footer">
+    <div class="contact-footer-content">
+        <div>
+            <h3>YourShop</h3>
+            <p>Your destination for quality products and great deals.</p>
+        </div>
+
+        <div>
+            <h3>Quick Links</h3>
+            <a href="./index.html">Home</a>
+            <a href="./about.html">About Us</a>
+            <a href="./contact.html">Contact Us</a>
+        </div>
+
+        <div>
+            <h3>Customer Service</h3>
+            <a href="./faq.html">FAQs</a>
+            <a href="./shipping.html">Shipping</a>
+            <a href="./returns.html">Returns</a>
+            <a href="./privacy.html">Privacy Policy</a>
+            <a href="./terms.html">Terms & Conditions</a>
+        </div>
+    </div>
+
+    <div class="contact-footer-bottom">
+        <p>&copy; 2026 YourShop. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="./js/products.js"></script>
+<script src="./js/wishlist.js"></script>
+
+</body>
+</html>
+```

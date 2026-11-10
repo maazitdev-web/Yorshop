@@ -22,13 +22,15 @@
 
 <header class="site-header">
 
-    <!-- Top Announcement Bar -->
-    <div class="announcement-bar">
-        <p>Welcome to YourShop! Discover amazing deals every day.</p>
-    </div>
-
+ <div class="announcement-bar">
+    <p>
+        Free Shipping | Exclusive Discounts | Special Offers Every Day
+    </p>
+</div>
     <!-- Main Header -->
     <div class="header-main">
+
+   
 
         <!-- Custom Logo -->
         <a href="index.html" class="logo">
@@ -56,9 +58,9 @@
                 </svg>
             </span>
 
-            <span class="logo-text">
-                Your<span>Shop</span>
-            </span>
+<span class="logo-text" id="store-logo-text">
+    Your<span>Shop</span>
+</span>
 
         </a>
 
@@ -99,66 +101,79 @@
         </form>
 
         <!-- Header Actions -->
-        <div class="header-actions">
+<div class="header-actions">
 
-            <!-- Account -->
-            <span class="header-action" aria-disabled="true">
-                <span class="action-icon">♙</span>
-                <span>Account (coming soon)</span>
-            </span>
+    <!-- Account -->
+    <span class="header-action" aria-disabled="true">
+        <span class="action-icon">♙</span>
+        <span>Account</span>
+    </span>
 
-            <!-- Shopping Cart -->
-            <a href="cart.html" class="header-action cart-action">
-                <span class="action-icon">🛒</span>
-                <span>Cart</span>
-                <span class="cart-count" id="cart-count">0</span>
-            </a>
+<!-- Wishlist -->
+<a href="./wishlist.html" class="header-action wishlist-action">
+    <span class="action-icon">♡</span>
+    <span>Wishlist</span>
+    <span class="wishlist-count" id="wishlist-count">0</span>
+</a>
 
-        </div>
+    <!-- Shopping Cart -->
+    <a href="cart.html" class="header-action cart-action">
+        <span class="action-icon">🛒</span>
+        <span>Cart</span>
+        <span class="cart-count" id="cart-count">0</span>
+    </a>
+         <a href="./compare.html" class="compare-header-link">
+    ⚖ Compare
+    <span id="compare-count">0</span>
+</a>
 
-    </div>
-
-    <!-- Navigation Bar -->
-    <nav class="main-navigation" aria-label="Main navigation">
-
-        <button
-            type="button"
-            class="menu-toggle"
-            id="menu-toggle"
-            aria-label="Open navigation menu"
-            aria-expanded="false"
-        >
-            ☰
-        </button>
-
-        <ul class="nav-links" id="nav-links">
+</div>
 
 
+<!-- MAIN NAVIGATION -->
+<nav class="main-navigation" aria-label="Main navigation">
 
-            <li>
-                <a href="index.html">Home</a>
-            </li>
+    <!-- Mobile Menu Button -->
+    <button
+        type="button"
+        class="menu-toggle"
+        id="menu-toggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
 
-            <li>
-                <a href="#categories-sidebar">All Categories</a>
-            </li>
+    <!-- Navigation Links -->
+    <ul class="nav-links" id="nav-links">
 
-            <li>
-                <a href="#products-section">Products</a>
-            </li>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-            <li>
-                <a href="#footer">Contact</a>
-            </li>
-
-
-                        <li>
-    <a href="./orders.html">My Orders</a>
+        <li>
+    <a href="./categories.html">All Categories</a>
 </li>
 
-        </ul>
+        <li>
+            <a href="#best-sellers">Best Sellers</a>
+        </li>
 
-    </nav>
+        <li>
+            <a href="#new-arrivals">New Arrivals</a>
+        </li>
+
+        <li>
+            <a href="#footer">Contact</a>
+        </li>
+
+        <li>
+            <a href="./orders.html">My Orders</a>
+        </li>
+
+    </ul>
+
+</nav>
 
 </header>
 
@@ -263,6 +278,45 @@
 </section>
 
 
+<!-- ========================================
+     RECENTLY VIEWED PRODUCTS
+======================================== -->
+
+<section class="recently-viewed-section" id="recently-viewed-section">
+
+    <div class="section-heading">
+        <span class="section-label">YOUR SHOPPING HISTORY</span>
+        <h2>Recently Viewed Products</h2>
+        <p>Continue exploring products you viewed recently.</p>
+    </div>
+
+    <div class="recently-viewed-grid" id="recently-viewed-grid">
+        <!-- Recently viewed products load here -->
+    </div>
+
+</section>
+
+<!-- ========================================
+     RECOMMENDED PRODUCTS
+======================================== -->
+
+<section class="recommended-section" id="recommended-section">
+
+    <div class="section-heading">
+        <span class="section-label">PICKED FOR YOU</span>
+        <h2>Recommended For You</h2>
+        <p>Discover products selected based on your interests.</p>
+    </div>
+
+    <div class="recommended-grid" id="recommended-grid">
+        <!-- Recommended products load here -->
+    </div>
+
+</section>
+
+
+
+
         <!-- Shopping Area -->
         <section id="shopping">
 
@@ -272,7 +326,10 @@
 <aside class="categories-sidebar" id="categories-sidebar">
 
     <div class="sidebar-heading">
-        <h2>Shop By Category</h2>
+
+
+<h2 id="footer-store-name">YourShop<span>.</span></h2>
+
     </div>
 
     <ul class="category-list">
@@ -379,23 +436,56 @@
     </div>
 
     <!-- Product Sorting -->
-    <div class="products-toolbar">
+ <div class="products-toolbar">
 
-        <p>Our Products</p>
+    <p>Our Products</p>
 
-        <div class="sort-container">
-            <label for="sort-products">Sort By:</label>
+    <!-- Price Filter -->
+    <div class="price-filter">
 
-            <select id="sort-products">
-                <option value="featured">Featured</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-            </select>
-        </div>
+        <label for="min-price">Min Price ($)</label>
+        <input
+            type="number"
+            id="min-price"
+            placeholder="Min"
+            min="0"
+        >
+
+        <label for="max-price">Max Price ($)</label>
+        <input
+            type="number"
+            id="max-price"
+            placeholder="Max"
+            min="0"
+        >
+
+        <button type="button" id="apply-price-filter">
+            Apply
+        </button>
+
+        <button type="button" id="reset-price-filter">
+            Reset
+        </button>
 
     </div>
 
+    <!-- Sorting -->
+    <div class="sort-container">
+
+        <label for="sort-products">Sort By:</label>
+
+<select id="sort-products">
+    <option value="featured">Featured</option>
+    <option value="popular">Most Popular</option>
+    <option value="newest">Newest First</option>
+    <option value="price-low">Price: Low to High</option>
+    <option value="price-high">Price: High to Low</option>
+    <option value="rating">Top Rated</option>
+</select>
+
+    </div>
+
+</div>
     <!-- Product Cards Will Be Added Here -->
     <div class="product-grid" id="product-grid">
 
@@ -488,10 +578,12 @@
 </footer>
 
     <!-- Main JavaScript -->
-
-    <script src="./js/products.js"></script>
+<script src="./js/products.js"></script>
+<script src="./js/currency.js"></script>
 <script src="./js/main.js"></script>
-
+<script src="./js/storefront-settings.js"></script>
+<script src="./js/recently-viewed.js"></script>
+<script src="./js/recommended-products.js"></script>
 
 </body>
 </html>

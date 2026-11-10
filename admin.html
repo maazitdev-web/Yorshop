@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YourShop | Admin Dashboard</title>
+
+    <link rel="stylesheet" href="./css/admin.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+
+    <div class="admin-logo">
+        <h2>Your<span>Shop</span></h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <nav class="admin-nav">
+        <a href="./admin.html" class="active">📊 Dashboard</a>
+        <a href="./admin-products.html">📦 Products</a>
+        <a href="./admin-orders.html">🛒 Orders</a>
+        <a href="./admin-customers.html">👥 Customers</a>
+        <a href="./admin-analytics.html">📈 Analytics</a>
+        <a href="./admin-settings.html">⚙️ Settings</a>
+        <a href="./admin-coupons.html">🎟️ Coupons</a>
+    </nav>
+
+    <a href="./index.html" class="back-to-store">
+        ← Back to Store
+    </a>
+
+</aside>
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome to YourShop Admin Panel</p>
+            </div>
+
+            <div class="admin-profile">
+                <span>Administrator</span>
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD -->
+        <section class="dashboard-section">
+
+            <div class="dashboard-heading">
+                <div>
+                    <h2>Overview</h2>
+                    <p>Here is what's happening with your store.</p>
+                </div>
+            </div>
+
+
+            <!-- STATISTICS -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <p>Total Products</p>
+                    <h3 id="total-products">20</h3>
+                    <span>Products in store</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <p>Total Orders</p>
+                    <h3 id="total-orders">0</h3>
+                    <span>Customer orders</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <p>Total Customers</p>
+                    <h3 id="total-customers">0</h3>
+                    <span>Unique customers</span>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <p>Total Revenue</p>
+                    <h3 id="total-revenue">$0.00</h3>
+                    <span>Order revenue</span>
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ORDERS -->
+            <div class="admin-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>Recent Orders</h2>
+                        <p>Latest customer orders</p>
+                    </div>
+
+                    <a href="./admin-orders.html">View All Orders →</a>
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recent-orders">
+                            <tr>
+                                <td colspan="5">Loading orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCT OVERVIEW -->
+            <div class="admin-panel product-overview">
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>Product Overview</h2>
+                        <p>Manage your store products</p>
+                    </div>
+
+                    <a href="./admin-products.html">Manage Products →</a>
+                </div>
+
+                <div class="product-overview-content">
+                    <div>
+                        <h3 id="overview-product-count">20</h3>
+                        <p>Products available in your store</p>
+                    </div>
+
+                    <a href="./admin-products.html" class="manage-products-btn">
+                        Manage Products
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="./js/products.js"></script>
+    <script src="./js/admin.js"></script>
+
+</body>
+</html>

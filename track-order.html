@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/track-order.css">
+</head>
+<body>
+
+    <header class="tracking-header">
+        <a href="./index.html" class="tracking-logo">
+            Your<span>Shop</span>
+        </a>
+
+        <nav>
+            <a href="./index.html">Home</a>
+            <a href="./index.html#products">Shop</a>
+            <a href="./cart.html">Cart</a>
+            <a href="./contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <main class="tracking-container">
+
+        <section class="tracking-intro">
+            <span class="tracking-label">YOURSHOP DELIVERY</span>
+            <h1>Track Your Order</h1>
+            <p>Enter your Order ID to check the latest status of your purchase.</p>
+        </section>
+
+        <section class="tracking-search-card">
+            <form id="tracking-form">
+                <label for="tracking-order-id">Order ID</label>
+
+                <div class="tracking-input-row">
+                    <input
+                        type="text"
+                        id="tracking-order-id"
+                        placeholder="Enter your Order ID"
+                        required
+                    >
+
+                    <button type="submit" id="track-order-button">
+                        Track Order
+                    </button>
+                </div>
+
+                <p id="tracking-message" role="status"></p>
+            </form>
+        </section>
+
+        <section id="tracking-result" class="tracking-result" hidden>
+
+            <div class="tracking-order-heading">
+                <div>
+                    <span class="tracking-small-label">ORDER DETAILS</span>
+                    <h2 id="result-order-id">Order #</h2>
+                    <p id="result-order-date"></p>
+                </div>
+
+                <span id="result-status" class="status-badge">Pending</span>
+            </div>
+
+            <div class="tracking-info-grid">
+                <div class="tracking-info-box">
+                    <span>Customer</span>
+                    <strong id="result-customer">-</strong>
+                </div>
+
+                <div class="tracking-info-box">
+                    <span>Payment Method</span>
+                    <strong id="result-payment">-</strong>
+                </div>
+
+                <div class="tracking-info-box">
+                    <span>Order Total</span>
+                    <strong id="result-total">-</strong>
+                </div>
+
+                <div class="tracking-info-box">
+                    <span>Delivery City</span>
+                    <strong id="result-city">-</strong>
+                </div>
+            </div>
+
+            <div class="tracking-progress-section">
+                <h3>Delivery Progress</h3>
+                <p class="tracking-progress-description" id="progress-description">
+                    Your order progress will appear here.
+                </p>
+
+                <div class="tracking-timeline" id="tracking-timeline">
+                    <div class="timeline-step" data-step="pending">
+                        <div class="timeline-icon">1</div>
+                        <div class="timeline-text">
+                            <strong>Order Placed</strong>
+                            <span>We received your order</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step" data-step="confirmed">
+                        <div class="timeline-icon">2</div>
+                        <div class="timeline-text">
+                            <strong>Confirmed</strong>
+                            <span>Your order is confirmed</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step" data-step="processing">
+                        <div class="timeline-icon">3</div>
+                        <div class="timeline-text">
+                            <strong>Processing</strong>
+                            <span>Your order is being prepared</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step" data-step="shipped">
+                        <div class="timeline-icon">4</div>
+                        <div class="timeline-text">
+                            <strong>Shipped</strong>
+                            <span>Your order is on its way</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step" data-step="delivered">
+                        <div class="timeline-icon">5</div>
+                        <div class="timeline-text">
+                            <strong>Delivered</strong>
+                            <span>Your order has arrived</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tracking-products-section">
+                <h3>Items in Your Order</h3>
+                <div id="tracking-products"></div>
+            </div>
+
+            <div class="tracking-cancelled" id="tracking-cancelled" hidden>
+                This order has been cancelled. Please contact customer support if you need help.
+            </div>
+
+        </section>
+
+        <section class="tracking-help">
+            <h3>Need help with your order?</h3>
+            <p>If you have questions about your delivery, our support team can help.</p>
+            <a href="./contact.html">Contact Support</a>
+        </section>
+
+    </main>
+
+    <footer class="tracking-footer">
+        <p>&copy; 2026 YourShop. All rights reserved.</p>
+    </footer>
+
+    <script src="./js/currency.js"></script>
+    <script src="./js/track-order.js"></script>
+</body>
+</html>
