@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Questions - YourShop Admin</title>
+
+    <link rel="stylesheet" href="./css/admin-product-questions.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="qa-admin-header">
+        <h1>YourShop Admin</h1>
+        <a href="./admin.html">Back to Dashboard</a>
+    </header>
+
+    <main class="qa-admin-container">
+        <div class="qa-admin-heading">
+            <div>
+                <h2>Product Questions & Answers</h2>
+                <p>Review customer questions and respond to them.</p>
+            </div>
+            <a href="./admin-product-questions.html">
+    Product Questions
+</a>
+            <a href="./index.html">View Store</a>
+
+            
+
+        </div>
+
+        <div class="qa-admin-stats">
+            <div class="qa-stat">
+                <span>Total Questions</span>
+                <strong id="qa-total">0</strong>
+            </div>
+            <div class="qa-stat">
+                <span>Pending Answers</span>
+                <strong id="qa-pending">0</strong>
+            </div>
+            <div class="qa-stat">
+                <span>Answered</span>
+                <strong id="qa-answered">0</strong>
+            </div>
+        </div>
+
+        <section class="qa-admin-panel">
+            <div class="qa-admin-toolbar">
+                <h3>Customer Questions</h3>
+
+                <select id="qa-admin-filter">
+                    <option value="all">All Questions</option>
+                    <option value="pending">Pending</option>
+                    <option value="answered">Answered</option>
+                </select>
+            </div>
+
+            <div id="qa-admin-list">
+                <p>Loading questions...</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="./js/products.js"></script>
+    <script src="./js/admin-product-questions.js"></script>
+</body>
+</html>

@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="./css/admin.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+
 </head>
 
 <body>
@@ -24,15 +27,66 @@
         <p>Admin Panel</p>
     </div>
 
-    <nav class="admin-nav">
-        <a href="./admin.html" class="active">📊 Dashboard</a>
-        <a href="./admin-products.html">📦 Products</a>
-        <a href="./admin-orders.html">🛒 Orders</a>
-        <a href="./admin-customers.html">👥 Customers</a>
-        <a href="./admin-analytics.html">📈 Analytics</a>
-        <a href="./admin-settings.html">⚙️ Settings</a>
-        <a href="./admin-coupons.html">🎟️ Coupons</a>
-    </nav>
+
+<nav class="admin-nav">
+
+    <p class="admin-nav-label">MAIN MENU</p>
+
+    <a href="./admin.html" class="active">
+        📊 Dashboard
+    </a>
+
+    <p class="admin-nav-label">STORE MANAGEMENT</p>
+
+    <a href="./admin-products.html">
+        📦 Products
+    </a>
+
+    <a href="./admin-orders.html">
+        🛒 Orders
+    </a>
+
+    <a href="./admin-customers.html">
+        👥 Customers
+    </a>
+
+    <a href="./admin-coupons.html">
+        🎟️ Coupons
+    </a>
+
+    <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+
+    <a href="./admin-support.html">
+        🎧 Support Tickets
+    </a>
+
+    <a href="./admin-product-questions.html">
+        ❓ Product Questions
+    </a>
+
+    <a href="./admin-reviews.html">
+        ⭐ Product Reviews
+    </a>
+
+<p class="admin-nav-label">REPORTS & SETTINGS</p>
+<a href="./admin-analytics.html">📈 Analytics</a>
+<a href="./advanced-sales-reports.html">
+    📊 Advanced Sales Reports
+</a>
+<a href="./admin-notifications.html">🔔 Notifications</a>
+<a href="./admin-activity.html">📋 Activity Log</a>
+<a href="./admin-settings.html">⚙️ Settings</a>
+<p class="admin-nav-label">STORE MANAGEMENT</p>
+
+<a href="./admin-products.html">📦 Products</a>
+<a href="./inventory-management.html">📋 Inventory</a>
+<a href="./shipping-management.html">🚚 Shipping</a>
+<a href="./admin-orders.html">🛒 Orders</a>
+<a href="./admin-customers.html">👥 Customers</a>
+<a href="./admin-coupons.html">🎟️ Coupons</a>
+
+</nav>
+
 
     <a href="./index.html" class="back-to-store">
         ← Back to Store
@@ -48,15 +102,41 @@
         <!-- HEADER -->
         <header class="admin-header">
 
+            <button
+    type="button"
+    class="admin-menu-toggle"
+    id="admin-menu-toggle"
+    aria-label="Toggle admin menu"
+    aria-expanded="false"
+>
+    ☰
+</button>
+
             <div>
                 <h1>Dashboard</h1>
                 <p>Welcome to YourShop Admin Panel</p>
             </div>
 
-            <div class="admin-profile">
-                <span>Administrator</span>
-                <div class="admin-avatar">A</div>
-            </div>
+<div class="admin-header-actions">
+
+    <a href="./admin-notifications.html"
+       class="admin-notification-link"
+       title="Admin Notifications"
+       aria-label="Admin Notifications">
+
+        🔔
+        <span id="admin-notification-count">0</span>
+
+    </a>
+
+    <div class="admin-profile">
+        <span>Administrator</span>
+        <div class="admin-avatar">A</div>
+    </div>
+
+</div>
+
+                        
 
         </header>
 
@@ -140,6 +220,22 @@
 
                 </div>
 
+                <!-- RECENT ACTIVITY -->
+<div class="admin-panel recent-activity-panel">
+
+    <div class="panel-heading">
+        <div>
+            <h2>Recent Activity</h2>
+            <p>Latest activity across your store</p>
+        </div>
+    </div>
+
+    <div id="recent-activity-list" class="recent-activity-list">
+        <p class="activity-empty">Loading activity...</p>
+    </div>
+
+</div>
+
             </div>
 
 
@@ -174,8 +270,10 @@
 
 
     <!-- JAVASCRIPT -->
-    <script src="./js/products.js"></script>
-    <script src="./js/admin.js"></script>
+<script src="./js/products.js"></script>
+<script src="./js/admin.js"></script>
+<script src="./js/admin-sidebar.js"></script>
+<script src="./js/admin-notifications.js"></script>
 
 </body>
 </html>

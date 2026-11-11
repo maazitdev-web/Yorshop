@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .profile-page {
+            min-height: 85vh;
+            padding: 45px 5%;
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .profile-heading {
+            margin-bottom: 28px;
+        }
+
+        .profile-heading h1 {
+            color: #102a56;
+            font-size: 28px;
+        }
+
+        .profile-heading p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 25px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .profile-sidebar,
+        .profile-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(16, 42, 86, 0.05);
+        }
+
+        .profile-user {
+            text-align: center;
+            padding-bottom: 22px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-avatar {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: #e8f0ff;
+            color: #2563eb;
+            display: grid;
+            place-items: center;
+            font-size: 36px;
+            margin: 0 auto 12px;
+        }
+
+        .profile-user h3 {
+            color: #102a56;
+            font-size: 16px;
+        }
+
+        .profile-user p {
+            color: #888;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-nav {
+            margin-top: 20px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .profile-nav a {
+            padding: 12px;
+            border-radius: 7px;
+            color: #526078;
+            text-decoration: none;
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .profile-nav a:hover,
+        .profile-nav a.active {
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .profile-content h2 {
+            color: #102a56;
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .profile-description {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .profile-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .profile-field label {
+            display: block;
+            color: #526078;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .profile-field input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce3ed;
+            border-radius: 7px;
+            outline: none;
+            font-family: inherit;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .profile-field input:focus {
+            border-color: #2563eb;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .profile-btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 7px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #eef2f7;
+            color: #526078;
+        }
+
+        .profile-message {
+            margin-top: 15px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="profile-page">
+
+    <div class="profile-heading">
+        <h1>My Account</h1>
+        <p>Manage your personal information and account details.</p>
+    </div>
+
+    <div class="profile-layout">
+
+        <aside class="profile-sidebar">
+
+            <div class="profile-user">
+                <div class="profile-avatar">👤</div>
+                <h3>Customer Name</h3>
+                <p>customer@example.com</p>
+            </div>
+
+            <nav class="profile-nav">
+                <a href="./customer-profile.html" class="active">👤 My Profile</a>
+                <a href="./my-orders.html">📦 My Orders</a>
+                <a href="./saved-addresses.html">📍 Saved Addresses</a>
+                <a href="./wishlist.html">❤️ My Wishlist</a>
+                <a href="./index.html">🏠 Back to Store</a>
+            </nav>
+
+        </aside>
+
+        <section class="profile-content">
+
+            <h2>Personal Information</h2>
+
+            <p class="profile-description">
+                View and edit your personal details.
+            </p>
+
+            <form id="profile-form">
+
+                <div class="profile-form">
+
+                    <div class="profile-field">
+                        <label for="profile-name">Full Name</label>
+                        <input type="text" id="profile-name"
+                               value="Customer Name" disabled required>
+                    </div>
+
+                    <div class="profile-field">
+                        <label for="profile-email">Email Address</label>
+                        <input type="email" id="profile-email"
+                               value="customer@example.com" disabled required>
+                    </div>
+
+                    <div class="profile-field">
+                        <label for="profile-phone">Phone Number</label>
+                        <input type="tel" id="profile-phone"
+                               placeholder="Enter phone number" disabled>
+                    </div>
+
+                    <div class="profile-field">
+                        <label for="profile-country">Country</label>
+                        <input type="text" id="profile-country"
+                               placeholder="Enter your country" disabled>
+                    </div>
+
+                </div>
+
+                <div class="profile-actions">
+                    <button type="button" class="profile-btn edit-btn"
+                            id="edit-profile">Edit Profile</button>
+
+                    <button type="button" class="profile-btn cancel-btn"
+                            id="cancel-profile" hidden>Cancel</button>
+
+                    <button type="submit" class="profile-btn edit-btn"
+                            id="save-profile" hidden>Save Changes</button>
+                </div>
+
+                <p class="profile-message" id="profile-message"></p>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</main>
+
+<script src="./js/customer-profile.js"></script>
+
+</body>
+</html>

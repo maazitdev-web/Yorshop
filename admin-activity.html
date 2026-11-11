@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Activity Log | YourShop Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-activity.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>YourShop</h2>
+                <p>Admin Panel</p>
+            </div>
+
+            <nav class="admin-nav">
+
+                <p class="admin-nav-label">MAIN MENU</p>
+                <a href="./admin.html">📊 Dashboard</a>
+
+                <p class="admin-nav-label">STORE MANAGEMENT</p>
+                <a href="./admin-products.html">📦 Products</a>
+                <a href="./admin-orders.html">🛒 Orders</a>
+                <a href="./admin-customers.html">👥 Customers</a>
+                <a href="./admin-coupons.html">🎟️ Coupons</a>
+
+                <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+                <a href="./admin-support.html">🎧 Support Tickets</a>
+                <a href="./admin-product-questions.html">❓ Product Questions</a>
+                <a href="./admin-reviews.html">⭐ Product Reviews</a>
+
+                <p class="admin-nav-label">REPORTS & SETTINGS</p>
+                <a href="./admin-analytics.html">📈 Analytics</a>
+                <a href="./admin-notifications.html">🔔 Notifications</a>
+                <a href="./admin-activity.html" class="active">📋 Activity Log</a>
+                <a href="./admin-settings.html">⚙️ Settings</a>
+
+            </nav>
+
+            <a href="./index.html" class="back-to-store">
+                🏠 Back to Store
+            </a>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <header class="admin-header">
+
+                <button
+                    type="button"
+                    class="admin-menu-toggle"
+                    id="admin-menu-toggle"
+                    aria-label="Toggle admin menu"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <div>
+                    <h1>Activity Log</h1>
+                    <p>Monitor actions performed in your store</p>
+                </div>
+
+                <div class="admin-profile">
+                    <span>Administrator</span>
+                    <div class="admin-avatar">A</div>
+                </div>
+
+            </header>
+
+            <!-- ACTIVITY SUMMARY -->
+            <section class="activity-stats">
+
+                <div class="activity-stat-card">
+                    <span>Total Activities</span>
+                    <h2 id="activity-total">0</h2>
+                    <p>All recorded actions</p>
+                </div>
+
+                <div class="activity-stat-card">
+                    <span>Today's Activities</span>
+                    <h2 id="activity-today">0</h2>
+                    <p>Actions recorded today</p>
+                </div>
+
+                <div class="activity-stat-card">
+                    <span>Order Activities</span>
+                    <h2 id="activity-orders">0</h2>
+                    <p>Order management actions</p>
+                </div>
+
+                <div class="activity-stat-card">
+                    <span>Other Activities</span>
+                    <h2 id="activity-other">0</h2>
+                    <p>Products, coupons and more</p>
+                </div>
+
+            </section>
+
+            <!-- ACTIVITY PANEL -->
+            <section class="admin-panel activity-panel">
+
+                <div class="activity-heading">
+                    <div>
+                        <h2>Store Activity History</h2>
+                        <p>Latest administrator actions appear first.</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="clear-activity"
+                        class="clear-activity-btn"
+                    >
+                        Clear History
+                    </button>
+                </div>
+
+                <!-- SEARCH AND FILTERS -->
+                <div class="activity-controls">
+
+                    <input
+                        type="search"
+                        id="activity-search"
+                        placeholder="Search activities..."
+                    >
+
+                    <select id="activity-category">
+                        <option value="all">All Categories</option>
+                        <option value="orders">Orders</option>
+                        <option value="products">Products</option>
+                        <option value="coupons">Coupons</option>
+                        <option value="reviews">Reviews</option>
+                        <option value="questions">Questions</option>
+                        <option value="general">General</option>
+                    </select>
+
+                </div>
+
+                <!-- ACTIVITY LIST -->
+                <div id="activity-list" class="activity-list">
+
+                    <p class="activity-empty">
+                        Loading activities...
+                    </p>
+
+                </div>
+
+                <p id="activity-message" class="activity-message"></p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="./js/admin-sidebar.js"></script>
+    <script src="./js/admin-activity-page.js"></script>
+
+</body>
+</html>

@@ -6,10 +6,18 @@
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
+    // ======================================
+    // 1. STORAGE AND GLOBAL VARIABLES
+    // ======================================
+
     const STORAGE_KEY = "yourshop-orders";
+    const NOTIFICATIONS_KEY = "yourshop-notifications";
+
+    // Declare orders before using it anywhere.
+    let orders = [];
 
     // ======================================
-    // 1. GET HTML ELEMENTS
+    // 2. GET HTML ELEMENTS
     // ======================================
 
     const ordersList = document.getElementById("admin-orders-list");
@@ -27,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 2. ORDER STATUSES
+    // 3. ORDER STATUSES
     // ======================================
 
     const ORDER_STATUSES = [
@@ -40,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     // ======================================
-    // 3. LOAD AND SAVE ORDERS
+    // 4. LOAD AND SAVE ORDERS
     // ======================================
 
     function getOrders() {
@@ -57,7 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    let orders = getOrders();
+    // Load orders after defining getOrders().
+    orders = getOrders();
 
     function saveOrders() {
         try {
@@ -70,15 +79,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error("Unable to save orders:", error);
-
             alert("Unable to save changes. Check your browser storage.");
-
             return false;
         }
     }
 
     // ======================================
-    // 4. HELPER FUNCTIONS
+    // 5. HELPER FUNCTIONS
     // ======================================
 
     function getCustomerName(order) {
@@ -154,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .trim()
             .toLowerCase();
 
-        // Support older order status names.
         if (["complete", "completed"].includes(status)) {
             return "delivered";
         }
@@ -175,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function formatPrice(amount) {
         if (typeof window.formatPrice === "function") {
             return window.formatPrice(amount);
+            console.log("Order activity event triggered!");
         }
 
         return new Intl.NumberFormat("en-US", {
@@ -205,11 +212,85 @@ document.addEventListener("DOMContentLoaded", () => {
         return [];
     }
 
+  
     // ======================================
-    // 5. UPDATE STATISTICS
+    // 6. ORDER STATUS NOTIFICATIONS
+    // ======================================
+
+    function createOrderStatusNotification(order, newStatus) {
+        let notifications = [];
+
+        try {
+            notifications = JSON.parse(
+                localStorage.getItem(NOTIFICATIONS_KEY) || "[]"
+            );
+
+            if (!Array.isArray(notifications)) {
+                notifications = [];
+            }
+
+        } catch (error) {
+            console.error("Unable to load notifications:", error);
+            notifications = [];
+        }
+
+        const orderIndex = orders.indexOf(order);
+        const orderId = getOrderId(
+            order,
+            orderIndex >= 0 ? orderIndex : 0
+        );
+
+        const customerName = getCustomerName(order);
+        const customerEmail = getCustomerEmail(order);
+
+        const statusMessages = {
+            pending: "is now pending.",
+            confirmed: "has been confirmed.",
+            processing: "is now being processed.",
+            shipped: "has been shipped.",
+            delivered: "has been delivered successfully.",
+            cancelled: "has been cancelled."
+        };
+
+        const notification = {
+            id: "NOT-" + Date.now() + "-" +
+                Math.floor(Math.random() * 1000),
+            title: `Order ${formatStatus(newStatus)}`,
+            message: `Hello ${customerName}, your order ${orderId} ${statusMessages[newStatus]}`,
+            category: "orders",
+            read: false,
+            createdAt: new Date().toISOString(),
+            orderId: orderId,
+            status: newStatus,
+            customerName: customerName,
+            customerEmail: customerEmail
+        };
+
+        notifications.unshift(notification);
+
+        try {
+            localStorage.setItem(
+                NOTIFICATIONS_KEY,
+                JSON.stringify(notifications)
+            );
+
+            console.log("Order notification created:", notification);
+
+        } catch (error) {
+            console.error("Unable to save order notification:", error);
+        }
+    }
+
+    // ======================================
+    // 7. UPDATE STATISTICS
     // ======================================
 
     function updateStatistics() {
+        // Always read the current orders array.
+        if (!Array.isArray(orders)) {
+            orders = [];
+        }
+
         if (totalOrders) {
             totalOrders.textContent = orders.length;
         }
@@ -234,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 6. DISPLAY ORDERS
+    // 8. DISPLAY ORDERS
     // ======================================
 
     function displayOrders() {
@@ -246,7 +327,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 getOrderId(order, index)
             ).toLowerCase();
 
-            const customer = getCustomerName(order).toLowerCase();
+            const customer = String(
+                getCustomerName(order)
+            ).toLowerCase();
+
             const status = getStatus(order);
 
             const matchesSearch =
@@ -257,9 +341,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (selectedStatus === "completed") {
                 matchesStatus = status === "delivered";
+
             } else if (selectedStatus === "processing") {
-                matchesStatus = ["confirmed", "processing", "shipped"]
-                    .includes(status);
+                matchesStatus = [
+                    "confirmed",
+                    "processing",
+                    "shipped"
+                ].includes(status);
+
             } else if (selectedStatus !== "all") {
                 matchesStatus = status === selectedStatus;
             }
@@ -316,6 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <td>
                         <button
+                            type="button"
                             class="view-order-button"
                             data-action="view"
                             data-index="${originalIndex}">
@@ -323,6 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </button>
 
                         <button
+                            type="button"
                             class="view-order-button"
                             data-action="delete"
                             data-index="${originalIndex}">
@@ -344,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 7. ORDER DETAILS MODAL
+    // 9. ORDER DETAILS MODAL
     // ======================================
 
     function viewOrder(index) {
@@ -352,11 +443,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!order) return;
 
-        const products = getOrderProducts(order);
+        const orderProducts = getOrderProducts(order);
         const status = getStatus(order);
 
-        const productsHTML = products.length
-            ? products.map(item => {
+        const productsHTML = orderProducts.length
+            ? orderProducts.map(item => {
                 const name = item.name || item.title || "Product";
                 const quantity = Number(item.quantity) || 1;
 
@@ -392,12 +483,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="order-modal-header">
                     <div>
                         <h2>Order Details</h2>
-                        <p>
-                            ${escapeHTML(getOrderId(order, index))}
-                        </p>
+                        <p>${escapeHTML(getOrderId(order, index))}</p>
                     </div>
 
                     <button
+                        type="button"
                         class="close-order-modal"
                         aria-label="Close">
                         &times;
@@ -410,30 +500,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         <div class="modal-info-card">
                             <span>Customer Name</span>
-                            <strong>
-                                ${escapeHTML(getCustomerName(order))}
-                            </strong>
+                            <strong>${escapeHTML(getCustomerName(order))}</strong>
                         </div>
 
                         <div class="modal-info-card">
                             <span>Email Address</span>
-                            <strong>
-                                ${escapeHTML(getCustomerEmail(order))}
-                            </strong>
+                            <strong>${escapeHTML(getCustomerEmail(order))}</strong>
                         </div>
 
                         <div class="modal-info-card">
                             <span>Phone Number</span>
-                            <strong>
-                                ${escapeHTML(getCustomerPhone(order))}
-                            </strong>
+                            <strong>${escapeHTML(getCustomerPhone(order))}</strong>
                         </div>
 
                         <div class="modal-info-card">
                             <span>Order Date</span>
-                            <strong>
-                                ${escapeHTML(getOrderDate(order))}
-                            </strong>
+                            <strong>${escapeHTML(getOrderDate(order))}</strong>
                         </div>
 
                         <div class="modal-info-card">
@@ -463,15 +545,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <div class="modal-total-section">
                         <span>Order Total</span>
-                        <strong>
-                            ${formatPrice(getOrderTotal(order))}
-                        </strong>
+                        <strong>${formatPrice(getOrderTotal(order))}</strong>
                     </div>
 
                 </div>
 
                 <div class="order-modal-footer">
-                    <button class="modal-close-button">
+                    <button type="button" class="modal-close-button">
                         Close
                     </button>
                 </div>
@@ -508,7 +588,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 8. VIEW AND DELETE BUTTONS
+    // 10. REFRESH ORDERS
+    // ======================================
+
+    function refreshOrders() {
+        updateStatistics();
+        displayOrders();
+    }
+
+    // ======================================
+    // 11. VIEW AND DELETE BUTTONS
     // ======================================
 
     ordersList.addEventListener("click", event => {
@@ -549,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ======================================
-    // 9. UPDATE ORDER STATUS
+    // 12. UPDATE ORDER STATUS
     // ======================================
 
     ordersList.addEventListener("change", event => {
@@ -569,14 +658,54 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const previousOrder = { ...orders[index] };
+        const previousStatus = getStatus(orders[index]);
 
+        if (previousStatus === newStatus) {
+            return;
+        }
+
+        // Update order status.
         orders[index].status = newStatus;
         orders[index].statusUpdatedAt = new Date().toISOString();
 
+        // Save order first.
         if (!saveOrders()) {
             orders[index] = previousOrder;
             displayOrders();
             return;
+        }
+
+        // Create customer notification.
+        createOrderStatusNotification(orders[index], newStatus);
+        // Record admin activity.
+console.log(
+    "Checking admin activity logger:",
+    typeof window.logAdminActivity
+);
+
+if (typeof window.logAdminActivity === "function") {
+    const orderId = getOrderId(orders[index], index);
+    const customerName = getCustomerName(orders[index]);
+
+    window.logAdminActivity(
+        "Order status updated",
+        `Order ${orderId} for ${customerName} changed from ${formatStatus(previousStatus)} to ${formatStatus(newStatus)}.`,
+        "orders"
+    );
+
+    console.log("Admin activity recorded successfully!");
+}
+
+        // Record admin activity.
+        if (typeof window.logAdminActivity === "function") {
+            const orderId = getOrderId(orders[index], index);
+            const customerName = getCustomerName(orders[index]);
+
+            window.logAdminActivity(
+                "Order status updated",
+                `Order ${orderId} for ${customerName} changed from ${formatStatus(previousStatus)} to ${formatStatus(newStatus)}.`,
+                "orders"
+            );
         }
 
         refreshOrders();
@@ -587,7 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ======================================
-    // 10. SEARCH AND FILTER
+    // 13. SEARCH AND FILTER
     // ======================================
 
     searchInput.addEventListener("input", displayOrders);
@@ -595,23 +724,15 @@ document.addEventListener("DOMContentLoaded", () => {
     statusFilter.addEventListener("change", displayOrders);
 
     // ======================================
-    // 11. REFRESH
-    // ======================================
-
-    function refreshOrders() {
-        updateStatistics();
-        displayOrders();
-    }
-
-    // ======================================
-    // 12. INITIALIZE
+    // 14. INITIALIZE
     // ======================================
 
     refreshOrders();
 
     console.log(
-        "YourShop Admin Orders loaded:",
-        orders.length
+        "YourShop Admin Orders loaded successfully:",
+        orders.length,
+        "orders"
     );
 
 });

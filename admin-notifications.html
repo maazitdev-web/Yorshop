@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YourShop | Admin Notifications</title>
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-notifications.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-logo">
+            <h2>Your<span>Shop</span></h2>
+            <p>Admin Panel</p>
+        </div>
+
+        <nav class="admin-nav">
+            <p class="admin-nav-label">MAIN MENU</p>
+            <a href="./admin.html">📊 Dashboard</a>
+
+            <p class="admin-nav-label">STORE MANAGEMENT</p>
+            <a href="./admin-products.html">📦 Products</a>
+            <a href="./admin-orders.html">🛒 Orders</a>
+            <a href="./admin-customers.html">👥 Customers</a>
+            <a href="./admin-coupons.html">🎟️ Coupons</a>
+
+            <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+            <a href="./admin-notifications.html" class="active">🔔 Notifications</a>
+            <a href="./admin-support.html">🎧 Support Tickets</a>
+            <a href="./admin-product-questions.html">❓ Product Questions</a>
+            <a href="./admin-reviews.html">⭐ Product Reviews</a>
+
+            <p class="admin-nav-label">REPORTS & SETTINGS</p>
+            <a href="./admin-analytics.html">📈 Analytics</a>
+            <a href="./admin-settings.html">⚙️ Settings</a>
+        </nav>
+
+        <a href="./index.html" class="back-to-store">
+            ← Back to Store
+        </a>
+
+    </aside>
+
+    <main class="admin-main">
+
+        <header class="admin-header">
+
+            <button
+                type="button"
+                class="admin-menu-toggle"
+                id="admin-menu-toggle"
+                aria-label="Toggle admin menu"
+                aria-expanded="false">
+                ☰
+            </button>
+
+            <div>
+                <h1>Notifications</h1>
+                <p>Stay updated with your store activity</p>
+            </div>
+
+            <div class="admin-profile">
+                <span>Administrator</span>
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </header>
+
+        <section class="admin-notifications-section">
+
+            <div class="admin-notifications-heading">
+                <div>
+                    <h2>All Notifications</h2>
+                    <p>Orders, support tickets, questions and reviews</p>
+                </div>
+
+                <div class="notification-actions">
+                    <button type="button" id="mark-all-read">
+                        Mark All Read
+                    </button>
+
+                    <button type="button" id="clear-notifications">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="notification-summary">
+                <div>
+                    <span>Total Notifications</span>
+                    <h3 id="admin-total-notifications">0</h3>
+                </div>
+
+                <div>
+                    <span>Unread Notifications</span>
+                    <h3 id="admin-unread-notifications">0</h3>
+                </div>
+            </div>
+
+            <div class="notification-filter">
+                <button class="active" data-filter="all">All</button>
+                <button data-filter="unread">Unread</button>
+                <button data-filter="orders">Orders</button>
+                <button data-filter="support">Support</button>
+                <button data-filter="questions">Questions</button>
+                <button data-filter="reviews">Reviews</button>
+            </div>
+
+            <div id="admin-notification-list" class="admin-notification-list">
+                <p class="admin-notification-empty">
+                    Loading notifications...
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./js/admin-sidebar.js"></script>
+    <script src="./js/admin-notifications.js"></script>
+
+</body>
+</html>

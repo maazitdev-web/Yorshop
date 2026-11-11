@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Support | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/support.css">
+</head>
+
+<body>
+
+    <header class="support-header">
+        <a href="./index.html" class="support-logo">
+            Your<span>Shop</span>
+        </a>
+
+        <nav>
+            <a href="./index.html">Home</a>
+            <a href="./faq.html">FAQs</a>
+            <a href="./contact.html">Contact Us</a>
+            <a href="./track-order.html">Track Order</a>
+        </nav>
+    </header>
+
+    <main class="support-container">
+
+        <section class="support-hero">
+            <span>WE ARE HERE TO HELP</span>
+            <h1>How Can We Help You?</h1>
+            <p>Submit a support request or check the status of an existing ticket.</p>
+        </section>
+
+        <section class="support-options">
+
+            <a href="#create-ticket" class="support-option">
+                <span>🎫</span>
+                <h3>Create a Support Ticket</h3>
+                <p>Tell us about your issue and our team will assist you.</p>
+            </a>
+
+            <a href="#check-ticket" class="support-option">
+                <span>🔍</span>
+                <h3>Check Ticket Status</h3>
+                <p>Find updates about your existing support request.</p>
+            </a>
+
+            <a href="./faq.html" class="support-option">
+                <span>❓</span>
+                <h3>Frequently Asked Questions</h3>
+                <p>Find answers to common customer questions.</p>
+            </a>
+
+        </section>
+
+        <section class="support-form-section" id="create-ticket">
+
+            <h2>Create a Support Ticket</h2>
+            <p>Complete the form below to contact our support team.</p>
+
+            <form id="support-form">
+
+                <div class="support-form-grid">
+
+                    <div class="support-field">
+                        <label for="support-name">Full Name</label>
+                        <input type="text" id="support-name" required
+                               placeholder="Enter your name">
+                    </div>
+
+                    <div class="support-field">
+                        <label for="support-email">Email Address</label>
+                        <input type="email" id="support-email" required
+                               placeholder="Enter your email">
+                    </div>
+
+                    <div class="support-field">
+                        <label for="support-order">Order ID (Optional)</label>
+                        <input type="text" id="support-order"
+                               placeholder="Example: YS-1001">
+                    </div>
+
+                    <div class="support-field">
+                        <label for="support-category">Issue Category</label>
+                        <select id="support-category" required>
+                            <option value="">Select a category</option>
+                            <option value="Order Issue">Order Issue</option>
+                            <option value="Payment Issue">Payment Issue</option>
+                            <option value="Delivery Issue">Delivery Issue</option>
+                            <option value="Return or Refund">Return or Refund</option>
+                            <option value="Product Issue">Product Issue</option>
+                            <option value="Account Issue">Account Issue</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="support-field full-width">
+                        <label for="support-subject">Subject</label>
+                        <input type="text" id="support-subject" required
+                               placeholder="Briefly describe your issue">
+                    </div>
+
+                    <div class="support-field full-width">
+                        <label for="support-message">Describe Your Issue</label>
+                        <textarea id="support-message" rows="6" required
+                                  placeholder="Explain how we can help you..."></textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="support-submit-btn">
+                    Submit Support Request
+                </button>
+
+                <p id="support-message-status" aria-live="polite"></p>
+
+            </form>
+
+        </section>
+
+        <section class="ticket-check-section" id="check-ticket">
+
+            <h2>Check Your Ticket</h2>
+            <p>Enter your support ticket ID to check its current status.</p>
+
+            <form id="ticket-search-form">
+                <input type="text" id="ticket-search"
+                       placeholder="Enter your ticket ID" required>
+
+                <button type="submit">Check Status</button>
+            </form>
+
+            <div id="ticket-search-result"></div>
+
+        </section>
+
+    </main>
+
+    <footer class="support-footer">
+        <p>© 2026 YourShop. All rights reserved.</p>
+        <a href="./index.html">Back to Shopping</a>
+    </footer>
+
+    <script src="./js/support.js"></script>
+
+</body>
+</html>

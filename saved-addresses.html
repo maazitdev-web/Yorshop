@@ -1,0 +1,429 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Saved Addresses | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .addresses-page {
+            min-height: 85vh;
+            padding: 45px 5%;
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .addresses-heading {
+            max-width: 1200px;
+            margin: 0 auto 28px;
+        }
+
+        .addresses-heading h1 {
+            color: #102a56;
+            font-size: 28px;
+        }
+
+        .addresses-heading p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .addresses-layout {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 25px;
+        }
+
+        .addresses-sidebar,
+        .addresses-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(16, 42, 86, .05);
+        }
+
+        .addresses-sidebar h3 {
+            color: #102a56;
+            margin-bottom: 18px;
+        }
+
+        .addresses-nav {
+            display: grid;
+            gap: 8px;
+        }
+
+        .addresses-nav a {
+            padding: 12px;
+            color: #526078;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .addresses-nav a:hover,
+        .addresses-nav a.active {
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .addresses-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .addresses-top h2 {
+            color: #102a56;
+            font-size: 20px;
+        }
+
+        .add-address-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 17px;
+            border-radius: 7px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .address-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .address-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .address-card.default {
+            border: 1px solid #2563eb;
+            background: #f8faff;
+        }
+
+        .address-card h3 {
+            color: #102a56;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .address-card p {
+            color: #68758a;
+            font-size: 12px;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+
+        .default-badge {
+            display: inline-block;
+            background: #e0ecff;
+            color: #2563eb;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 17px;
+        }
+
+        .address-action {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .edit-address {
+            background: #eaf1ff;
+            color: #2563eb;
+        }
+
+        .delete-address {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .default-address {
+            background: #102a56;
+            color: white;
+        }
+
+        .address-form-wrapper {
+            display: none;
+            background: #f8faff;
+            border: 1px solid #dce6f5;
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 25px;
+        }
+
+        .address-form-wrapper.show {
+            display: block;
+        }
+
+        .address-form-wrapper h3 {
+            color: #102a56;
+            font-size: 17px;
+            margin-bottom: 18px;
+        }
+
+        .address-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .address-field label {
+            display: block;
+            color: #526078;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .address-field input,
+        .address-field select,
+        .address-field textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce3ed;
+            border-radius: 7px;
+            font-family: inherit;
+            font-size: 12px;
+            outline: none;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .address-field input:focus,
+        .address-field select:focus,
+        .address-field textarea:focus {
+            border-color: #2563eb;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .address-form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .save-address-btn,
+        .cancel-address-btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .save-address-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .cancel-address-btn {
+            background: #e8edf5;
+            color: #526078;
+        }
+
+        .empty-addresses {
+            text-align: center;
+            padding: 45px 15px;
+            color: #777;
+        }
+
+        .empty-addresses .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .empty-addresses h3 {
+            color: #102a56;
+            margin-bottom: 8px;
+        }
+
+        #address-message {
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 850px) {
+            .address-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 750px) {
+            .addresses-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .address-form {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="addresses-page">
+
+    <div class="addresses-heading">
+        <h1>My Account</h1>
+        <p>Manage your delivery addresses.</p>
+    </div>
+
+    <div class="addresses-layout">
+
+        <aside class="addresses-sidebar">
+
+            <h3>My Account</h3>
+
+            <nav class="addresses-nav">
+                <a href="./customer-profile.html">👤 My Profile</a>
+                <a href="./my-orders.html">📦 My Orders</a>
+                <a href="./saved-addresses.html" class="active">📍 Saved Addresses</a>
+                <a href="./wishlist.html">❤️ My Wishlist</a>
+                <a href="./index.html">🏠 Back to Store</a>
+            </nav>
+
+        </aside>
+
+        <section class="addresses-content">
+
+            <div class="addresses-top">
+                <h2>My Saved Addresses</h2>
+
+                <button class="add-address-btn" id="add-address-btn">
+                    + Add New Address
+                </button>
+            </div>
+
+            <div class="address-form-wrapper" id="address-form-wrapper">
+
+                <h3 id="address-form-title">Add New Address</h3>
+
+                <form id="address-form">
+
+                    <div class="address-form">
+
+                        <div class="address-field">
+                            <label for="address-name">Full Name</label>
+                            <input type="text" id="address-name" required>
+                        </div>
+
+                        <div class="address-field">
+                            <label for="address-phone">Phone Number</label>
+                            <input type="tel" id="address-phone" required>
+                        </div>
+
+                        <div class="address-field">
+                            <label for="address-type">Address Type</label>
+                            <select id="address-type" required>
+                                <option value="Home">Home</option>
+                                <option value="Office">Office</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="address-field">
+                            <label for="address-country">Country</label>
+                            <input type="text" id="address-country" required>
+                        </div>
+
+                        <div class="address-field">
+                            <label for="address-city">City</label>
+                            <input type="text" id="address-city" required>
+                        </div>
+
+                        <div class="address-field">
+                            <label for="address-postal">Postal Code</label>
+                            <input type="text" id="address-postal">
+                        </div>
+
+                        <div class="address-field full-width">
+                            <label for="address-details">Complete Address</label>
+                            <textarea id="address-details" rows="3" required></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="address-form-actions">
+                        <button type="submit" class="save-address-btn">
+                            Save Address
+                        </button>
+
+                        <button type="button" class="cancel-address-btn"
+                                id="cancel-address-btn">
+                            Cancel
+                        </button>
+                    </div>
+
+                </form>
+
+                <p id="address-message"></p>
+
+            </div>
+
+            <div class="address-grid" id="address-grid">
+
+                <div class="empty-addresses">
+                    <div class="empty-icon">📍</div>
+                    <h3>No Saved Addresses</h3>
+                    <p>Add an address for faster checkout.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+<script src="./js/saved-addresses.js"></script>
+
+</body>
+</html>

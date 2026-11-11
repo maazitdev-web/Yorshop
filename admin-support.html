@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Support Management | YourShop Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/admin-support.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>Your<span>Shop</span></h2>
+                <p>Admin Panel</p>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="./admin.html">📊 Dashboard</a>
+                <a href="./admin-products.html">📦 Products</a>
+                <a href="./admin-orders.html">🛒 Orders</a>
+                <a href="./admin-customers.html">👥 Customers</a>
+                <a href="./admin-analytics.html">📈 Analytics</a>
+                <a href="./admin-coupons.html">🎟️ Coupons</a>
+                <a href="./admin-support.html" class="active">🎧 Support Tickets</a>
+                <a href="./admin-settings.html">⚙️ Settings</a>
+            </nav>
+
+            <a href="./index.html" class="back-to-store">
+                ← Back to Store
+            </a>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+                <div>
+                    <h1>Support Management</h1>
+                    <p>Manage customer questions and support requests.</p>
+                </div>
+
+                <a href="./support.html" class="view-support-link">
+                    View Customer Support
+                </a>
+            </header>
+
+            <!-- STATISTICS -->
+            <section class="support-stats">
+
+                <div class="support-stat-card">
+                    <span>🎫</span>
+                    <div>
+                        <p>Total Tickets</p>
+                        <h2 id="admin-support-total">0</h2>
+                    </div>
+                </div>
+
+                <div class="support-stat-card">
+                    <span>📬</span>
+                    <div>
+                        <p>Open Tickets</p>
+                        <h2 id="admin-support-open">0</h2>
+                    </div>
+                </div>
+
+                <div class="support-stat-card">
+                    <span>🔄</span>
+                    <div>
+                        <p>In Progress</p>
+                        <h2 id="admin-support-progress">0</h2>
+                    </div>
+                </div>
+
+                <div class="support-stat-card">
+                    <span>✅</span>
+                    <div>
+                        <p>Resolved Tickets</p>
+                        <h2 id="admin-support-resolved">0</h2>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- TICKET MANAGEMENT -->
+            <section class="admin-support-panel">
+
+                <div class="support-panel-heading">
+                    <div>
+                        <h2>Customer Support Tickets</h2>
+                        <p>Review and manage customer requests.</p>
+                    </div>
+
+                    <button type="button" id="refresh-support">
+                        ↻ Refresh
+                    </button>
+                </div>
+
+                <!-- SEARCH AND FILTER -->
+                <div class="support-toolbar">
+
+                    <input
+                        type="search"
+                        id="support-admin-search"
+                        placeholder="Search ticket ID, customer, email..."
+                    >
+
+                    <select id="support-status-filter">
+                        <option value="all">All Statuses</option>
+                        <option value="Open">Open</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+
+                    <select id="support-category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="Order Issue">Order Issue</option>
+                        <option value="Payment Issue">Payment Issue</option>
+                        <option value="Delivery Issue">Delivery Issue</option>
+                        <option value="Return or Refund">Return or Refund</option>
+                        <option value="Product Issue">Product Issue</option>
+                        <option value="Account Issue">Account Issue</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                </div>
+
+                <p class="support-results">
+                    Showing <strong id="support-results-count">0</strong> tickets
+                </p>
+
+                <!-- TICKETS TABLE -->
+                <div class="support-table-wrapper">
+
+                    <table class="support-table">
+
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="admin-support-list">
+                            <tr>
+                                <td colspan="7">Loading support tickets...</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+            <!-- TICKET DETAILS MODAL -->
+            <div class="support-modal" id="support-details-modal" hidden>
+
+                <div class="support-modal-content">
+
+                    <div class="support-modal-header">
+                        <h2>Ticket Details</h2>
+
+                        <button
+                            type="button"
+                            id="close-support-modal"
+                            aria-label="Close"
+                        >
+                            &times;
+                        </button>
+                    </div>
+
+                    <div id="support-ticket-details"></div>
+
+                    <div class="support-modal-actions">
+                        <button type="button" id="close-support-details">
+                            Close
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="./js/admin-support.js"></script>
+
+</body>
+</html>

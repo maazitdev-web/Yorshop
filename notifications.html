@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+            color: #102a56;
+        }
+
+        .notifications-page {
+            min-height: 100vh;
+            padding: 45px 5%;
+        }
+
+        .notifications-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .page-heading p {
+            color: #778196;
+            font-size: 13px;
+        }
+
+        .notifications-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(16, 42, 86, .05);
+        }
+
+        .notification-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .notification-toolbar h2 {
+            font-size: 17px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .notification-actions button {
+            padding: 9px 13px;
+            border-radius: 6px;
+            border: 1px solid #dce3ef;
+            background: white;
+            color: #2563eb;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .notification-actions button:hover {
+            background: #eaf1ff;
+        }
+
+        .notification-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 18px 0;
+        }
+
+        .filter-btn {
+            border: none;
+            padding: 9px 16px;
+            border-radius: 20px;
+            background: #f1f4f9;
+            color: #64748b;
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .notification-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .notification-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 17px;
+            border: 1px solid #edf0f5;
+            border-radius: 9px;
+            transition: .2s;
+        }
+
+        .notification-card.unread {
+            background: #f4f8ff;
+            border-left: 4px solid #2563eb;
+        }
+
+        .notification-icon {
+            width: 43px;
+            height: 43px;
+            min-width: 43px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #eaf1ff;
+            font-size: 19px;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-content h3 {
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .notification-content p {
+            color: #778196;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .notification-date {
+            display: block;
+            color: #9aa3b2;
+            font-size: 10px;
+            margin-top: 8px;
+        }
+
+        .notification-card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .notification-card-actions button {
+            border: none;
+            background: none;
+            color: #2563eb;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .notification-card-actions .delete-notification {
+            color: #dc2626;
+        }
+
+        .empty-notifications {
+            padding: 55px 15px;
+            text-align: center;
+            color: #8992a3;
+        }
+
+        .empty-notifications span {
+            display: block;
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .empty-notifications h3 {
+            color: #102a56;
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .empty-notifications p {
+            font-size: 12px;
+        }
+
+        .back-dashboard {
+            display: inline-block;
+            margin-top: 22px;
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .notifications-page {
+                padding: 25px 15px;
+            }
+
+            .notifications-panel {
+                padding: 17px;
+            }
+
+            .notification-card {
+                gap: 10px;
+                padding: 13px;
+            }
+
+            .notification-card-actions {
+                gap: 12px;
+            }
+
+            .notification-content h3 {
+                font-size: 12px;
+            }
+        }
+
+
+        /* ========================================
+   NOTIFICATION PAGE IMPROVEMENTS
+======================================== */
+
+.page-label {
+    display: inline-block;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+.notification-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.notification-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 19px;
+    background: #fff;
+    border: 1px solid #edf0f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(16, 42, 86, .04);
+}
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    background: #eaf1ff;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.notification-stat h3 {
+    font-size: 20px;
+    color: #102a56;
+}
+
+.notification-stat p {
+    font-size: 10px;
+    color: #778196;
+}
+
+.notification-card:hover {
+    border-color: #c9d9f5;
+    transform: translateY(-2px);
+}
+
+.notification-card-actions button:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .notification-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .notification-stat {
+        padding: 14px;
+    }
+}
+
+
+
+/* ========================================
+   CLICKABLE ORDER NOTIFICATIONS
+======================================== */
+
+.clickable-order-notification {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable-order-notification:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 18px rgba(16, 42, 86, 0.10);
+}
+
+.clickable-order-notification:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 3px;
+}
+
+.notification-order-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <main class="notifications-page">
+
+        <div class="notifications-container">
+
+<header class="page-heading">
+    <span class="page-label">YOURSHOP ACCOUNT</span>
+    <h1>Notifications</h1>
+    <p>Stay updated with your orders, deliveries and exclusive offers.</p>
+</header>
+
+<div class="notification-stats">
+
+    <div class="notification-stat">
+        <span class="stat-icon">🔔</span>
+        <div>
+            <h3 id="total-notifications">0</h3>
+            <p>Total Notifications</p>
+        </div>
+    </div>
+
+    <div class="notification-stat">
+        <span class="stat-icon">📩</span>
+        <div>
+            <h3 id="unread-notifications">0</h3>
+            <p>Unread Notifications</p>
+        </div>
+    </div>
+
+    <div class="notification-stat">
+        <span class="stat-icon">✓</span>
+        <div>
+            <h3 id="read-notifications">0</h3>
+            <p>Read Notifications</p>
+        </div>
+    </div>
+
+</div>
+
+            <section class="notifications-panel">
+
+                <div class="notification-toolbar">
+
+                    <h2>
+                        All Notifications
+                        (<span id="notification-count">0</span>)
+                    </h2>
+
+                    <div class="notification-actions">
+                        <button type="button" id="mark-all-read">
+                            Mark All as Read
+                        </button>
+
+                        <button type="button" id="clear-notifications">
+                            Clear All
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="notification-filters">
+
+                    <button class="filter-btn active"
+                            data-filter="all">
+                        All
+                    </button>
+
+                    <button class="filter-btn"
+                            data-filter="unread">
+                        Unread
+                    </button>
+
+                    <button class="filter-btn"
+                            data-filter="orders">
+                        Orders
+                    </button>
+
+                    <button class="filter-btn"
+                            data-filter="promotions">
+                        Promotions
+                    </button>
+
+                    <button class="filter-btn"
+                            data-filter="general">
+                        General
+                    </button>
+
+                </div>
+
+                <div class="notification-list" id="notification-list">
+
+                    <div class="empty-notifications">
+                        <span>🔔</span>
+                        <h3>No Notifications Yet</h3>
+                        <p>Your notifications will appear here.</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <a href="./customer-dashboard.html" class="back-dashboard">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </main>
+
+    <script src="./js/notifications.js"></script>
+
+</body>
+</html>

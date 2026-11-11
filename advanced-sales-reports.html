@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Advanced Sales Reports | YourShop Admin</title>
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/advanced-sales-reports.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <div class="admin-logo">
+            <h2>YourShop</h2>
+            <span>ADMIN PANEL</span>
+        </div>
+
+        <nav class="admin-nav">
+
+            <p class="admin-nav-label">MAIN MENU</p>
+            <a href="./admin.html">📊 Dashboard</a>
+
+            <p class="admin-nav-label">STORE MANAGEMENT</p>
+            <a href="./admin-products.html">📦 Products</a>
+            <a href="./inventory-management.html">📋 Inventory</a>
+            <a href="./shipping-management.html">🚚 Shipping</a>
+            <a href="./admin-orders.html">🛒 Orders</a>
+            <a href="./admin-customers.html">👥 Customers</a>
+            <a href="./admin-coupons.html">🎟️ Coupons</a>
+
+            <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+            <a href="./admin-support.html">🎧 Support Tickets</a>
+            <a href="./admin-product-questions.html">❓ Product Questions</a>
+            <a href="./admin-reviews.html">⭐ Product Reviews</a>
+
+            <p class="admin-nav-label">REPORTS & SETTINGS</p>
+            <a href="./admin-analytics.html">📈 Analytics</a>
+            <a href="./advanced-sales-reports.html" class="active">📊 Advanced Sales Reports</a>
+            <a href="./admin-notifications.html">🔔 Notifications</a>
+            <a href="./admin-activity.html">📋 Activity Log</a>
+            <a href="./admin-settings.html">⚙️ Settings</a>
+
+        </nav>
+
+        <a href="./index.html" class="back-to-store">
+            🏠 Back to Store
+        </a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <!-- HEADER -->
+        <header class="admin-header">
+
+            <button
+                type="button"
+                class="admin-menu-toggle"
+                id="admin-menu-toggle"
+                aria-label="Toggle admin menu"
+                aria-expanded="false">
+                ☰
+            </button>
+
+            <div>
+                <h1>Advanced Sales Reports</h1>
+                <p>Analyze your store performance and sales.</p>
+            </div>
+
+            <div class="admin-profile">
+                <span>Administrator</span>
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </header>
+
+        <!-- DATE FILTER -->
+        <section class="report-filter-panel">
+
+            <div>
+                <h2>Sales Overview</h2>
+                <p>Choose a date range to analyze your sales.</p>
+            </div>
+
+            <div class="report-filter-controls">
+
+                <select id="report-period">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">Last 7 Days</option>
+                    <option value="month" selected>Last 30 Days</option>
+                    <option value="year">Last 12 Months</option>
+                </select>
+
+                <button type="button" id="export-sales-report">
+                    Export CSV
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="sales-report-stats">
+
+            <div class="report-stat-card">
+                <h3>Total Revenue</h3>
+                <strong id="report-total-revenue">$0.00</strong>
+                <p>Revenue from qualifying orders</p>
+            </div>
+
+            <div class="report-stat-card">
+                <h3>Total Orders</h3>
+                <strong id="report-total-orders">0</strong>
+                <p>Orders in selected period</p>
+            </div>
+
+            <div class="report-stat-card">
+                <h3>Average Order Value</h3>
+                <strong id="report-average-order">$0.00</strong>
+                <p>Average value per order</p>
+            </div>
+
+            <div class="report-stat-card">
+                <h3>Products Sold</h3>
+                <strong id="report-products-sold">0</strong>
+                <p>Total units sold</p>
+            </div>
+
+        </section>
+
+        <!-- SALES CHART -->
+        <section class="report-panel">
+
+            <div class="report-panel-heading">
+                <div>
+                    <h2>Revenue Trend</h2>
+                    <p>Revenue over the selected period</p>
+                </div>
+            </div>
+
+            <div class="report-chart-container">
+                <canvas id="revenue-chart"></canvas>
+            </div>
+
+        </section>
+
+        <!-- ORDER STATUS CHART -->
+        <section class="report-grid">
+
+            <div class="report-panel">
+
+                <h2>Order Status Breakdown</h2>
+                <p>Distribution of orders by status</p>
+
+                <div class="report-chart-container">
+                    <canvas id="order-status-chart"></canvas>
+                </div>
+
+            </div>
+
+            <div class="report-panel">
+
+                <h2>Top-Selling Products</h2>
+                <p>Products with the highest quantities sold</p>
+
+                <div class="report-table-wrapper">
+
+                    <table class="report-table">
+
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity Sold</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="top-selling-products">
+                            <tr>
+                                <td colspan="3">Loading reports...</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CUSTOMER REPORT -->
+        <section class="report-panel">
+
+            <h2>Customer Insights</h2>
+            <p>Customer activity in the selected period</p>
+
+            <div class="customer-report-stats">
+
+                <div>
+                    <span>Total Customers</span>
+                    <strong id="report-total-customers">0</strong>
+                </div>
+
+                <div>
+                    <span>New Customers</span>
+                    <strong id="report-new-customers">0</strong>
+                </div>
+
+                <div>
+                    <span>Repeat Customers</span>
+                    <strong id="report-repeat-customers">0</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- RECENT SALES REPORT -->
+        <section class="report-panel">
+
+            <h2>Sales Details</h2>
+            <p>Orders included in the selected report</p>
+
+            <div class="report-table-wrapper">
+
+                <table class="report-table">
+
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="sales-report-list">
+                        <tr>
+                            <td colspan="6">Loading sales data...</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="./js/currency.js"></script>
+<script src="./js/admin-sidebar.js"></script>
+<script src="./js/admin-activity.js"></script>
+<script src="./js/advanced-sales-reports.js"></script>
+</body>
+</html>

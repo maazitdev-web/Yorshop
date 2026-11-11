@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .orders-page {
+            min-height: 85vh;
+            padding: 45px 5%;
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .orders-heading {
+            max-width: 1200px;
+            margin: 0 auto 28px;
+        }
+
+        .orders-heading h1 {
+            color: #102a56;
+            font-size: 28px;
+        }
+
+        .orders-heading p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .orders-layout {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 25px;
+        }
+
+        .orders-sidebar,
+        .orders-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(16, 42, 86, .05);
+        }
+
+        .orders-sidebar h3 {
+            color: #102a56;
+            margin-bottom: 18px;
+        }
+
+        .orders-nav {
+            display: grid;
+            gap: 8px;
+        }
+
+        .orders-nav a {
+            padding: 12px;
+            color: #526078;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        .orders-nav a:hover,
+        .orders-nav a.active {
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .orders-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .orders-top h2 {
+            color: #102a56;
+            font-size: 20px;
+        }
+
+        .orders-top select {
+            padding: 10px 13px;
+            border: 1px solid #dce3ed;
+            border-radius: 7px;
+            font-family: inherit;
+            color: #526078;
+            outline: none;
+        }
+
+        .order-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .order-card {
+            border: 1px solid #e5eaf2;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .order-card-header {
+            background: #f8faff;
+            padding: 15px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e5eaf2;
+        }
+
+        .order-id {
+            color: #102a56;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .order-date {
+            color: #888;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #fff7e6;
+            color: #b7791f;
+        }
+
+        .status-confirmed {
+            background: #e8f1ff;
+            color: #2563eb;
+        }
+
+        .status-processing {
+            background: #f0eaff;
+            color: #7c3aed;
+        }
+
+        .status-shipped {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .status-delivered {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .order-card-body {
+            padding: 18px;
+        }
+
+        .order-products {
+            color: #526078;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .order-products p {
+            border-bottom: 1px solid #f0f2f6;
+            padding: 5px 0;
+        }
+
+        .order-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 1px solid #e5eaf2;
+        }
+
+        .order-total {
+            color: #102a56;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .order-payment {
+            color: #888;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .order-btn {
+            display: inline-block;
+            padding: 9px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .track-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .shop-btn {
+            background: #eaf1ff;
+            color: #2563eb;
+        }
+
+        .empty-orders {
+            text-align: center;
+            padding: 55px 20px;
+            color: #777;
+        }
+
+        .empty-orders .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-orders h3 {
+            color: #102a56;
+            margin-bottom: 8px;
+        }
+
+        .empty-orders a {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 11px 22px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+            .orders-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+            
+/* ======================================
+   ORDER PROGRESS TIMELINE
+====================================== */
+
+.order-timeline {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    margin: 25px 0 15px;
+    position: relative;
+}
+
+.timeline-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    color: #9ca3af;
+    font-size: 10px;
+}
+
+.timeline-step::before {
+    content: "";
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    border: 3px solid #e5e7eb;
+    margin: 0 auto 9px;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    height: 3px;
+    background: #e5e7eb;
+    width: calc(100% - 18px);
+    top: 8px;
+    left: calc(50% + 9px);
+    z-index: 1;
+}
+
+.timeline-step.completed {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.timeline-step.completed::before {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.timeline-step.completed:not(:last-child)::after {
+    background: #2563eb;
+}
+
+.timeline-step.current {
+    color: #102a56;
+    font-weight: 700;
+}
+
+.timeline-step.current::before {
+    background: white;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px #dbeafe;
+}
+
+.timeline-step.current:not(:last-child)::after {
+    background: #e5e7eb;
+}
+
+.order-status-updated {
+    color: #8992a3;
+    font-size: 11px;
+    margin-top: 12px;
+}
+
+/* ======================================
+   ORDER DETAILS MODAL
+====================================== */
+
+.customer-order-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .65);
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.customer-order-modal-content {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.customer-order-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.customer-order-modal-header h2 {
+    color: #102a56;
+    font-size: 20px;
+}
+
+.customer-order-modal-close {
+    border: none;
+    background: #f1f5f9;
+    border-radius: 7px;
+    width: 35px;
+    height: 35px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.customer-order-modal-content p {
+    color: #526078;
+    font-size: 13px;
+    margin: 10px 0;
+}
+
+@media (max-width: 500px) {
+    .timeline-step {
+        font-size: 8px;
+    }
+
+    .timeline-step::before {
+        width: 14px;
+        height: 14px;
+    }
+
+    .timeline-step:not(:last-child)::after {
+        top: 6px;
+        left: calc(50% + 7px);
+    }
+
+    .customer-order-modal-content {
+        padding: 18px;
+    }
+}
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <main class="orders-page">
+
+        <div class="orders-heading">
+            <h1>My Account</h1>
+            <p>View and manage your shopping orders.</p>
+        </div>
+
+        <div class="orders-layout">
+
+            <aside class="orders-sidebar">
+                <h3>My Account</h3>
+
+                <nav class="orders-nav">
+                    <a href="./customer-profile.html">👤 My Profile</a>
+                    <a href="./my-orders.html" class="active">📦 My Orders</a>
+                    <a href="./saved-addresses.html">📍 Saved Addresses</a>
+                    <a href="./wishlist.html">❤️ My Wishlist</a>
+                    <a href="./index.html">🏠 Back to Store</a>
+                </nav>
+            </aside>
+
+            <section class="orders-content">
+
+                <div class="orders-top">
+                    <h2>My Orders</h2>
+
+                    <select id="order-filter">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="order-list" id="customer-orders-list">
+
+                    <div class="empty-orders">
+                        <div class="empty-icon">📦</div>
+                        <h3>Loading Your Orders...</h3>
+                        <p>Your order history will appear here.</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <script src="./js/currency.js"></script>
+    <script src="./js/my-orders.js"></script>
+
+</body>
+</html>

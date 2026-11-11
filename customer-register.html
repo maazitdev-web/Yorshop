@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .account-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 20px;
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .account-card {
+            width: 100%;
+            max-width: 490px;
+            background: white;
+            padding: 38px;
+            border-radius: 14px;
+            box-shadow: 0 8px 35px rgba(16, 42, 86, 0.08);
+        }
+
+        .account-logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: 700;
+            color: #102a56;
+            margin-bottom: 20px;
+        }
+
+        .account-logo span {
+            color: #2563eb;
+        }
+
+        .account-card h1 {
+            text-align: center;
+            color: #102a56;
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .account-subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        .account-form label {
+            display: block;
+            margin-bottom: 7px;
+            color: #26354d;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .account-form input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dce3ed;
+            border-radius: 7px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 17px;
+            box-sizing: border-box;
+        }
+
+        .account-form input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .account-terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            color: #666;
+            font-size: 12px;
+            line-height: 1.7;
+            margin: 5px 0 20px;
+        }
+
+        .account-terms input {
+            width: auto;
+            margin-top: 4px;
+        }
+
+        .account-terms a,
+        .account-footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .account-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .account-submit:hover {
+            background: #102a56;
+        }
+
+        .account-footer {
+            text-align: center;
+            margin-top: 22px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .account-back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #102a56;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .account-card {
+                padding: 27px 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="account-page">
+
+        <div class="account-card">
+
+            <div class="account-logo">
+                Your<span>Shop</span>
+            </div>
+
+            <h1>Create Your Account</h1>
+
+            <p class="account-subtitle">
+                Join YourShop and enjoy a better shopping experience.
+            </p>
+
+            <form class="account-form" id="customer-register-form">
+
+                <label for="register-name">Full Name</label>
+                <input
+                    type="text"
+                    id="register-name"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    required
+                >
+
+                <label for="register-email">Email Address</label>
+                <input
+                    type="email"
+                    id="register-email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="register-phone">Phone Number</label>
+                <input
+                    type="tel"
+                    id="register-phone"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel"
+                    required
+                >
+
+                <label for="register-password">Password</label>
+                <input
+                    type="password"
+                    id="register-password"
+                    placeholder="Create a password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <label for="confirm-password">Confirm Password</label>
+                <input
+                    type="password"
+                    id="confirm-password"
+                    placeholder="Confirm your password"
+                    minlength="8"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <label class="account-terms">
+                    <input type="checkbox" id="accept-terms" required>
+                    <span>
+                        I agree to the
+                        <a href="./terms.html">Terms & Conditions</a>
+                        and
+                        <a href="./privacy.html">Privacy Policy</a>.
+                    </span>
+                </label>
+
+                <button type="submit" class="account-submit">
+                    Create Account
+                </button>
+
+                <p id="register-message"></p>
+
+            </form>
+
+            <div class="account-footer">
+                Already have an account?
+                <a href="./customer-login.html">Sign In</a>
+            </div>
+
+            <a href="./index.html" class="account-back">
+                ← Back to YourShop
+            </a>
+
+        </div>
+
+    </main>
+
+    <script src="./js/customer-register.js"></script>
+
+</body>
+</html>

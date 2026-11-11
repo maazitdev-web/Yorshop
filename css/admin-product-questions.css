@@ -1,0 +1,214 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f4f7fc;
+    color: #263b5c;
+}
+
+.qa-admin-header {
+    background: #102a56;
+    color: white;
+    padding: 18px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.qa-admin-header h1 {
+    font-size: 21px;
+}
+
+.qa-admin-header a,
+.qa-admin-heading > a {
+    color: white;
+    text-decoration: none;
+    background: #2563eb;
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.qa-admin-container {
+    max-width: 1250px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.qa-admin-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.qa-admin-heading h2 {
+    color: #102a56;
+    font-size: 24px;
+}
+
+.qa-admin-heading p {
+    color: #7b8798;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.qa-admin-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.qa-stat,
+.qa-admin-panel {
+    background: white;
+    border: 1px solid #e6ebf2;
+    border-radius: 10px;
+    padding: 22px;
+}
+
+.qa-stat span {
+    display: block;
+    color: #778398;
+    font-size: 13px;
+}
+
+.qa-stat strong {
+    display: block;
+    color: #2563eb;
+    font-size: 27px;
+    margin-top: 8px;
+}
+
+.qa-admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.qa-admin-toolbar h3 {
+    color: #102a56;
+    font-size: 17px;
+}
+
+.qa-admin-toolbar select {
+    padding: 10px;
+    border: 1px solid #dce3ed;
+    border-radius: 7px;
+    font-family: inherit;
+}
+
+.qa-admin-card {
+    border: 1px solid #e6ebf2;
+    border-radius: 9px;
+    padding: 18px;
+    margin-bottom: 15px;
+    background: #fff;
+}
+
+.qa-admin-card h4 {
+    color: #102a56;
+    margin-bottom: 8px;
+}
+
+.qa-admin-meta {
+    color: #8993a4;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.qa-admin-question {
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.qa-admin-card textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px;
+    border: 1px solid #dce3ed;
+    border-radius: 7px;
+    font-family: inherit;
+    resize: vertical;
+    margin-top: 10px;
+}
+
+.qa-admin-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.qa-admin-actions button {
+    border: none;
+    border-radius: 6px;
+    padding: 9px 15px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.qa-answer-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.qa-delete-btn {
+    background: #feecec;
+    color: #dc2626;
+}
+
+.qa-admin-answer {
+    background: #eaf2ff;
+    padding: 12px;
+    border-radius: 7px;
+    margin-top: 12px;
+    line-height: 1.6;
+}
+
+.qa-admin-status {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #fff4d6;
+    color: #9a6700;
+}
+
+.qa-admin-status.answered {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.qa-admin-empty {
+    color: #8993a4;
+    text-align: center;
+    padding: 30px 10px;
+}
+
+@media (max-width: 650px) {
+    .qa-admin-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .qa-admin-heading,
+    .qa-admin-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .qa-admin-header {
+        gap: 12px;
+    }
+}

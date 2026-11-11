@@ -5,6 +5,8 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    "use strict";
+
     const STORAGE_KEY = "yourshop-admin-products";
 
     // ======================================
@@ -39,7 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? JSON.parse(JSON.stringify(window.products))
                 : [];
 
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(allProducts));
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(allProducts)
+            );
         }
 
         if (!Array.isArray(allProducts)) {
@@ -60,10 +65,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function saveProducts() {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(allProducts));
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(allProducts)
+            );
+
+            return true;
+
         } catch (error) {
             console.error("Could not save products:", error);
+
             alert("Could not save products. Check your browser storage.");
+
+            return false;
         }
     }
 
@@ -196,7 +210,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Category
             const categoryCell = document.createElement("td");
-            categoryCell.textContent = product.category || "Uncategorized";
+            categoryCell.textContent =
+                product.category || "Uncategorized";
 
             // Price
             const priceCell = document.createElement("td");
@@ -544,6 +559,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const isEditing = editingProductId !== null;
 
+        // Keep a backup in case saving fails.
+        const previousProducts = [...allProducts];
+
         if (isEditing) {
 
             const index = allProducts.findIndex(product =>
@@ -597,7 +615,30 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        saveProducts();
+        // Save products.
+        const saved = saveProducts();
+
+        if (!saved) {
+            allProducts = previousProducts;
+            updateStats();
+            filterProducts();
+            return;
+        }
+
+        // Record admin activity.
+        if (typeof window.logAdminActivity === "function") {
+
+            window.logAdminActivity(
+                isEditing ? "Product updated" : "Product added",
+
+                isEditing
+                    ? `Administrator updated product: ${name}.`
+                    : `Administrator added a new product: ${name}.`,
+
+                "products"
+            );
+        }
+
         updateStats();
         filterProducts();
 
@@ -644,11 +685,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (!confirmed) return;
 
+                // Keep a backup in case saving fails.
+                const previousProducts = [...allProducts];
+
+                // Remove product.
                 allProducts = allProducts.filter(item =>
                     String(item.id) !== String(id)
                 );
 
-                saveProducts();
+                // Save changes.
+                const saved = saveProducts();
+
+                if (!saved) {
+                    allProducts = previousProducts;
+                    updateStats();
+                    filterProducts();
+                    return;
+                }
+
+                // Record admin activity.
+                if (typeof window.logAdminActivity === "function") {
+
+                    window.logAdminActivity(
+                        "Product deleted",
+                        `Administrator deleted product: ${product.name}.`,
+                        "products"
+                    );
+                }
+
                 updateStats();
                 filterProducts();
 

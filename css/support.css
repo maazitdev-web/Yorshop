@@ -1,0 +1,319 @@
+
+/* ==========================================
+   YOURSHOP - CUSTOMER SUPPORT
+========================================== */
+
+.support-header {
+    min-height: 75px;
+    padding: 15px 6%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.support-logo {
+    color: #102a56;
+    font-size: 26px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.support-logo span {
+    color: #2563eb;
+}
+
+.support-header nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.support-header nav a {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.support-header nav a:hover {
+    color: #2563eb;
+}
+
+.support-container {
+    width: 92%;
+    max-width: 1250px;
+    margin: auto;
+    padding: 40px 0 70px;
+}
+
+.support-hero {
+    background: linear-gradient(135deg, #102a56, #2563eb);
+    color: #ffffff;
+    padding: 65px 25px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.support-hero span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #bfdbfe;
+}
+
+.support-hero h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    margin: 15px 0;
+}
+
+.support-hero p {
+    font-size: 14px;
+    color: #e2e8f0;
+}
+
+.support-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin: 35px 0 55px;
+}
+
+.support-option {
+    display: block;
+    padding: 28px 22px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+.support-option:hover {
+    transform: translateY(-5px);
+    border-color: #2563eb;
+    box-shadow: 0 10px 25px rgba(15, 42, 86, 0.08);
+}
+
+.support-option > span {
+    font-size: 30px;
+}
+
+.support-option h3 {
+    color: #102a56;
+    font-size: 17px;
+    margin: 15px 0 8px;
+}
+
+.support-option p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.support-form-section,
+.ticket-check-section {
+    background: #ffffff;
+    padding: 35px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.support-form-section h2,
+.ticket-check-section h2 {
+    color: #102a56;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.support-form-section > p,
+.ticket-check-section > p {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+.support-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.support-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.support-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.support-field label {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.support-field input,
+.support-field select,
+.support-field textarea,
+#ticket-search {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #dbe1ea;
+    border-radius: 7px;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: #334155;
+    background: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.support-field input:focus,
+.support-field select:focus,
+.support-field textarea:focus,
+#ticket-search:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.support-field textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+.support-submit-btn,
+#ticket-search-form button {
+    padding: 13px 24px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.support-submit-btn {
+    margin-top: 25px;
+}
+
+.support-submit-btn:hover,
+#ticket-search-form button:hover {
+    background: #102a56;
+}
+
+#support-message-status {
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+#ticket-search-form {
+    display: flex;
+    gap: 12px;
+    max-width: 650px;
+}
+
+#ticket-search {
+    flex: 1;
+}
+
+#ticket-search-result {
+    margin-top: 20px;
+}
+
+.ticket-result-card {
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+}
+
+.ticket-result-card h3 {
+    color: #102a56;
+    margin-bottom: 12px;
+}
+
+.ticket-result-card p {
+    color: #475569;
+    font-size: 13px;
+    margin: 7px 0;
+}
+
+.ticket-status {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.support-footer {
+    padding: 25px 6%;
+    background: #102a56;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.support-footer p,
+.support-footer a {
+    font-size: 13px;
+}
+
+.support-footer a {
+    color: #bfdbfe;
+    text-decoration: none;
+}
+
+@media (max-width: 800px) {
+    .support-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .support-header {
+        flex-direction: column;
+    }
+
+    .support-header nav {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 550px) {
+    .support-options,
+    .support-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .support-field.full-width {
+        grid-column: auto;
+    }
+
+    .support-form-section,
+    .ticket-check-section {
+        padding: 22px 17px;
+    }
+
+    #ticket-search-form {
+        flex-direction: column;
+    }
+
+    .support-hero {
+        padding: 45px 18px;
+    }
+}

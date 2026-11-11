@@ -102,6 +102,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+    // --------------------------------------------
+    // 3.1 LOAD CENTRAL INVENTORY STOCK
+    // --------------------------------------------
+
+    try {
+        const savedStock = JSON.parse(
+            localStorage.getItem("yourshop-inventory-stock") || "{}"
+        );
+
+        if (
+            savedStock &&
+            typeof savedStock === "object" &&
+            !Array.isArray(savedStock)
+        ) {
+            products.forEach(product => {
+                const productId = String(product.id);
+
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        savedStock,
+                        productId
+                    )
+                ) {
+                    const stock = Number(savedStock[productId]);
+
+                    if (
+                        Number.isSafeInteger(stock) &&
+                        stock >= 0
+                    ) {
+                        product.stock = stock;
+                    }
+                }
+            });
+        }
+
+        console.log("YourShop inventory stock synchronized.");
+
+    } catch (error) {
+        console.error("Could not load inventory stock:", error);
+    }
+
+
     // --------------------------------------------
     // 4. LOCAL STORAGE HELPERS
     // --------------------------------------------

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Login | YourShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .account-page {
+            min-height: 85vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .account-card {
+            width: 100%;
+            max-width: 450px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 8px 35px rgba(16, 42, 86, 0.08);
+        }
+
+        .account-logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: 700;
+            color: #102a56;
+            margin-bottom: 25px;
+        }
+
+        .account-logo span {
+            color: #2563eb;
+        }
+
+        .account-card h1 {
+            color: #102a56;
+            font-size: 25px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .account-subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .account-form label {
+            display: block;
+            margin-bottom: 7px;
+            color: #26354d;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .account-form input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #dce3ed;
+            border-radius: 7px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .account-form input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .account-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+            font-size: 12px;
+        }
+
+        .remember-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #555;
+        }
+
+        .remember-option input {
+            width: auto;
+            margin: 0;
+        }
+
+        .account-options a,
+        .account-footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .account-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .account-submit:hover {
+            background: #102a56;
+        }
+
+        .account-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .account-back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #102a56;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .account-card {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="account-page">
+
+        <div class="account-card">
+
+            <div class="account-logo">
+                Your<span>Shop</span>
+            </div>
+
+            <h1>Welcome Back!</h1>
+
+            <p class="account-subtitle">
+                Sign in to access your YourShop account.
+            </p>
+
+            <form class="account-form" id="customer-login-form">
+
+                <label for="login-email">Email Address</label>
+                <input
+                    type="email"
+                    id="login-email"
+                    placeholder="Enter your email"
+                    autocomplete="email"
+                    required
+                >
+
+                <label for="login-password">Password</label>
+                <input
+                    type="password"
+                    id="login-password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <div class="account-options">
+
+                    <label class="remember-option">
+                        <input type="checkbox" id="remember-me">
+                        Remember me
+                    </label>
+
+                    <a href="./forgot-password.html">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <button type="submit" class="account-submit">
+                    Sign In
+                </button>
+
+                <p id="login-message"></p>
+
+            </form>
+
+            <div class="account-footer">
+                Don't have an account?
+                <a href="./customer-register.html">Create Account</a>
+            </div>
+
+            <a href="./index.html" class="account-back">
+                ← Back to YourShop
+            </a>
+
+        </div>
+
+    </main>
+    
+    <script src="./js/customer-login.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Reviews | YourShop Admin</title>
+
+    <link rel="stylesheet" href="./css/admin-reviews.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="reviews-admin-header">
+        <h1>YourShop Admin</h1>
+        <a href="./admin.html">Back to Dashboard</a>
+    </header>
+
+    <main class="reviews-admin-container">
+
+        <div class="reviews-admin-heading">
+            <div>
+                <h2>Product Reviews</h2>
+                <p>Manage and moderate customer reviews.</p>
+            </div>
+
+            <a href="./index.html">View Store</a>
+        </div>
+
+        <!-- REVIEW STATISTICS -->
+        <section class="reviews-admin-stats">
+
+            <div class="review-stat-card">
+                <span>Total Reviews</span>
+                <strong id="admin-total-reviews">0</strong>
+            </div>
+
+            <div class="review-stat-card">
+                <span>Pending Reviews</span>
+                <strong id="admin-pending-reviews">0</strong>
+            </div>
+
+            <div class="review-stat-card">
+                <span>Approved Reviews</span>
+                <strong id="admin-approved-reviews">0</strong>
+            </div>
+
+            <div class="review-stat-card">
+                <span>Rejected Reviews</span>
+                <strong id="admin-rejected-reviews">0</strong>
+            </div>
+
+        </section>
+
+        <!-- REVIEW FILTERS -->
+        <section class="reviews-admin-panel">
+
+            <div class="reviews-admin-toolbar">
+
+                <h3>Customer Reviews</h3>
+
+                <div class="review-filters">
+
+                    <select id="admin-review-status">
+                        <option value="all">All Reviews</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+
+                    <select id="admin-review-rating">
+                        <option value="all">All Ratings</option>
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="2">2 Stars</option>
+                        <option value="1">1 Star</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div id="admin-reviews-list">
+                <p>Loading reviews...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./js/products.js"></script>
+    <script src="./js/admin-reviews.js"></script>
+
+</body>
+</html>

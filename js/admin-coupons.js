@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let coupons = loadCoupons();
 
-
     // ============================================
     // 2. HTML ELEMENTS
     // ============================================
@@ -69,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("coupon-search");
     const resultsCount = document.getElementById("coupon-results-count");
 
-
     // ============================================
     // 3. HELPERS
     // ============================================
@@ -90,6 +88,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function normalizeCode(code) {
         return String(code || "").trim().toUpperCase();
+    }
+
+    // Record admin activity.
+    function logCouponActivity(action, details) {
+        if (typeof window.logAdminActivity === "function") {
+            window.logAdminActivity(
+                action,
+                details,
+                "coupons"
+            );
+        }
     }
 
     function isExpired(coupon) {
@@ -142,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
             : "#dc2626";
     }
 
-
     // ============================================
     // 4. UPDATE STATISTICS
     // ============================================
@@ -165,7 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("coupon-inactive").textContent = inactive;
         document.getElementById("coupon-uses").textContent = uses;
     }
-
 
     // ============================================
     // 5. DISPLAY COUPONS
@@ -280,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
             `Showing ${filteredCoupons.length} of ${coupons.length} coupons`;
     }
 
-
     // ============================================
     // 6. RESET FORM
     // ============================================
@@ -303,7 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showMessage("", true);
     }
-
 
     // ============================================
     // 7. CREATE OR UPDATE COUPON
@@ -332,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const originalCode = editCodeInput.value;
 
-        // Validate code
+        // Validate code.
         if (!/^[A-Z0-9_-]{3,30}$/.test(code)) {
             showMessage(
                 "Use 3–30 characters: letters, numbers, hyphens or underscores.",
@@ -341,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Validate discount
+        // Validate discount.
         if (
             !Number.isFinite(value) ||
             value <= 0 ||
@@ -362,7 +367,10 @@ document.addEventListener("DOMContentLoaded", () => {
             !Number.isInteger(usageLimit) ||
             usageLimit < 0
         ) {
-            showMessage("Please check the order amount and usage limit.", false);
+            showMessage(
+                "Please check the order amount and usage limit.",
+                false
+            );
             return;
         }
 
@@ -397,7 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Prevent duplicate codes
+        // Prevent duplicate codes.
         const duplicate = coupons.some(coupon => {
             const existingCode = normalizeCode(coupon.code);
 
@@ -410,14 +418,22 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Keep a backup in case saving fails.
+        const previousCoupons = coupons.map(coupon => ({
+            ...coupon
+        }));
+
         if (originalCode) {
-            // UPDATE EXISTING COUPON
+            // UPDATE EXISTING COUPON.
             const index = coupons.findIndex(coupon =>
                 normalizeCode(coupon.code) === originalCode
             );
 
             if (index === -1) {
-                showMessage("Coupon not found. Refresh and try again.", false);
+                showMessage(
+                    "Coupon not found. Refresh and try again.",
+                    false
+                );
                 return;
             }
 
@@ -436,7 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
         } else {
-            // CREATE NEW COUPON
+            // CREATE NEW COUPON.
             coupons.push({
                 code: code,
                 type: type,
@@ -450,7 +466,24 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        if (!saveCoupons(coupons)) return;
+        // Save changes.
+        if (!saveCoupons(coupons)) {
+            coupons = previousCoupons;
+            return;
+        }
+
+        // Record activity.
+        if (originalCode) {
+            logCouponActivity(
+                "Coupon updated",
+                `Administrator updated coupon ${code}.`
+            );
+        } else {
+            logCouponActivity(
+                "Coupon created",
+                `Administrator created coupon ${code}.`
+            );
+        }
 
         updateStatistics();
         displayCoupons(searchInput.value);
@@ -464,7 +497,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         resetForm();
     });
-
 
     // ============================================
     // 8. EDIT / TOGGLE / DELETE ACTIONS
@@ -529,10 +561,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // ACTIVATE / DEACTIVATE
         if (action === "toggle") {
-            coupons[index].active =
-                coupons[index].active === false;
 
-            if (!saveCoupons(coupons)) return;
+            const previousCoupons = coupons.map(item => ({
+                ...item
+            }));
+
+            const wasActive = coupon.active !== false;
+
+            coupons[index].active = !wasActive;
+
+            if (!saveCoupons(coupons)) {
+                coupons = previousCoupons;
+                updateStatistics();
+                displayCoupons(searchInput.value);
+                return;
+            }
+
+            // Record activity.
+            if (wasActive) {
+                logCouponActivity(
+                    "Coupon deactivated",
+                    `Administrator deactivated coupon ${code}.`
+                );
+            } else {
+                logCouponActivity(
+                    "Coupon activated",
+                    `Administrator activated coupon ${code}.`
+                );
+            }
 
             updateStatistics();
             displayCoupons(searchInput.value);
@@ -540,15 +596,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // DELETE
         if (action === "delete") {
+
             const confirmed = confirm(
                 `Are you sure you want to delete coupon ${code}?`
             );
 
             if (!confirmed) return;
 
+            const previousCoupons = coupons.map(item => ({
+                ...item
+            }));
+
             coupons.splice(index, 1);
 
-            if (!saveCoupons(coupons)) return;
+            if (!saveCoupons(coupons)) {
+                coupons = previousCoupons;
+                updateStatistics();
+                displayCoupons(searchInput.value);
+                return;
+            }
+
+            // Record activity.
+            logCouponActivity(
+                "Coupon deleted",
+                `Administrator deleted coupon ${code}.`
+            );
 
             if (editCodeInput.value === code) {
                 resetForm();
@@ -559,13 +631,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-
     // ============================================
     // 9. CANCEL EDIT
     // ============================================
 
     cancelButton.addEventListener("click", resetForm);
-
 
     // ============================================
     // 10. SEARCH COUPONS
@@ -575,7 +645,6 @@ document.addEventListener("DOMContentLoaded", () => {
         displayCoupons(searchInput.value);
     });
 
-
     // ============================================
     // 11. INITIALIZE
     // ============================================
@@ -583,6 +652,8 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStatistics();
     displayCoupons();
 
-    console.log("YourShop Admin Coupons loaded successfully.");
+    console.log(
+        "YourShop Admin Coupons loaded successfully."
+    );
 
 });

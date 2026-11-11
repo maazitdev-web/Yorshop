@@ -230,7 +230,9 @@
 
 <!-- WRITE A REVIEW FORM -->
 <div class="write-review-section">
-    <h3>Write a Review</h3>
+    <h3 id="review-form-heading">Write a Review</h3>
+
+    <p id="review-form-message"></p>
 
     <form id="review-form">
 
@@ -278,8 +280,44 @@
 
 </section>
 
+<!-- PRODUCT QUESTIONS & ANSWERS -->
+<section class="product-qa-section">
+    <h2>Questions & Answers</h2>
+    <p class="qa-intro">
+        Have a question about this product? Ask us!
+    </p>
+
+    <form id="product-question-form" class="qa-form">
+        <input
+            type="text"
+            id="questioner-name"
+            placeholder="Your name"
+            required
+        >
+
+        <textarea
+            id="product-question"
+            placeholder="Write your question..."
+            rows="4"
+            required
+        ></textarea>
+
+        <button type="submit">Submit Question</button>
+        <p id="question-form-message"></p>
+    </form>
+
+    <div class="qa-list">
+        <h3>Customer Questions</h3>
+        <div id="product-questions-list">
+            <p>Loading questions...</p>
+        </div>
+    </div>
+</section>
 
 <!-- Related Products -->
+
+
+
 <section class="related-products-section">
 
     <div class="related-products-heading">
@@ -305,6 +343,7 @@
 
     <script src="./js/products.js"></script>
     <script src="./js/product-detail.js"></script>
+    <script src="./js/product-qa.js"></script>
 
 </body>
 

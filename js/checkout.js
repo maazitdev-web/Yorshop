@@ -3,8 +3,9 @@
 // YOURSHOP - COMPLETE CHECKOUT JAVASCRIPT
 // ============================================
 // Features:
-// Cart display, currency, coupons, discounts,
-// order creation, stock validation and COD payment.
+// Cart, currency, coupons, shipping, discounts,
+// inventory validation, saved addresses,
+// notifications and Cash on Delivery.
 
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
@@ -16,43 +17,60 @@ document.addEventListener("DOMContentLoaded", () => {
     const CART_KEY = "yourshop-cart";
     const ORDERS_KEY = "yourshop-orders";
     const COUPONS_KEY = "yourshop-coupons";
-
+    const NOTIFICATIONS_KEY = "yourshop-notifications";
+    const SAVED_ADDRESSES_KEY = "yourshop-saved-addresses";
+    const SHIPPING_KEY = "yourshop-shipping-methods";
 
     // ============================================
-    // 2. SELECT HTML ELEMENTS
+    // 2. HTML ELEMENTS
     // ============================================
 
     const checkoutItems = document.getElementById("checkout-items");
-
     const subtotalElement = document.getElementById("checkout-subtotal");
-
     const shippingElement = document.getElementById("checkout-shipping");
-
     const discountElement = document.getElementById("checkout-discount");
-
     const totalElement = document.getElementById("checkout-total");
 
     const checkoutForm = document.getElementById("checkout-form");
-
     const placeOrderButton = document.getElementById("place-order-button");
 
     const couponInput = document.getElementById("coupon-code");
-
     const applyCouponButton = document.getElementById("apply-coupon");
-
     const removeCouponButton = document.getElementById("remove-coupon");
-
     const couponMessage = document.getElementById("coupon-message");
 
+    const savedAddressesContainer = document.getElementById(
+        "checkout-saved-addresses"
+    );
+
+    const postalInput = document.getElementById("customer-postal");
+
+    // Shipping elements
+    const shippingMethodsContainer = document.getElementById(
+        "checkout-shipping-methods"
+    );
+
+    const shippingMessage = document.getElementById(
+        "checkout-shipping-message"
+    );
+
+    if (!checkoutForm) {
+        console.error("Checkout form not found.");
+        return;
+    }
 
     // ============================================
-    // 3. LOAD CART
+    // 3. STORAGE HELPERS
     // ============================================
 
     function loadArray(key) {
         try {
-            const data = JSON.parse(localStorage.getItem(key) || "[]");
+            const data = JSON.parse(
+                localStorage.getItem(key) || "[]"
+            );
+
             return Array.isArray(data) ? data : [];
+
         } catch (error) {
             console.error("Storage error:", key, error);
             return [];
@@ -63,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             localStorage.setItem(key, JSON.stringify(data));
             return true;
+
         } catch (error) {
             console.error("Could not save:", key, error);
             return false;
@@ -70,9 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let cart = loadArray(CART_KEY);
-
     let appliedCoupon = null;
-
 
     // ============================================
     // 4. CURRENCY FORMATTER
@@ -85,9 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return window.formatPrice(price);
         }
 
-        return "$" + price.toFixed(2);
+        return "$ " + price.toFixed(2);
     }
-
 
     // ============================================
     // 5. PRODUCT PRICE CALCULATION
@@ -103,12 +119,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function calculateSubtotal() {
         return cart.reduce((total, product) => {
             const price = getDiscountedPrice(product);
-            const quantity = Math.max(0, Number(product.quantity) || 0);
+            const quantity = Math.max(
+                0,
+                Number(product.quantity) || 0
+            );
 
             return total + price * quantity;
         }, 0);
     }
-
 
     // ============================================
     // 6. COUPON HELPERS
@@ -119,7 +137,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getCouponCode(coupon) {
-        return String(coupon.code || "").trim().toUpperCase();
+        return String(coupon.code || "")
+            .trim()
+            .toUpperCase();
     }
 
     function isCouponActive(coupon) {
@@ -141,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return true;
         }
 
-        // Date-only expiry values remain valid through that day.
         if (/^\d{4}-\d{2}-\d{2}$/.test(expiry)) {
             expiryDate.setHours(23, 59, 59, 999);
         }
@@ -166,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-
     // ============================================
     // 7. VALIDATE COUPON
     // ============================================
@@ -183,9 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         }
 
-        const coupons = getCoupons();
-
-        const coupon = coupons.find(item =>
+        const coupon = getCoupons().find(item =>
             getCouponCode(item) === normalizedCode
         );
 
@@ -230,7 +246,9 @@ document.addEventListener("DOMContentLoaded", () => {
             coupon.type || coupon.discountType || "percentage"
         ).toLowerCase();
 
-        const value = Number(coupon.value ?? coupon.discountValue);
+        const value = Number(
+            coupon.value ?? coupon.discountValue
+        );
 
         if (
             !Number.isFinite(value) ||
@@ -259,7 +277,6 @@ document.addEventListener("DOMContentLoaded", () => {
             discount = value;
         }
 
-        // Optional maximum discount
         const maximumDiscount = Number(coupon.maxDiscount);
 
         if (
@@ -269,22 +286,240 @@ document.addEventListener("DOMContentLoaded", () => {
             discount = Math.min(discount, maximumDiscount);
         }
 
-        discount = Math.min(subtotal, Math.max(0, discount));
+        discount = Math.min(
+            subtotal,
+            Math.max(0, discount)
+        );
 
         return {
             valid: true,
-            coupon: coupon,
-            discount: discount,
+            coupon,
+            discount,
             code: normalizedCode,
-            type: type,
-            value: value,
+            type,
+            value,
             message: "Coupon applied successfully!"
         };
     }
 
+    // ============================================
+    // 8. SHIPPING MANAGEMENT INTEGRATION
+    // ============================================
+
+    const defaultShippingMethods = [
+        {
+            id: "SHIP-001",
+            name: "Standard Delivery",
+            type: "standard",
+            price: 5,
+            minimum: 100,
+            days: "3-5 Business Days",
+            zone: "All Areas",
+            active: true
+        },
+        {
+            id: "SHIP-002",
+            name: "Express Delivery",
+            type: "express",
+            price: 12,
+            minimum: 0,
+            days: "1-2 Business Days",
+            zone: "All Areas",
+            active: true
+        },
+        {
+            id: "SHIP-003",
+            name: "Overnight Delivery",
+            type: "overnight",
+            price: 20,
+            minimum: 0,
+            days: "Next Business Day",
+            zone: "Major Cities",
+            active: true
+        }
+    ];
+
+    let shippingMethods = [];
+    let selectedShippingMethodId = null;
+
+    function loadShippingMethods() {
+        try {
+            const saved = JSON.parse(
+                localStorage.getItem(SHIPPING_KEY)
+            );
+
+            if (Array.isArray(saved)) {
+                return saved.filter(method =>
+                    method &&
+                    method.active === true &&
+                    method.id &&
+                    method.name &&
+                    Number.isFinite(Number(method.price)) &&
+                    Number(method.price) >= 0 &&
+                    Number.isFinite(Number(method.minimum)) &&
+                    Number(method.minimum) >= 0
+                );
+            }
+
+            return defaultShippingMethods.filter(
+                method => method.active
+            );
+
+        } catch (error) {
+            console.error("Could not load shipping methods:", error);
+
+            return defaultShippingMethods.filter(
+                method => method.active
+            );
+        }
+    }
+
+    function getSelectedShippingMethod() {
+        return shippingMethods.find(method =>
+            String(method.id) === String(selectedShippingMethodId)
+        ) || null;
+    }
+
+    function calculateShipping() {
+        const method = getSelectedShippingMethod();
+
+        if (!method) return 0;
+
+        const subtotal = calculateSubtotal();
+        const price = Number(method.price) || 0;
+        const minimum = Number(method.minimum) || 0;
+
+        // Free shipping applies when the minimum is greater than zero
+        // and the subtotal reaches that amount.
+        if (minimum > 0 && subtotal >= minimum) {
+            return 0;
+        }
+
+        return price;
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => {
+            const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            };
+
+            return entities[character];
+        });
+    }
+
+    function displayShippingMethods() {
+        if (!shippingMethodsContainer) return;
+
+        shippingMethods = loadShippingMethods();
+
+        if (shippingMethods.length === 0) {
+            selectedShippingMethodId = null;
+
+            shippingMethodsContainer.innerHTML = `
+                <p class="checkout-shipping-empty">
+                    No delivery methods are currently available.
+                    Please contact the store.
+                </p>
+            `;
+
+            if (shippingMessage) {
+                shippingMessage.textContent =
+                    "Shipping is currently unavailable.";
+            }
+
+            if (placeOrderButton) {
+                placeOrderButton.disabled = true;
+            }
+
+            updatePriceSummary();
+            return;
+        }
+
+        // Keep the previous selection if it is still active.
+        const selectedStillAvailable = shippingMethods.some(method =>
+            String(method.id) === String(selectedShippingMethodId)
+        );
+
+        if (!selectedStillAvailable) {
+            selectedShippingMethodId = shippingMethods[0].id;
+        }
+
+        shippingMethodsContainer.innerHTML = shippingMethods.map(method => {
+            const methodId = String(method.id);
+            const isSelected =
+                methodId === String(selectedShippingMethodId);
+
+            const minimum = Number(method.minimum) || 0;
+
+            const freeShippingText = minimum > 0
+                ? `Free delivery on orders over ${formatPrice(minimum)}`
+                : "Shipping charge applies";
+
+            const freeShippingReached =
+                minimum > 0 && calculateSubtotal() >= minimum;
+
+            const chargeText = freeShippingReached
+                ? "FREE"
+                : formatPrice(method.price);
+
+            return `
+                <label class="checkout-shipping-option">
+                    <input
+                        type="radio"
+                        name="checkoutShippingMethod"
+                        value="${escapeHTML(methodId)}"
+                        ${isSelected ? "checked" : ""}
+                    >
+
+                    <span class="checkout-shipping-option-info">
+                        <strong>${escapeHTML(method.name)}</strong>
+                        <small>
+                            ${escapeHTML(method.days)}
+                        </small>
+                        <small>
+                            ${escapeHTML(freeShippingText)}
+                        </small>
+                    </span>
+
+                    <strong class="checkout-shipping-price">
+                        ${chargeText}
+                    </strong>
+                </label>
+            `;
+        }).join("");
+
+        if (placeOrderButton && cart.length > 0) {
+            placeOrderButton.disabled = false;
+        }
+
+        if (shippingMessage) {
+            shippingMessage.textContent = "";
+        }
+
+        updatePriceSummary();
+    }
+
+    if (shippingMethodsContainer) {
+        shippingMethodsContainer.addEventListener("change", event => {
+            if (
+                event.target.name !== "checkoutShippingMethod"
+            ) {
+                return;
+            }
+
+            selectedShippingMethodId = event.target.value;
+
+            displayShippingMethods();
+        });
+    }
 
     // ============================================
-    // 8. CALCULATE FINAL TOTAL
+    // 9. CURRENT DISCOUNT AND FINAL TOTAL
     // ============================================
 
     function getCurrentDiscount(subtotal) {
@@ -298,37 +533,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getFinalTotal() {
         const subtotal = calculateSubtotal();
-        const shipping = 0;
+        const shipping = calculateShipping();
         const discount = getCurrentDiscount(subtotal);
 
-        return Math.max(0, subtotal + shipping - discount);
+        return Math.max(
+            0,
+            subtotal + shipping - discount
+        );
     }
 
-
     // ============================================
-    // 9. COUPON MESSAGE
+    // 10. COUPON MESSAGE
     // ============================================
 
-    function showCouponMessage(message, success) {
+    function showCouponMessage(text, success) {
         if (!couponMessage) return;
 
-        couponMessage.textContent = message;
+        couponMessage.textContent = text;
 
         couponMessage.style.color = success
             ? "#16a34a"
             : "#dc2626";
     }
 
-
     // ============================================
-    // 10. UPDATE PRICE SUMMARY
+    // 11. UPDATE PRICE SUMMARY
     // ============================================
 
     function updatePriceSummary() {
         const subtotal = calculateSubtotal();
-
-        const shipping = 0;
-
+        const shipping = calculateShipping();
         const discount = getCurrentDiscount(subtotal);
 
         const total = Math.max(
@@ -347,7 +581,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (discountElement) {
-            discountElement.textContent = "-" + formatPrice(discount);
+            discountElement.textContent =
+                "-" + formatPrice(discount);
         }
 
         if (totalElement) {
@@ -359,9 +594,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-
     // ============================================
-    // 11. DISPLAY CHECKOUT PRODUCTS
+    // 12. DISPLAY CHECKOUT PRODUCTS
     // ============================================
 
     function displayCheckoutItems() {
@@ -382,12 +616,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             appliedCoupon = null;
+
             updatePriceSummary();
+            displayShippingMethods();
 
             return;
         }
 
-        if (placeOrderButton) {
+        if (placeOrderButton && shippingMethods.length > 0) {
             placeOrderButton.disabled = false;
         }
 
@@ -405,7 +641,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 "";
 
             const item = document.createElement("div");
-
             item.className = "checkout-item";
 
             const img = document.createElement("img");
@@ -433,9 +668,8 @@ document.addEventListener("DOMContentLoaded", () => {
         updatePriceSummary();
     }
 
-
     // ============================================
-    // 12. APPLY COUPON
+    // 13. APPLY COUPON
     // ============================================
 
     if (applyCouponButton) {
@@ -444,15 +678,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? couponInput.value
                 : "";
 
-            const subtotal = calculateSubtotal();
-
-            const result = validateCoupon(code, subtotal);
+            const result = validateCoupon(
+                code,
+                calculateSubtotal()
+            );
 
             if (!result.valid) {
                 appliedCoupon = null;
 
                 showCouponMessage(result.message, false);
-
                 updatePriceSummary();
 
                 return;
@@ -470,12 +704,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             updatePriceSummary();
+            displayShippingMethods();
         });
     }
 
-
     // ============================================
-    // 13. REMOVE COUPON
+    // 14. REMOVE COUPON
     // ============================================
 
     if (removeCouponButton) {
@@ -489,41 +723,248 @@ document.addEventListener("DOMContentLoaded", () => {
             showCouponMessage("Coupon removed.", false);
 
             updatePriceSummary();
+            displayShippingMethods();
         });
     }
 
+    // ============================================
+    // 15. CENTRAL INVENTORY STOCK VALIDATION
+    // ============================================
 
-    // ============================================
-    // 14. VALIDATE STOCK
-    // ============================================
+    function getInventoryStock() {
+        try {
+            const data = JSON.parse(
+                localStorage.getItem("yourshop-inventory-stock") || "{}"
+            );
+
+            if (
+                data &&
+                typeof data === "object" &&
+                !Array.isArray(data)
+            ) {
+                return data;
+            }
+
+            return {};
+
+        } catch (error) {
+            console.error("Could not load inventory stock:", error);
+            return {};
+        }
+    }
+
+    function getAvailableStock(product) {
+        const inventoryStock = getInventoryStock();
+        const productId = String(product.id);
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                inventoryStock,
+                productId
+            )
+        ) {
+            const stock = Number(inventoryStock[productId]);
+
+            return Number.isSafeInteger(stock) && stock >= 0
+                ? stock
+                : -1;
+        }
+
+        if (product.stock === undefined || product.stock === null) {
+            return null;
+        }
+
+        const stock = Number(product.stock);
+
+        return Number.isSafeInteger(stock) && stock >= 0
+            ? stock
+            : -1;
+    }
 
     function validateStock() {
         return cart.every(product => {
-            const stock = Number(product.stock);
-            const quantity = Number(product.quantity) || 0;
+            const stock = getAvailableStock(product);
+            const quantity = Number(product.quantity);
 
-            if (product.stock === undefined || product.stock === null) {
-                return true;
+            if (stock === null) {
+                return Number.isInteger(quantity) && quantity > 0;
             }
 
             return (
-                Number.isFinite(stock) &&
                 stock >= 0 &&
+                Number.isInteger(quantity) &&
                 quantity > 0 &&
                 quantity <= stock
             );
         });
     }
 
+    // ============================================
+    // 16. SAVED ADDRESS INTEGRATION
+    // ============================================
+
+    function escapeAddressHTML(value) {
+        return escapeHTML(value);
+    }
+
+    function loadSavedAddresses() {
+        try {
+            const addresses = JSON.parse(
+                localStorage.getItem(SAVED_ADDRESSES_KEY) || "[]"
+            );
+
+            return Array.isArray(addresses) ? addresses : [];
+
+        } catch (error) {
+            console.error("Could not load saved addresses:", error);
+            return [];
+        }
+    }
+
+    function fillCheckoutAddress(address) {
+        document.getElementById("customer-name").value =
+            address.name || "";
+
+        document.getElementById("customer-phone").value =
+            address.phone || "";
+
+        document.getElementById("customer-address").value =
+            address.details || "";
+
+        document.getElementById("customer-city").value =
+            address.city || "";
+
+        if (postalInput) {
+            postalInput.value = address.postalCode || "";
+            postalInput.required = Boolean(address.postalCode);
+        }
+    }
+
+    function clearCheckoutAddress() {
+        document.getElementById("customer-name").value = "";
+        document.getElementById("customer-phone").value = "";
+        document.getElementById("customer-address").value = "";
+        document.getElementById("customer-city").value = "";
+
+        if (postalInput) {
+            postalInput.value = "";
+            postalInput.required = true;
+        }
+    }
+
+    function displaySavedAddresses() {
+        if (!savedAddressesContainer) return;
+
+        const addresses = loadSavedAddresses();
+
+        const defaultAddress = addresses.find(
+            address => address.isDefault
+        );
+
+        const selectedAddress =
+            defaultAddress || addresses[0];
+
+        let html = "";
+
+        addresses.forEach(address => {
+            const checked = selectedAddress &&
+                String(address.id) === String(selectedAddress.id);
+
+            html += `
+                <label class="saved-address-option">
+                    <input
+                        type="radio"
+                        name="checkoutAddressChoice"
+                        value="${escapeAddressHTML(address.id)}"
+                        ${checked ? "checked" : ""}
+                    >
+
+                    <span>
+                        <strong>
+                            ${escapeAddressHTML(address.type)} Address
+                            ${address.isDefault ? "(Default)" : ""}
+                        </strong>
+
+                        <small>
+                            ${escapeAddressHTML(address.name)}<br>
+                            ${escapeAddressHTML(address.phone)}<br>
+                            ${escapeAddressHTML(address.details)}<br>
+                            ${escapeAddressHTML(address.city)},
+                            ${escapeAddressHTML(address.country)}
+                        </small>
+                    </span>
+                </label>
+            `;
+        });
+
+        html += `
+            <label class="saved-address-option">
+                <input
+                    type="radio"
+                    name="checkoutAddressChoice"
+                    value="manual"
+                    ${addresses.length === 0 ? "checked" : ""}
+                >
+
+                <span>
+                    <strong>Enter a New Address</strong>
+                    <small>Use a different delivery address.</small>
+                </span>
+            </label>
+        `;
+
+        savedAddressesContainer.innerHTML = html;
+
+        if (selectedAddress) {
+            fillCheckoutAddress(selectedAddress);
+        } else {
+            clearCheckoutAddress();
+        }
+    }
+
+    if (savedAddressesContainer) {
+        savedAddressesContainer.addEventListener("change", event => {
+            if (event.target.name !== "checkoutAddressChoice") {
+                return;
+            }
+
+            const selectedId = event.target.value;
+
+            if (selectedId === "manual") {
+                clearCheckoutAddress();
+                return;
+            }
+
+            const address = loadSavedAddresses().find(
+                item => String(item.id) === String(selectedId)
+            );
+
+            if (address) {
+                fillCheckoutAddress(address);
+            }
+        });
+    }
 
     // ============================================
-    // 15. GET CUSTOMER INFORMATION
+    // 17. GET CUSTOMER INFORMATION
     // ============================================
 
     function getCustomerInformation() {
         const paymentOption = document.querySelector(
             'input[name="paymentMethod"]:checked'
         );
+
+        const addressChoice = document.querySelector(
+            'input[name="checkoutAddressChoice"]:checked'
+        );
+
+        const selectedAddress = addressChoice &&
+            addressChoice.value !== "manual"
+            ? loadSavedAddresses().find(
+                address => String(address.id) ===
+                    String(addressChoice.value)
+            )
+            : null;
 
         return {
             name: document.getElementById("customer-name").value.trim(),
@@ -538,15 +979,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
             postalCode: document.getElementById("customer-postal").value.trim(),
 
+            addressType: selectedAddress
+                ? selectedAddress.type
+                : "Other",
+
+            savedAddressId: selectedAddress
+                ? selectedAddress.id
+                : null,
+
             paymentMethod: paymentOption
                 ? paymentOption.value
                 : "cash"
         };
     }
 
+    // ============================================
+    // 18. CREATE ORDER NOTIFICATION
+    // ============================================
+
+    function createOrderNotification(order) {
+        const notifications = loadArray(NOTIFICATIONS_KEY);
+
+        const notification = {
+            id: "NOT-" + Date.now(),
+
+            title: "Order Confirmed!",
+
+            message: `Your order ${order.orderId} has been successfully placed. Your total is ${formatPrice(order.total)}.`,
+
+            category: "orders",
+
+            read: false,
+
+            createdAt: new Date().toISOString(),
+
+            orderId: order.orderId
+        };
+
+        notifications.unshift(notification);
+
+        if (!saveArray(NOTIFICATIONS_KEY, notifications)) {
+            console.warn("Order notification could not be saved.");
+        }
+    }
 
     // ============================================
-    // 16. INCREASE COUPON USAGE
+    // 19. INCREASE COUPON USAGE
     // ============================================
 
     function recordCouponUsage(code) {
@@ -564,168 +1042,201 @@ document.addEventListener("DOMContentLoaded", () => {
         return saveArray(COUPONS_KEY, coupons);
     }
 
-
     // ============================================
-    // 17. PLACE ORDER
+    // 20. PLACE ORDER
     // ============================================
 
-    if (checkoutForm) {
-        checkoutForm.addEventListener("submit", event => {
-            event.preventDefault();
+    checkoutForm.addEventListener("submit", event => {
+        event.preventDefault();
 
-            // Check cart
-            cart = loadArray(CART_KEY);
+        // Reload the latest cart.
+        cart = loadArray(CART_KEY);
 
-            if (cart.length === 0) {
-                alert("Your shopping cart is empty!");
-                return;
-            }
+        if (cart.length === 0) {
+            alert("Your shopping cart is empty!");
+            return;
+        }
 
-            // Check stock
-            if (!validateStock()) {
-                alert(
-                    "One or more products exceed available stock. Please update your cart."
-                );
-                return;
-            }
-
-            // Check customer information
-            if (!checkoutForm.reportValidity()) {
-                return;
-            }
-
-            const customer = getCustomerInformation();
-
-            // Online payment remains unavailable
-            if (customer.paymentMethod === "online") {
-                alert(
-                    "Online payment is coming soon. Please select Cash on Delivery."
-                );
-                return;
-            }
-
-            // Revalidate coupon at checkout
-            let couponDetails = null;
-
-            if (appliedCoupon) {
-                const result = validateCoupon(
-                    appliedCoupon.code,
-                    calculateSubtotal()
-                );
-
-                if (!result.valid) {
-                    appliedCoupon = null;
-
-                    showCouponMessage(
-                        result.message + " Please apply another coupon.",
-                        false
-                    );
-
-                    updatePriceSummary();
-
-                    return;
-                }
-
-                couponDetails = result;
-            }
-
-            const subtotal = calculateSubtotal();
-
-            const shipping = 0;
-
-            const discount = couponDetails
-                ? couponDetails.discount
-                : 0;
-
-            const total = Math.max(
-                0,
-                subtotal + shipping - discount
-            );
-
-            // Load existing orders
-            const orders = loadArray(ORDERS_KEY);
-
-            // Create order
-            const order = {
-                orderId: "YS" + Date.now(),
-
-                customer: customer,
-
-                // Keep both properties for compatibility
-                products: cart,
-                items: cart,
-
-                subtotal: subtotal,
-                discount: discount,
-                couponCode: couponDetails
-                    ? couponDetails.code
-                    : null,
-
-                couponDetails: couponDetails
-                    ? {
-                        code: couponDetails.code,
-                        type: couponDetails.type,
-                        value: couponDetails.value,
-                        discount: discount
-                    }
-                    : null,
-
-                shipping: shipping,
-                total: total,
-
-                paymentMethod: customer.paymentMethod,
-                paymentStatus: "Pending",
-
-                orderDate: new Date().toISOString(),
-
-                status: "Pending"
-            };
-
-            // Save order
-            orders.push(order);
-
-            if (!saveArray(ORDERS_KEY, orders)) {
-                alert(
-                    "Your order could not be saved. Please try again."
-                );
-                return;
-            }
-
-            // Record coupon use
-            if (couponDetails) {
-                const usageSaved = recordCouponUsage(
-                    couponDetails.code
-                );
-
-                if (!usageSaved) {
-                    console.error(
-                        "Could not update coupon usage count."
-                    );
-                }
-            }
-
-            // Clear cart
-            localStorage.removeItem(CART_KEY);
-
-            // Save order ID for confirmation page
-            localStorage.setItem(
-                "yourshop-last-order",
-                order.orderId
-            );
-
-            // Confirmation
+        // Validate stock.
+        if (!validateStock()) {
             alert(
-                `Thank you, ${customer.name}! Your order has been placed successfully.\n\nOrder ID: ${order.orderId}\nDiscount: ${formatPrice(discount)}\nTotal: ${formatPrice(total)}`
+                "One or more products exceed available stock. Please update your cart."
+            );
+            return;
+        }
+
+        // Validate customer information.
+        if (!checkoutForm.reportValidity()) {
+            return;
+        }
+
+        const customer = getCustomerInformation();
+
+        // COD only.
+        if (customer.paymentMethod === "online") {
+            alert(
+                "Online payment is coming soon. Please select Cash on Delivery."
+            );
+            return;
+        }
+
+        // Reload active shipping methods in case Admin changed them.
+        displayShippingMethods();
+
+        const shippingMethod = getSelectedShippingMethod();
+
+        if (!shippingMethod) {
+            alert(
+                "No shipping method is currently available. Please contact the store."
+            );
+            return;
+        }
+
+        // Revalidate coupon.
+        let couponDetails = null;
+
+        if (appliedCoupon) {
+            const result = validateCoupon(
+                appliedCoupon.code,
+                calculateSubtotal()
             );
 
-            window.location.href = "./confirmation.html";
-        });
-    }
+            if (!result.valid) {
+                appliedCoupon = null;
 
+                showCouponMessage(
+                    result.message + " Please apply another coupon.",
+                    false
+                );
+
+                updatePriceSummary();
+                return;
+            }
+
+            couponDetails = result;
+        }
+
+        const subtotal = calculateSubtotal();
+
+        const shipping = calculateShipping();
+
+        const discount = couponDetails
+            ? couponDetails.discount
+            : 0;
+
+        const total = Math.max(
+            0,
+            subtotal + shipping - discount
+        );
+
+        // Store shipping method details in the order.
+        const shippingDetails = {
+            id: shippingMethod.id,
+            name: shippingMethod.name,
+            type: shippingMethod.type,
+            deliveryTime: shippingMethod.days,
+            zone: shippingMethod.zone,
+            originalPrice: Number(shippingMethod.price),
+            freeShippingMinimum: Number(shippingMethod.minimum) || 0,
+            charge: shipping
+        };
+
+        const orders = loadArray(ORDERS_KEY);
+
+        const order = {
+            orderId: "YS" + Date.now(),
+
+            customer,
+
+            products: cart,
+            items: cart,
+
+            subtotal,
+            discount,
+
+            couponCode: couponDetails
+                ? couponDetails.code
+                : null,
+
+            couponDetails: couponDetails
+                ? {
+                    code: couponDetails.code,
+                    type: couponDetails.type,
+                    value: couponDetails.value,
+                    discount
+                }
+                : null,
+
+            shipping,
+            shippingMethod: shippingDetails,
+
+            total,
+
+            paymentMethod: customer.paymentMethod,
+            paymentStatus: "Pending",
+
+            orderDate: new Date().toISOString(),
+
+            status: "Pending"
+        };
+
+        // Save order.
+        orders.push(order);
+
+        if (!saveArray(ORDERS_KEY, orders)) {
+            alert(
+                "Your order could not be saved. Please try again."
+            );
+            return;
+        }
+
+        // Create confirmation notification.
+        createOrderNotification(order);
+
+        // Record coupon usage.
+        if (couponDetails) {
+            const usageSaved = recordCouponUsage(
+                couponDetails.code
+            );
+
+            if (!usageSaved) {
+                console.error(
+                    "Could not update coupon usage count."
+                );
+            }
+        }
+
+        // Clear cart.
+        localStorage.removeItem(CART_KEY);
+
+        // Save last order ID.
+        localStorage.setItem(
+            "yourshop-last-order",
+            order.orderId
+        );
+
+        // Confirmation.
+        alert(
+            `Thank you, ${customer.name}! Your order has been placed successfully.\n\n` +
+            `Order ID: ${order.orderId}\n` +
+            `Shipping: ${shippingMethod.name}\n` +
+            `Delivery Charge: ${formatPrice(shipping)}\n` +
+            `Discount: ${formatPrice(discount)}\n` +
+            `Total: ${formatPrice(total)}`
+        );
+
+        window.location.href = "./confirmation.html";
+    });
 
     // ============================================
-    // 18. INITIALIZE CHECKOUT
+    // 21. INITIALIZE CHECKOUT
     // ============================================
+
+    displaySavedAddresses();
+
+    shippingMethods = loadShippingMethods();
+
+    displayShippingMethods();
 
     displayCheckoutItems();
 

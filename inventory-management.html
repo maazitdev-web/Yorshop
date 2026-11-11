@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YourShop | Inventory Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/inventory-management.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>YourShop</h2>
+                <p>Admin Panel</p>
+            </div>
+
+            <nav class="admin-nav">
+
+                <p class="admin-nav-label">MAIN MENU</p>
+                <a href="./admin.html">📊 Dashboard</a>
+
+                <p class="admin-nav-label">STORE MANAGEMENT</p>
+                <a href="./admin-products.html">📦 Products</a>
+                <a href="./inventory-management.html" class="active">📋 Inventory</a>
+                <a href="./admin-orders.html">🛒 Orders</a>
+                <a href="./admin-customers.html">👥 Customers</a>
+                <a href="./admin-coupons.html">🎟️ Coupons</a>
+
+                <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+                <a href="./admin-support.html">🎧 Support Tickets</a>
+                <a href="./admin-product-questions.html">❓ Product Questions</a>
+                <a href="./admin-reviews.html">⭐ Product Reviews</a>
+
+                <p class="admin-nav-label">REPORTS & SETTINGS</p>
+                <a href="./admin-analytics.html">📈 Analytics</a>
+                <a href="./admin-notifications.html">🔔 Notifications</a>
+                <a href="./admin-activity.html">📋 Activity Log</a>
+                <a href="./admin-settings.html">⚙️ Settings</a>
+
+            </nav>
+
+            <a href="./index.html" class="back-to-store">
+                🏠 Back to Store
+            </a>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <header class="admin-header">
+
+                <button
+                    type="button"
+                    class="admin-menu-toggle"
+                    id="admin-menu-toggle"
+                    aria-label="Toggle admin menu"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <div>
+                    <h1>Inventory Management</h1>
+                    <p>Monitor and manage your store stock.</p>
+                </div>
+
+                <div class="admin-profile">
+                    <span>Administrator</span>
+                    <div class="admin-avatar">A</div>
+                </div>
+
+            </header>
+
+            <!-- INVENTORY STATISTICS -->
+            <section class="inventory-stats">
+
+                <div class="inventory-stat-card">
+                    <span>Total Products</span>
+                    <h2 id="inventory-total-products">0</h2>
+                </div>
+
+                <div class="inventory-stat-card">
+                    <span>Total Stock Units</span>
+                    <h2 id="inventory-total-stock">0</h2>
+                </div>
+
+                <div class="inventory-stat-card">
+                    <span>Low Stock Products</span>
+                    <h2 id="inventory-low-stock">0</h2>
+                </div>
+
+                <div class="inventory-stat-card">
+                    <span>Out of Stock</span>
+                    <h2 id="inventory-out-stock">0</h2>
+                </div>
+
+            </section>
+
+            <!-- INVENTORY TABLE -->
+            <section class="admin-panel inventory-panel">
+
+                <div class="inventory-heading">
+                    <div>
+                        <h2>Product Inventory</h2>
+                        <p>View and update product stock quantities.</p>
+                    </div>
+                </div>
+
+                <!-- SEARCH AND FILTER -->
+                <div class="inventory-controls">
+
+                    <input
+                        type="search"
+                        id="inventory-search"
+                        placeholder="Search products..."
+                    >
+
+                    <select id="inventory-category">
+                        <option value="all">All Categories</option>
+                    </select>
+
+                    <select id="inventory-status">
+                        <option value="all">All Stock Status</option>
+                        <option value="in-stock">In Stock</option>
+                        <option value="low-stock">Low Stock</option>
+                        <option value="out-of-stock">Out of Stock</option>
+                    </select>
+
+                </div>
+
+                <div class="inventory-table-wrapper">
+
+                    <table class="inventory-table">
+
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Current Stock</th>
+                                <th>Stock Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="inventory-product-list">
+                            <tr>
+                                <td colspan="6">Loading inventory...</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <p id="inventory-message" class="inventory-message"></p>
+
+            </section>
+
+            <!-- STOCK ADJUSTMENT HISTORY -->
+            <section class="admin-panel inventory-history-panel">
+
+                <div class="inventory-heading">
+                    <div>
+                        <h2>Stock Adjustment History</h2>
+                        <p>Recent changes to product quantities.</p>
+                    </div>
+                </div>
+
+                <div class="inventory-table-wrapper">
+
+                    <table class="inventory-table">
+
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Previous Stock</th>
+                                <th>New Stock</th>
+                                <th>Change</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="inventory-history-list">
+                            <tr>
+                                <td colspan="5">No stock adjustments yet.</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- SCRIPTS -->
+<script src="./js/products.js"></script>
+<script src="./js/currency.js"></script>
+<script src="./js/admin-sidebar.js"></script>
+<script src="./js/admin-activity.js"></script>
+<script src="./js/inventory-management.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Management | YourShop Admin</title>
+
+    <link rel="stylesheet" href="./css/admin.css">
+    <link rel="stylesheet" href="./css/shipping-management.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+
+        <div class="admin-logo">
+            <h2>YourShop</h2>
+            <span>ADMIN PANEL</span>
+        </div>
+
+        <nav class="admin-nav">
+
+            <p class="admin-nav-label">MAIN MENU</p>
+            <a href="./admin.html">📊 Dashboard</a>
+
+            <p class="admin-nav-label">STORE MANAGEMENT</p>
+            <a href="./admin-products.html">📦 Products</a>
+            <a href="./inventory-management.html">📋 Inventory</a>
+            <a href="./shipping-management.html" class="active">🚚 Shipping</a>
+            <a href="./admin-orders.html">🛒 Orders</a>
+            <a href="./admin-customers.html">👥 Customers</a>
+            <a href="./admin-coupons.html">🎟️ Coupons</a>
+
+            <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+            <a href="./admin-support.html">🎧 Support Tickets</a>
+            <a href="./admin-product-questions.html">❓ Product Questions</a>
+            <a href="./admin-reviews.html">⭐ Product Reviews</a>
+
+            <p class="admin-nav-label">REPORTS & SETTINGS</p>
+            <a href="./admin-analytics.html">📈 Analytics</a>
+            <a href="./admin-notifications.html">🔔 Notifications</a>
+            <a href="./admin-activity.html">📋 Activity Log</a>
+            <a href="./admin-settings.html">⚙️ Settings</a>
+
+        </nav>
+
+        <a href="./index.html" class="back-to-store">🏠 Back to Store</a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+
+        <header class="admin-header">
+
+            <button
+                type="button"
+                class="admin-menu-toggle"
+                id="admin-menu-toggle"
+                aria-label="Toggle admin menu"
+                aria-expanded="false">
+                ☰
+            </button>
+
+            <div>
+                <h1>Shipping Management</h1>
+                <p>Manage delivery methods, rates and shipping zones.</p>
+            </div>
+
+            <div class="admin-profile">
+                <span>Administrator</span>
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </header>
+
+        <!-- STATISTICS -->
+        <section class="shipping-stats">
+
+            <div class="shipping-stat-card">
+                <h3>Total Shipping Methods</h3>
+                <strong id="shipping-total-methods">0</strong>
+            </div>
+
+            <div class="shipping-stat-card">
+                <h3>Active Methods</h3>
+                <strong id="shipping-active-methods">0</strong>
+            </div>
+
+            <div class="shipping-stat-card">
+                <h3>Shipping Zones</h3>
+                <strong id="shipping-total-zones">0</strong>
+            </div>
+
+            <div class="shipping-stat-card">
+                <h3>Free Shipping Methods</h3>
+                <strong id="shipping-free-methods">0</strong>
+            </div>
+
+        </section>
+
+        <!-- SHIPPING METHOD FORM -->
+        <section class="shipping-panel">
+
+            <h2 id="shipping-form-title">Add Shipping Method</h2>
+
+            <form id="shipping-form" class="shipping-form">
+
+                <input type="hidden" id="shipping-method-id">
+
+                <div class="shipping-form-group">
+                    <label for="shipping-name">Method Name</label>
+                    <input
+                        type="text"
+                        id="shipping-name"
+                        placeholder="Standard Delivery"
+                        required>
+                </div>
+
+                <div class="shipping-form-group">
+                    <label for="shipping-type">Delivery Type</label>
+                    <select id="shipping-type" required>
+                        <option value="standard">Standard Delivery</option>
+                        <option value="express">Express Delivery</option>
+                        <option value="overnight">Overnight Delivery</option>
+                    </select>
+                </div>
+
+                <div class="shipping-form-group">
+                    <label for="shipping-price">Shipping Price ($)</label>
+                    <input
+                        type="number"
+                        id="shipping-price"
+                        min="0"
+                        step="0.01"
+                        placeholder="5.00"
+                        required>
+                </div>
+
+                <div class="shipping-form-group">
+                    <label for="shipping-minimum">Free Shipping Minimum ($)</label>
+                    <input
+                        type="number"
+                        id="shipping-minimum"
+                        min="0"
+                        step="0.01"
+                        placeholder="100">
+                </div>
+
+                <div class="shipping-form-group">
+                    <label for="shipping-days">Estimated Delivery</label>
+                    <input
+                        type="text"
+                        id="shipping-days"
+                        placeholder="3-5 Business Days"
+                        required>
+                </div>
+
+                <div class="shipping-form-group">
+                    <label for="shipping-zone">Shipping Zone</label>
+                    <input
+                        type="text"
+                        id="shipping-zone"
+                        placeholder="All Areas"
+                        required>
+                </div>
+
+                <div class="shipping-form-group full-width">
+                    <label class="shipping-toggle">
+                        <input type="checkbox" id="shipping-active" checked>
+                        Enable this shipping method
+                    </label>
+                </div>
+
+                <div class="shipping-form-group full-width">
+                    <div>
+                        <button type="submit" class="shipping-primary-button" id="shipping-submit-button">
+                            Add Shipping Method
+                        </button>
+
+                        <button type="button" class="shipping-action-button" id="shipping-cancel-edit" hidden>
+                            Cancel Edit
+                        </button>
+                    </div>
+
+                    <p id="shipping-message" class="shipping-message"></p>
+                </div>
+
+            </form>
+
+        </section>
+
+        <!-- SHIPPING METHODS TABLE -->
+        <section class="shipping-panel">
+
+            <h2>Shipping Methods</h2>
+
+            <div class="shipping-table-wrapper">
+
+                <table class="shipping-table">
+
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Free Shipping Minimum</th>
+                            <th>Delivery Time</th>
+                            <th>Zone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="shipping-method-list">
+                        <tr>
+                            <td colspan="8" class="shipping-empty">
+                                Loading shipping methods...
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="./js/admin-sidebar.js"></script>
+<script src="./js/admin-activity.js"></script>
+<script src="./js/shipping-management.js"></script>
+
+</body>
+</html>

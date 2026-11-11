@@ -103,12 +103,61 @@
         <!-- Header Actions -->
 <div class="header-actions">
 
-    <!-- Account -->
-    <span class="header-action" aria-disabled="true">
+<!-- Account Dropdown -->
+<div class="account-dropdown" id="account-dropdown">
+
+    <button
+        type="button"
+        class="header-action account-toggle"
+        id="account-toggle"
+        aria-expanded="false"
+        aria-controls="account-menu"
+    >
         <span class="action-icon">♙</span>
         <span>Account</span>
-    </span>
+        <span class="account-arrow">⌄</span>
+    </button>
+    <a href="./admin.html" class="header-action">
+    <span>⚙️</span>
+    <span>Admin</span>
+</a>
 
+    <div class="account-menu" id="account-menu" hidden>
+
+        <div class="account-menu-heading">
+            <strong>Welcome to YourShop!</strong>
+            <p>Manage your shopping account</p>
+        </div>
+
+        <a href="./customer-login.html">
+            <span>↪</span> Login
+        </a>
+
+        <a href="./customer-register.html">
+            <span>＋</span> Create Account
+        </a>
+
+        <div class="account-menu-divider"></div>
+
+        <a href="./customer-dashboard.html">
+            <span>▦</span> My Dashboard
+        </a>
+
+        <a href="./my-orders.html">
+            <span>▤</span> My Orders
+        </a>
+
+        <a href="./customer-profile.html">
+            <span>♙</span> My Profile
+        </a>
+
+        <a href="./saved-addresses.html">
+            <span>⌖</span> Saved Addresses
+        </a>
+
+    </div>
+
+</div>
 <!-- Wishlist -->
 <a href="./wishlist.html" class="header-action wishlist-action">
     <span class="action-icon">♡</span>
@@ -584,6 +633,18 @@
 <script src="./js/storefront-settings.js"></script>
 <script src="./js/recently-viewed.js"></script>
 <script src="./js/recommended-products.js"></script>
+<script src="./js/account-menu.js"></script>
+
+<!-- FLOATING SUPPORT BUTTON -->
+<a href="./support.html"
+   class="floating-support-btn"
+   title="Customer Support"
+   aria-label="Open Customer Support">
+
+    <span class="support-icon">🎧</span>
+    <span class="support-tooltip">Need Help?</span>
+
+</a>
 
 </body>
 </html>

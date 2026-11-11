@@ -1,0 +1,269 @@
+
+/* ==========================================
+   YOURSHOP - SHIPPING MANAGEMENT CSS
+========================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+/* Statistics */
+
+.shipping-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.shipping-stat-card {
+    background: #fff;
+    padding: 22px;
+    border-radius: 12px;
+    border: 1px solid #e5eaf2;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+}
+
+.shipping-stat-card h3 {
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.shipping-stat-card strong {
+    font-size: 28px;
+    color: #102a56;
+}
+
+/* Main Panels */
+
+.shipping-panel {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #e5eaf2;
+    margin-bottom: 25px;
+}
+
+.shipping-panel h2 {
+    color: #102a56;
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Form */
+
+.shipping-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.shipping-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.shipping-form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.shipping-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.shipping-form-group input:not([type="checkbox"]),
+.shipping-form-group select,
+.shipping-form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dbe2ea;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.shipping-form-group input:focus,
+.shipping-form-group select:focus,
+.shipping-form-group textarea:focus {
+    border-color: #2563eb;
+}
+
+/* Toggle */
+
+.shipping-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+}
+
+.shipping-toggle input {
+    width: 17px;
+    height: 17px;
+    accent-color: #2563eb;
+}
+
+/* Buttons */
+
+.shipping-primary-button {
+    background: #1d4ed8;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.shipping-primary-button:hover {
+    background: #1e40af;
+}
+
+.shipping-action-button {
+    padding: 9px 13px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 2px;
+}
+
+.shipping-edit-button {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.shipping-delete-button {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.shipping-action-button:hover {
+    opacity: 0.8;
+}
+
+/* Table */
+
+.shipping-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.shipping-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+}
+
+.shipping-table th,
+.shipping-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e5eaf2;
+    font-size: 12px;
+}
+
+.shipping-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.shipping-table td {
+    color: #334155;
+}
+
+.shipping-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* Status */
+
+.shipping-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.shipping-status.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.shipping-status.inactive {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Messages */
+
+.shipping-message {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.shipping-message.success {
+    color: #15803d;
+}
+
+.shipping-message.error {
+    color: #dc2626;
+}
+
+.shipping-empty {
+    text-align: center;
+    padding: 25px !important;
+    color: #94a3b8 !important;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+    .shipping-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .shipping-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .shipping-form {
+        grid-template-columns: 1fr;
+    }
+
+    .shipping-panel {
+        padding: 16px;
+    }
+
+    .shipping-panel h2 {
+        font-size: 17px;
+    }
+}

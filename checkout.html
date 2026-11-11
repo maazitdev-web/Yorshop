@@ -20,6 +20,74 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="./css/style.css">
 
+
+<style>
+.saved-checkout-addresses {
+    background: #f5f8ff;
+    border: 1px solid #dce6f5;
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 25px;
+}
+
+.saved-checkout-addresses h3 {
+    color: #102a56;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.saved-checkout-addresses p {
+    color: #68758a;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.saved-address-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: white;
+    border: 1px solid #dce3ed;
+    border-radius: 8px;
+    padding: 13px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.saved-address-option:has(input:checked) {
+    border-color: #2563eb;
+    background: #eef4ff;
+}
+
+.saved-address-option input {
+    margin-top: 4px;
+    accent-color: #2563eb;
+}
+
+.saved-address-option strong {
+    color: #102a56;
+    font-size: 13px;
+}
+
+.saved-address-option small {
+    display: block;
+    color: #68758a;
+    font-size: 11px;
+    line-height: 1.7;
+    margin-top: 4px;
+}
+
+.manage-address-link {
+    display: inline-block;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 5px;
+}
+</style>
+
+
 </head>
 
 <body>
@@ -73,6 +141,25 @@
                 <h2>Delivery Information</h2>
 
                 <form id="checkout-form">
+
+
+<!-- SAVED DELIVERY ADDRESSES -->
+<div class="saved-checkout-addresses">
+
+    <h3>Choose a Saved Address</h3>
+
+    <p>Select an address from your saved addresses or enter a new one.</p>
+
+    <div id="checkout-saved-addresses">
+        <!-- Saved addresses will appear here -->
+    </div>
+
+    <a href="./saved-addresses.html" class="manage-address-link">
+        Manage Saved Addresses
+    </a>
+
+</div>
+
 
                     <!-- Customer Name -->
                     <div class="form-group">
@@ -189,6 +276,23 @@
                     <h2 class="payment-heading">
                         Payment Method
                     </h2>
+
+
+<!-- SHIPPING METHOD -->
+<h2 class="payment-heading">
+    Delivery Method
+</h2>
+
+<div class="checkout-shipping-section">
+    <p>Select your preferred delivery method:</p>
+
+    <div id="checkout-shipping-methods">
+        <p>Loading available delivery methods...</p>
+    </div>
+
+    <p id="checkout-shipping-message"></p>
+</div>
+
 
                     <div class="payment-option">
 
