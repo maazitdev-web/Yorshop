@@ -115,14 +115,15 @@ app.get("/api/products", async (req, res) => {
             : "";
 
         // 3. Validate sorting
-        const allowedSortColumns = [
-            "id",
-            "name",
-            "price",
-            "rating",
-            "stock",
-            "created_at"
-        ];
+const allowedSortColumns = [
+    "id",
+    "name",
+    "price",
+    "rating",
+    "stock",
+    "created_at",
+    "sold_count"
+];
 
         const selectedSort = allowedSortColumns.includes(sortBy)
             ? sortBy
