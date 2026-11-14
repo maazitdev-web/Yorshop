@@ -1,15 +1,16 @@
 ﻿
 // ============================================
 // YOURSHOP - MAIN JAVASCRIPT
+// FRONTEND-ONLY VERSION
 // ============================================
 // Features:
-// Navigation, hero slider, products, MySQL backend,
+// Navigation, hero slider, products, local storage,
 // cart, wishlist, compare, quick view, search,
 // filters, sorting, pagination, newsletter,
-// and back to top.
+// image fallback, and back to top.
 // ============================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 
     "use strict";
 
@@ -41,28 +42,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     const applyPriceButton = document.getElementById("apply-price-filter");
     const resetPriceButton = document.getElementById("reset-price-filter");
 
-    // Hide Admin Login link when administrator is logged in
-const adminToken = sessionStorage.getItem("yourshop-admin-token");
+    // Hide Admin Login link when administrator is logged in.
+    const adminToken = sessionStorage.getItem("yourshop-admin-token");
 
-const adminLoginLinks = document.querySelectorAll(
-    'a[href="./admin-login.html"]'
-);
+    const adminLoginLinks = document.querySelectorAll(
+        'a[href="./admin-login.html"]'
+    );
 
-if (adminToken) {
-    adminLoginLinks.forEach(link => {
-        link.style.display = "none";
-    });
-}
-// ============================================
-// 2. LOCAL PRODUCT PAGINATION SETTINGS
-// ============================================
+    if (adminToken) {
+        adminLoginLinks.forEach(link => {
+            link.style.display = "none";
+        });
+    }
 
-let currentPage = 1;
-const productsPerPage = 8;
-let totalPages = 1;
-let totalProducts = 0;
+    // ============================================
+    // 2. LOCAL PRODUCT PAGINATION SETTINGS
+    // ============================================
 
-let searchRequestId = 0;
+    let currentPage = 1;
+    const productsPerPage = 8;
+    let totalPages = 1;
+    let totalProducts = 0;
 
     // ============================================
     // 3. CHECK PRODUCTS.JS
@@ -77,13 +77,8 @@ let searchRequestId = 0;
         return;
     }
 
-
     // ============================================
-    // 4. LOAD PRODUCTS FROM MYSQL
-    // ============================================
-
-    // ============================================
-    // 5. LOAD CENTRAL INVENTORY STOCK
+    // 4. LOAD CENTRAL INVENTORY STOCK
     // ============================================
 
     try {
@@ -115,20 +110,13 @@ let searchRequestId = 0;
                         Number.isSafeInteger(stock) &&
                         stock >= 0
                     ) {
-
                         product.stock = stock;
-
                     }
-
                 }
-
             });
-
         }
 
-        console.log(
-            "YourShop inventory stock synchronized."
-        );
+        console.log("YourShop inventory stock loaded.");
 
     } catch (error) {
 
@@ -136,11 +124,10 @@ let searchRequestId = 0;
             "Could not load inventory stock:",
             error
         );
-
     }
 
     // ============================================
-    // 6. LOCAL STORAGE HELPERS
+    // 5. LOCAL STORAGE HELPERS
     // ============================================
 
     function getStoredArray(key) {
@@ -161,9 +148,7 @@ let searchRequestId = 0;
             );
 
             return [];
-
         }
-
     }
 
     function saveStoredArray(key, value) {
@@ -185,9 +170,7 @@ let searchRequestId = 0;
             alert(
                 "Your browser could not save this change."
             );
-
         }
-
     }
 
     function getCart() {
@@ -203,7 +186,6 @@ let searchRequestId = 0;
         return getStoredArray("yourshop-wishlist")
             .map(Number)
             .filter(Number.isFinite);
-
     }
 
     function saveWishlist(list) {
@@ -215,11 +197,131 @@ let searchRequestId = 0;
         return getStoredArray("yourshop-compare")
             .map(Number)
             .filter(Number.isFinite);
-
     }
 
     function saveCompareList(list) {
         saveStoredArray("yourshop-compare", list);
+    }
+
+    // ============================================
+    // 6. IMAGE FALLBACK SYSTEM
+    // ============================================
+
+    function getProductImageSources(product) {
+
+        const sources = [
+            product.image,
+            ...(Array.isArray(product.images) ? product.images : [])
+        ];
+
+        // Remove empty URLs and duplicates.
+        return sources.filter((url, index, array) => {
+
+            return (
+                typeof url === "string" &&
+                url.trim() !== "" &&
+                array.indexOf(url) === index
+            );
+
+        });
+    }
+
+    function getImagePlaceholder() {
+
+        const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="500"
+                height="400"
+                viewBox="0 0 500 400">
+
+                <rect
+                    width="500"
+                    height="400"
+                    fill="#f1f5f9"
+                />
+
+                <g
+                    fill="none"
+                    stroke="#94a3b8"
+                    stroke-width="5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+
+                    <rect
+                        x="190"
+                        y="115"
+                        width="120"
+                        height="105"
+                        rx="10"
+                    />
+
+                    <circle
+                        cx="225"
+                        cy="150"
+                        r="12"
+                    />
+
+                    <path d="M195 205 L235 170 L265 195 L285 175 L305 200"/>
+
+                </g>
+
+                <text
+                    x="250"
+                    y="275"
+                    text-anchor="middle"
+                    font-family="Arial"
+                    font-size="22"
+                    fill="#64748b">
+                    Image Unavailable
+                </text>
+
+            </svg>
+        `;
+
+        return "data:image/svg+xml;charset=UTF-8," +
+            encodeURIComponent(svg);
+    }
+
+    function attachImageFallback(imageElement, product) {
+
+        if (!imageElement || !product) return;
+
+        const imageSources = getProductImageSources(product);
+
+        let currentImageIndex = 0;
+
+        // If no image URLs exist, show the placeholder.
+        if (imageSources.length === 0) {
+
+            imageElement.onerror = null;
+            imageElement.src = getImagePlaceholder();
+
+            return;
+        }
+
+        // Try the next image whenever one fails.
+        imageElement.onerror = function () {
+
+            currentImageIndex++;
+
+            if (currentImageIndex < imageSources.length) {
+
+                this.src = imageSources[currentImageIndex];
+
+            } else {
+
+                // All available images failed.
+                this.onerror = null;
+                this.src = getImagePlaceholder();
+
+                console.warn(
+                    `YourShop: All images failed for ${product.name}.`
+                );
+            }
+        };
+
+        // Start with the first available image.
+        imageElement.src = imageSources[0];
     }
 
     // ============================================
@@ -245,6 +347,7 @@ let searchRequestId = 0;
         headerContent.classList.add("open");
 
         if (menuOverlay) {
+
             menuOverlay.hidden = false;
 
             requestAnimationFrame(() => {
@@ -254,9 +357,12 @@ let searchRequestId = 0;
 
         document.body.classList.add("menu-open");
 
-        menuToggle.setAttribute("aria-expanded", "true");
-        menuToggle.setAttribute("aria-label", "Close navigation menu");
-        menuToggle.textContent = "✕";
+        if (menuToggle) {
+
+            menuToggle.setAttribute("aria-expanded", "true");
+            menuToggle.setAttribute("aria-label", "Close navigation menu");
+            menuToggle.textContent = "✕";
+        }
 
         headerContent.setAttribute("aria-hidden", "false");
     }
@@ -268,18 +374,22 @@ let searchRequestId = 0;
         headerContent.classList.remove("open");
 
         if (menuOverlay) {
+
             menuOverlay.classList.remove("active");
 
             setTimeout(() => {
+
                 if (!menuOverlay.classList.contains("active")) {
                     menuOverlay.hidden = true;
                 }
+
             }, 300);
         }
 
         document.body.classList.remove("menu-open");
 
         if (menuToggle) {
+
             menuToggle.setAttribute("aria-expanded", "false");
             menuToggle.setAttribute("aria-label", "Open navigation menu");
             menuToggle.textContent = "☰";
@@ -288,7 +398,6 @@ let searchRequestId = 0;
         headerContent.setAttribute("aria-hidden", "true");
     }
 
-    // Open and close menu button
     if (menuToggle && headerContent) {
 
         menuToggle.addEventListener("click", () => {
@@ -302,40 +411,30 @@ let searchRequestId = 0;
             } else {
                 openMobileMenu();
             }
-
         });
-
     }
 
-    // Close button
     if (menuClose) {
         menuClose.addEventListener("click", closeMobileMenu);
     }
 
-    // Close when dark overlay is clicked
     if (menuOverlay) {
         menuOverlay.addEventListener("click", closeMobileMenu);
     }
 
-    // Close when a navigation link is selected
     if (navLinks) {
 
         navLinks.querySelectorAll("a").forEach(link => {
 
-            link.addEventListener("click", () => {
-                closeMobileMenu();
-            });
+            link.addEventListener("click", closeMobileMenu);
 
         });
-
     }
 
-    // Close after submitting search
     if (searchForm) {
         searchForm.addEventListener("submit", closeMobileMenu);
     }
 
-    // Expand and collapse categories
     if (categoryExpandButton && menuCategories) {
 
         categoryExpandButton.addEventListener("click", () => {
@@ -349,24 +448,20 @@ let searchRequestId = 0;
             );
 
             menuCategories.hidden = isExpanded;
-
         });
-
     }
 
-    // Close menu with Escape key
     document.addEventListener("keydown", event => {
 
         if (event.key === "Escape") {
             closeMobileMenu();
         }
-
     });
 
-    // Reset mobile menu when switching to desktop
     mobileScreen.addEventListener("change", event => {
 
         if (!event.matches) {
+
             closeMobileMenu();
 
             if (menuCategories) {
@@ -374,15 +469,14 @@ let searchRequestId = 0;
             }
 
             if (categoryExpandButton) {
+
                 categoryExpandButton.setAttribute(
                     "aria-expanded",
                     "false"
                 );
             }
         }
-
     });
-
 
     // ============================================
     // 8. HERO SLIDER
@@ -413,7 +507,6 @@ let searchRequestId = 0;
             }
 
             currentSlide = index;
-
         }
 
         function startSlider() {
@@ -429,7 +522,6 @@ let searchRequestId = 0;
                 );
 
             }, 3000);
-
         }
 
         if (dots.length === slides.length) {
@@ -442,14 +534,11 @@ let searchRequestId = 0;
                     startSlider();
 
                 });
-
             });
-
         }
 
         showSlide(0);
         startSlider();
-
     }
 
     // ============================================
@@ -462,7 +551,6 @@ let searchRequestId = 0;
         const discount = Number(product.discount) || 0;
 
         return price * (1 - discount / 100);
-
     }
 
     function formatPrice(amount) {
@@ -472,7 +560,6 @@ let searchRequestId = 0;
         }
 
         return `$${Number(amount || 0).toFixed(2)}`;
-
     }
 
     function getProductById(id) {
@@ -480,7 +567,6 @@ let searchRequestId = 0;
         return products.find(product =>
             Number(product.id) === Number(id)
         );
-
     }
 
     // ============================================
@@ -501,7 +587,6 @@ let searchRequestId = 0;
         }, 0);
 
         cartCount.textContent = quantity;
-
     }
 
     function updateWishlistCount() {
@@ -509,7 +594,6 @@ let searchRequestId = 0;
         if (!wishlistCount) return;
 
         wishlistCount.textContent = getWishlist().length;
-
     }
 
     // ============================================
@@ -554,7 +638,6 @@ let searchRequestId = 0;
             );
 
             return;
-
         }
 
         const details = document.getElementById(
@@ -562,11 +645,6 @@ let searchRequestId = 0;
         );
 
         const discountedPrice = getDiscountedPrice(product);
-
-        const image = product.images && product.images.length
-            ? product.images[0]
-            : product.image;
-
         const stock = Number(product.stock) || 0;
 
         details.innerHTML = `
@@ -574,7 +652,7 @@ let searchRequestId = 0;
             <div class="quick-view-image">
 
                 <img
-                    src="${image || ""}"
+                    class="quick-view-product-image"
                     alt="${product.name || "Product"}"
                 >
 
@@ -630,19 +708,23 @@ let searchRequestId = 0;
                 </a>
 
             </div>
-
         `;
+
+        // Apply image fallback to Quick View image.
+        const quickViewImage = details.querySelector(
+            ".quick-view-product-image"
+        );
+
+        attachImageFallback(quickViewImage, product);
 
         quickViewModal.classList.add("active");
         document.body.classList.add("quick-view-open");
-
     }
 
     function closeQuickView() {
 
         quickViewModal.classList.remove("active");
         document.body.classList.remove("quick-view-open");
-
     }
 
     quickViewModal.addEventListener("click", event => {
@@ -660,18 +742,14 @@ let searchRequestId = 0;
             );
 
             return;
-
         }
 
         if (
             event.target === quickViewModal ||
             event.target.closest(".quick-view-close")
         ) {
-
             closeQuickView();
-
         }
-
     });
 
     document.addEventListener("keydown", event => {
@@ -679,7 +757,6 @@ let searchRequestId = 0;
         if (event.key === "Escape") {
             closeQuickView();
         }
-
     });
 
     // ============================================
@@ -714,7 +791,7 @@ let searchRequestId = 0;
             <div class="product-image-container">
 
                 <img
-                    src="${product.image || (product.images && product.images[0]) || ""}"
+                    class="product-card-image"
                     alt="${product.name || "Product"}"
                     loading="lazy"
                 >
@@ -732,14 +809,20 @@ let searchRequestId = 0;
                 </button>
 
             </div>
+<div class="product-info">
 
-            <div class="product-info">
+    <span class="product-category">
+        ${category}
+    </span>
 
-                <span class="product-category">
-                    ${category}
-                </span>
-
-                <h3>${product.name || "Unnamed product"}</h3>
+    <h3>
+        <a
+            href="./product-detail.html?id=${encodeURIComponent(product.id)}"
+            class="product-title-link"
+        >
+            ${product.name || "Unnamed product"}
+        </a>
+    </h3>
 
                 <div class="product-rating">
                     ⭐ ${Number(product.rating || 0).toFixed(1)} / 5
@@ -784,11 +867,16 @@ let searchRequestId = 0;
                 </button>
 
             </div>
-
         `;
 
-        return card;
+        // Apply automatic image fallback to this product card.
+        const productImage = card.querySelector(
+            ".product-card-image"
+        );
 
+        attachImageFallback(productImage, product);
+
+        return card;
     }
 
     // ============================================
@@ -821,11 +909,9 @@ let searchRequestId = 0;
                     </button>
 
                 </div>
-
             `;
 
             return;
-
         }
 
         const fragment = document.createDocumentFragment();
@@ -835,11 +921,9 @@ let searchRequestId = 0;
             fragment.appendChild(
                 createProductCard(product)
             );
-
         });
 
         productGrid.appendChild(fragment);
-
     }
 
     function renderBestSellers() {
@@ -859,9 +943,7 @@ let searchRequestId = 0;
             bestSellersGrid.appendChild(
                 createProductCard(product)
             );
-
         });
-
     }
 
     function renderNewArrivals() {
@@ -883,9 +965,7 @@ let searchRequestId = 0;
                     newArrival: true
                 })
             );
-
         });
-
     }
 
     // ============================================
@@ -904,7 +984,7 @@ let searchRequestId = 0;
 
         if (totalPages <= 1) return;
 
-        // Previous button
+        // Previous button.
         const previousButton = document.createElement("button");
 
         previousButton.type = "button";
@@ -916,12 +996,11 @@ let searchRequestId = 0;
             if (currentPage > 1) {
                 displayFilteredProducts(currentPage - 1);
             }
-
         });
 
         pagination.appendChild(previousButton);
 
-        // Page numbers
+        // Page numbers.
         for (let page = 1; page <= totalPages; page++) {
 
             const pageButton = document.createElement("button");
@@ -937,7 +1016,6 @@ let searchRequestId = 0;
                     "aria-current",
                     "page"
                 );
-
             }
 
             pageButton.addEventListener("click", () => {
@@ -945,10 +1023,9 @@ let searchRequestId = 0;
             });
 
             pagination.appendChild(pageButton);
-
         }
 
-        // Next button
+        // Next button.
         const nextButton = document.createElement("button");
 
         nextButton.type = "button";
@@ -960,154 +1037,166 @@ let searchRequestId = 0;
             if (currentPage < totalPages) {
                 displayFilteredProducts(currentPage + 1);
             }
-
         });
 
         pagination.appendChild(nextButton);
-
     }
 
-// ============================================
-// 15. SEARCH, FILTER AND SORT PRODUCTS LOCALLY
-// ============================================
+    // ============================================
+    // 15. SEARCH, FILTER AND SORT PRODUCTS LOCALLY
+    // ============================================
 
-function displayFilteredProducts(page = 1) {
+    function displayFilteredProducts(page = 1) {
 
-    const query = searchInput
-        ? searchInput.value.trim().toLowerCase()
-        : "";
+        const query = searchInput
+            ? searchInput.value.trim().toLowerCase()
+            : "";
 
-    const category = searchCategory
-        ? searchCategory.value
-        : "all";
+        const category = searchCategory
+            ? searchCategory.value
+            : "all";
 
-    const minPrice = minPriceInput && minPriceInput.value.trim() !== ""
-        ? Number(minPriceInput.value)
-        : null;
+        const minPrice = minPriceInput && minPriceInput.value.trim() !== ""
+            ? Number(minPriceInput.value)
+            : null;
 
-    const maxPrice = maxPriceInput && maxPriceInput.value.trim() !== ""
-        ? Number(maxPriceInput.value)
-        : null;
+        const maxPrice = maxPriceInput && maxPriceInput.value.trim() !== ""
+            ? Number(maxPriceInput.value)
+            : null;
 
-    // Start with all locally available products.
-    let filteredProducts = [...products];
+        // Start with all locally available products.
+        let filteredProducts = [...products];
 
-    // Search by product name.
-    if (query) {
-        filteredProducts = filteredProducts.filter(product =>
-            String(product.name || "").toLowerCase().includes(query)
-        );
-    }
+        // Search by product name.
+        if (query) {
 
-    // Filter by category.
-    if (category && category !== "all") {
-        filteredProducts = filteredProducts.filter(product =>
-            product.category === category
-        );
-    }
-
-    // Filter by minimum price.
-    if (minPrice !== null) {
-        filteredProducts = filteredProducts.filter(product =>
-            Number(product.price) >= minPrice
-        );
-    }
-
-    // Filter by maximum price.
-    if (maxPrice !== null) {
-        filteredProducts = filteredProducts.filter(product =>
-            Number(product.price) <= maxPrice
-        );
-    }
-
-    // Sort products.
-    if (sortSelect) {
-        switch (sortSelect.value) {
-
-            case "popular":
-                filteredProducts.sort((a, b) =>
-                    Number(b.soldCount || 0) - Number(a.soldCount || 0)
-                );
-                break;
-
-            case "newest":
-                filteredProducts.sort((a, b) =>
-                    Number(b.id) - Number(a.id)
-                );
-                break;
-
-            case "price-low":
-                filteredProducts.sort((a, b) =>
-                    Number(a.price) - Number(b.price)
-                );
-                break;
-
-            case "price-high":
-                filteredProducts.sort((a, b) =>
-                    Number(b.price) - Number(a.price)
-                );
-                break;
-
-            case "rating":
-                filteredProducts.sort((a, b) =>
-                    Number(b.rating) - Number(a.rating)
-                );
-                break;
+            filteredProducts = filteredProducts.filter(product =>
+                String(product.name || "").toLowerCase().includes(query)
+            );
         }
-    }
 
-    // Calculate pagination.
-    totalProducts = filteredProducts.length;
+        // Filter by category.
+        if (category && category !== "all") {
 
-    totalPages = Math.max(
-        1,
-        Math.ceil(totalProducts / productsPerPage)
-    );
+            filteredProducts = filteredProducts.filter(product =>
+                product.category === category
+            );
+        }
 
-    currentPage = Math.min(
-        Math.max(1, page),
-        totalPages
-    );
+        // Filter by minimum price.
+        if (minPrice !== null) {
 
-    const startIndex = (currentPage - 1) * productsPerPage;
+            filteredProducts = filteredProducts.filter(product =>
+                Number(product.price) >= minPrice
+            );
+        }
 
-    const paginatedProducts = filteredProducts.slice(
-        startIndex,
-        startIndex + productsPerPage
-    );
+        // Filter by maximum price.
+        if (maxPrice !== null) {
 
-    // Update product count.
-    const productCount = document.getElementById("product-count");
+            filteredProducts = filteredProducts.filter(product =>
+                Number(product.price) <= maxPrice
+            );
+        }
 
-    if (productCount) {
+        // Sort products.
+        if (sortSelect) {
 
-        const start = totalProducts === 0
-            ? 0
-            : startIndex + 1;
+            switch (sortSelect.value) {
 
-        const end = Math.min(
-            startIndex + productsPerPage,
-            totalProducts
+                case "popular":
+
+                    filteredProducts.sort((a, b) =>
+                        Number(b.soldCount || 0) - Number(a.soldCount || 0)
+                    );
+
+                    break;
+
+                case "newest":
+
+                    filteredProducts.sort((a, b) =>
+                        Number(b.id) - Number(a.id)
+                    );
+
+                    break;
+
+                case "price-low":
+
+                    filteredProducts.sort((a, b) =>
+                        Number(a.price) - Number(b.price)
+                    );
+
+                    break;
+
+                case "price-high":
+
+                    filteredProducts.sort((a, b) =>
+                        Number(b.price) - Number(a.price)
+                    );
+
+                    break;
+
+                case "rating":
+
+                    filteredProducts.sort((a, b) =>
+                        Number(b.rating) - Number(a.rating)
+                    );
+
+                    break;
+            }
+        }
+
+        // Calculate pagination.
+        totalProducts = filteredProducts.length;
+
+        totalPages = Math.max(
+            1,
+            Math.ceil(totalProducts / productsPerPage)
         );
 
-        productCount.textContent =
-            `Showing ${start}–${end} of ${totalProducts} products`;
+        currentPage = Math.min(
+            Math.max(1, page),
+            totalPages
+        );
+
+        const startIndex = (currentPage - 1) * productsPerPage;
+
+        const paginatedProducts = filteredProducts.slice(
+            startIndex,
+            startIndex + productsPerPage
+        );
+
+        // Update product count.
+        const productCount = document.getElementById("product-count");
+
+        if (productCount) {
+
+            const start = totalProducts === 0
+                ? 0
+                : startIndex + 1;
+
+            const end = Math.min(
+                startIndex + productsPerPage,
+                totalProducts
+            );
+
+            productCount.textContent =
+                `Showing ${start}–${end} of ${totalProducts} products`;
+        }
+
+        displayProducts(paginatedProducts);
+
+        renderProductPagination();
+
+        console.log("Local products displayed:", {
+            search: query,
+            category,
+            totalProducts,
+            currentPage,
+            totalPages,
+            displayedProducts: paginatedProducts.length
+        });
     }
-
-    // Display products and pagination.
-    displayProducts(paginatedProducts);
-
-    renderProductPagination();
-
-    console.log("Local products displayed:", {
-        search: query,
-        category,
-        totalProducts,
-        currentPage,
-        totalPages,
-        displayedProducts: paginatedProducts.length
-    });
-}
 
     // ============================================
     // 16. ADD PRODUCT TO CART
@@ -1125,7 +1214,6 @@ function displayFilteredProducts(page = 1) {
             );
 
             return;
-
         }
 
         const cart = getCart();
@@ -1150,7 +1238,6 @@ function displayFilteredProducts(page = 1) {
             );
 
             return;
-
         }
 
         if (existing) {
@@ -1163,7 +1250,6 @@ function displayFilteredProducts(page = 1) {
                 ...product,
                 quantity: 1
             });
-
         }
 
         saveCart(cart);
@@ -1173,7 +1259,6 @@ function displayFilteredProducts(page = 1) {
         alert(
             `${product.name} added to your cart!`
         );
-
     }
 
     // ============================================
@@ -1197,7 +1282,6 @@ function displayFilteredProducts(page = 1) {
         } else {
 
             list.push(id);
-
         }
 
         saveWishlist(list);
@@ -1224,11 +1308,9 @@ function displayFilteredProducts(page = 1) {
                     ? "Remove from wishlist"
                     : "Add to wishlist"
             );
-
         }
 
         updateWishlistCount();
-
     }
 
     // ============================================
@@ -1258,11 +1340,9 @@ function displayFilteredProducts(page = 1) {
                 );
 
                 return;
-
             }
 
             list.push(id);
-
         }
 
         saveCompareList(list);
@@ -1284,11 +1364,9 @@ function displayFilteredProducts(page = 1) {
                 "aria-pressed",
                 String(active)
             );
-
         }
 
         updateCompareButtons();
-
     }
 
     function updateCompareButtons() {
@@ -1314,9 +1392,7 @@ function displayFilteredProducts(page = 1) {
                 "aria-pressed",
                 String(active)
             );
-
         });
-
     }
 
     // ============================================
@@ -1327,7 +1403,7 @@ function displayFilteredProducts(page = 1) {
 
         const target = event.target;
 
-        // Reset search
+        // Reset search.
         const resetButton = target.closest("#reset-search");
 
         if (resetButton) {
@@ -1355,10 +1431,9 @@ function displayFilteredProducts(page = 1) {
             displayFilteredProducts(1);
 
             return;
-
         }
 
-        // Wishlist
+        // Wishlist.
         const wishlistButton = target.closest(".wishlist-heart");
 
         if (wishlistButton) {
@@ -1372,10 +1447,9 @@ function displayFilteredProducts(page = 1) {
             );
 
             return;
-
         }
 
-        // Compare
+        // Compare.
         const compareButton = target.closest(".compare-button");
 
         if (compareButton) {
@@ -1389,10 +1463,9 @@ function displayFilteredProducts(page = 1) {
             );
 
             return;
-
         }
 
-        // Add to cart
+        // Add to cart.
         const cartButton = target.closest(".add-to-cart-button");
 
         if (cartButton) {
@@ -1405,10 +1478,9 @@ function displayFilteredProducts(page = 1) {
             );
 
             return;
-
         }
 
-        // Quick view
+        // Quick view.
         const quickViewButton = target.closest(
             ".quick-view-button"
         );
@@ -1423,22 +1495,19 @@ function displayFilteredProducts(page = 1) {
             );
 
             return;
-
         }
 
-        // Open product details
+        // Open product details.
         const card = target.closest(".product-card");
 
         if (card && card.dataset.productId) {
 
-            window.location.href =
-                `./product-detail.html?id=${encodeURIComponent(card.dataset.productId)}`;
-
+        window.location.href =
+    `./product-detail.html?id=${product.id}`;
         }
-
     }
 
-    // Attach product events to all grids
+    // Attach product events to all grids.
     [
         productGrid,
         bestSellersGrid,
@@ -1452,7 +1521,6 @@ function displayFilteredProducts(page = 1) {
                 "click",
                 handleProductClick
             );
-
         });
 
     // ============================================
@@ -1476,11 +1544,8 @@ function displayFilteredProducts(page = 1) {
                 section.scrollIntoView({
                     behavior: "smooth"
                 });
-
             }
-
         });
-
     }
 
     if (searchCategory) {
@@ -1490,7 +1555,6 @@ function displayFilteredProducts(page = 1) {
             displayFilteredProducts(1);
 
         });
-
     }
 
     if (sortSelect) {
@@ -1500,7 +1564,6 @@ function displayFilteredProducts(page = 1) {
             displayFilteredProducts(1);
 
         });
-
     }
 
     // ============================================
@@ -1545,6 +1608,7 @@ function displayFilteredProducts(page = 1) {
             event.preventDefault();
 
             if (searchCategory) {
+
                 searchCategory.value =
                     category === "men-fashion"
                         ? "mens-fashion"
@@ -1556,18 +1620,17 @@ function displayFilteredProducts(page = 1) {
             }
 
             displayFilteredProducts(1);
-const section = document.getElementById("products-section");
 
-if (section) {
-    section.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+            const section = document.getElementById("products-section");
 
+            if (section) {
+
+                section.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
             }
-
         });
-
     }
 
     // ============================================
@@ -1599,7 +1662,6 @@ if (section) {
                 );
 
                 return;
-
             }
 
             if (
@@ -1613,13 +1675,10 @@ if (section) {
                 );
 
                 return;
-
             }
 
             displayFilteredProducts(1);
-
         });
-
     }
 
     if (resetPriceButton) {
@@ -1635,9 +1694,7 @@ if (section) {
             }
 
             displayFilteredProducts(1);
-
         });
-
     }
 
     // ============================================
@@ -1675,11 +1732,9 @@ if (section) {
 
                     newsletterMessage.textContent =
                         "Please enter a valid email address.";
-
                 }
 
                 return;
-
             }
 
             const subscribers = getStoredArray(
@@ -1692,11 +1747,9 @@ if (section) {
 
                     newsletterMessage.textContent =
                         "This email is already subscribed.";
-
                 }
 
                 return;
-
             }
 
             subscribers.push(email);
@@ -1710,13 +1763,10 @@ if (section) {
 
                 newsletterMessage.textContent =
                     "Thank you for subscribing!";
-
             }
 
             newsletterForm.reset();
-
         });
-
     }
 
     // ============================================
@@ -1741,7 +1791,6 @@ if (section) {
         );
 
         document.body.appendChild(backToTopButton);
-
     }
 
     function updateBackToTopVisibility() {
@@ -1750,7 +1799,6 @@ if (section) {
             "show",
             window.scrollY > 300
         );
-
     }
 
     window.addEventListener(
@@ -1766,7 +1814,6 @@ if (section) {
             top: 0,
             behavior: "smooth"
         });
-
     });
 
     // ============================================
@@ -1783,11 +1830,11 @@ if (section) {
 
     updateCompareButtons();
 
-// Load first page from local products
-displayFilteredProducts(1);
+    // Load first page from local products.
+    displayFilteredProducts(1);
 
     console.log(
-        "YourShop main.js loaded successfully."
+        "YourShop frontend main.js loaded successfully."
     );
 
 });

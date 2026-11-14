@@ -1046,247 +1046,205 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     
-
-    // ============================================
-    // 20. PLACE ORDER
-    // ============================================
+// ============================================
+// 20. PLACE ORDER - FRONTEND ONLY
+// ============================================
 
 checkoutForm.addEventListener("submit", async event => {
-            event.preventDefault();
+    event.preventDefault();
 
-        // Reload the latest cart.
-        cart = loadArray(CART_KEY);
+    // Reload the latest cart.
+    cart = loadArray(CART_KEY);
 
-        if (cart.length === 0) {
-            alert("Your shopping cart is empty!");
-            return;
-        }
+    if (cart.length === 0) {
+        alert("Your shopping cart is empty!");
+        return;
+    }
 
-        // Validate stock.
-        if (!validateStock()) {
-            alert(
-                "One or more products exceed available stock. Please update your cart."
-            );
-            return;
-        }
-
-        // Validate customer information.
-        if (!checkoutForm.reportValidity()) {
-            return;
-        }
-
-        const customer = getCustomerInformation();
-
-        // COD only.
-        if (customer.paymentMethod === "online") {
-            alert(
-                "Online payment is coming soon. Please select Cash on Delivery."
-            );
-            return;
-        }
-
-        // Reload active shipping methods in case Admin changed them.
-        displayShippingMethods();
-
-        const shippingMethod = getSelectedShippingMethod();
-
-        if (!shippingMethod) {
-            alert(
-                "No shipping method is currently available. Please contact the store."
-            );
-            return;
-        }
-
-        // Revalidate coupon.
-        let couponDetails = null;
-
-        if (appliedCoupon) {
-            const result = validateCoupon(
-                appliedCoupon.code,
-                calculateSubtotal()
-            );
-
-            if (!result.valid) {
-                appliedCoupon = null;
-
-                showCouponMessage(
-                    result.message + " Please apply another coupon.",
-                    false
-                );
-
-                updatePriceSummary();
-                return;
-            }
-
-            couponDetails = result;
-        }
-
-        const subtotal = calculateSubtotal();
-
-        const shipping = calculateShipping();
-
-        const discount = couponDetails
-            ? couponDetails.discount
-            : 0;
-
-        const total = Math.max(
-            0,
-            subtotal + shipping - discount
-        );
-
-        // Store shipping method details in the order.
-        const shippingDetails = {
-            id: shippingMethod.id,
-            name: shippingMethod.name,
-            type: shippingMethod.type,
-            deliveryTime: shippingMethod.days,
-            zone: shippingMethod.zone,
-            originalPrice: Number(shippingMethod.price),
-            freeShippingMinimum: Number(shippingMethod.minimum) || 0,
-            charge: shipping
-        };
-
-        const orders = loadArray(ORDERS_KEY);
-
-
-        // Send order to MySQL backend
-        let databaseOrder;
-
-        try {
-            placeOrderButton.disabled = true;
-            placeOrderButton.textContent = "Placing Order...";
-
-            const response = await fetch(
-                "http://localhost:3000/api/orders",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        customer,
-                        items: cart.map(product => ({
-                            id: Number(product.id),
-                            quantity: Number(product.quantity)
-                        })),
-                        shipping,
-                        discount
-                    })
-                }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(
-                    result.message || "Unable to place your order."
-                );
-            }
-
-            databaseOrder = result;
-
-            console.log("Order saved in MySQL:", databaseOrder);
-
-        } catch (error) {
-            console.error("Order API error:", error);
-
-            alert(
-                "Your order could not be placed.\n\n" +
-                error.message
-            );
-
-            return;
-
-        } finally {
-            placeOrderButton.disabled = false;
-            placeOrderButton.textContent = "Place Order";
-        }
-
-        const order = {
-            
-orderId: databaseOrder.orderCode,
-databaseOrderId: databaseOrder.orderId,
-            customer,
-
-            products: cart,
-            items: cart,
-
-subtotal: Number(databaseOrder.subtotal),
-discount: Number(databaseOrder.discount),
-
-            couponCode: couponDetails
-                ? couponDetails.code
-                : null,
-
-            couponDetails: couponDetails
-                ? {
-                    code: couponDetails.code,
-                    type: couponDetails.type,
-                    value: couponDetails.value,
-                    discount
-                }
-                : null,
-
-shipping: Number(databaseOrder.shipping),
-            shippingMethod: shippingDetails,
-
-           total: Number(databaseOrder.total),
-
-            paymentMethod: customer.paymentMethod,
-            paymentStatus: "Pending",
-
-            orderDate: new Date().toISOString(),
-
-            status: "Pending"
-        };
-
-        // Save order.
-        orders.push(order);
-
-        if (!saveArray(ORDERS_KEY, orders)) {
-            alert(
-                "Your order could not be saved. Please try again."
-            );
-            return;
-        }
-
-        // Create confirmation notification.
-        createOrderNotification(order);
-
-        // Record coupon usage.
-        if (couponDetails) {
-            const usageSaved = recordCouponUsage(
-                couponDetails.code
-            );
-
-            if (!usageSaved) {
-                console.error(
-                    "Could not update coupon usage count."
-                );
-            }
-        }
-
-        // Clear cart.
-        localStorage.removeItem(CART_KEY);
-
-        // Save last order ID.
-        localStorage.setItem(
-            "yourshop-last-order",
-            order.orderId
-        );
-
-        // Confirmation.
+    // Validate stock.
+    if (!validateStock()) {
         alert(
-            `Thank you, ${customer.name}! Your order has been placed successfully.\n\n` +
-            `Order ID: ${order.orderId}\n` +
-            `Shipping: ${shippingMethod.name}\n` +
-            `Delivery Charge: ${formatPrice(shipping)}\n` +
-            `Discount: ${formatPrice(discount)}\n` +
-            `Total: ${formatPrice(total)}`
+            "One or more products exceed available stock. Please update your cart."
+        );
+        return;
+    }
+
+    // Validate customer information.
+    if (!checkoutForm.reportValidity()) {
+        return;
+    }
+
+    const customer = getCustomerInformation();
+
+    // COD only.
+    if (customer.paymentMethod === "online") {
+        alert(
+            "Online payment is coming soon. Please select Cash on Delivery."
+        );
+        return;
+    }
+
+    // Reload active shipping methods.
+    displayShippingMethods();
+
+    const shippingMethod = getSelectedShippingMethod();
+
+    if (!shippingMethod) {
+        alert(
+            "No shipping method is currently available. Please contact the store."
+        );
+        return;
+    }
+
+    // Revalidate coupon.
+    let couponDetails = null;
+
+    if (appliedCoupon) {
+        const result = validateCoupon(
+            appliedCoupon.code,
+            calculateSubtotal()
         );
 
-        window.location.href = "./confirmation.html";
-    });
+        if (!result.valid) {
+            appliedCoupon = null;
+
+            showCouponMessage(
+                result.message + " Please apply another coupon.",
+                false
+            );
+
+            updatePriceSummary();
+            return;
+        }
+
+        couponDetails = result;
+    }
+
+    const subtotal = calculateSubtotal();
+    const shipping = calculateShipping();
+
+    const discount = couponDetails
+        ? couponDetails.discount
+        : 0;
+
+    const total = Math.max(
+        0,
+        subtotal + shipping - discount
+    );
+
+    // Shipping information.
+    const shippingDetails = {
+        id: shippingMethod.id,
+        name: shippingMethod.name,
+        type: shippingMethod.type,
+        deliveryTime: shippingMethod.days,
+        zone: shippingMethod.zone,
+        originalPrice: Number(shippingMethod.price),
+        freeShippingMinimum: Number(shippingMethod.minimum) || 0,
+        charge: shipping
+    };
+
+    // Load existing orders.
+    const orders = loadArray(ORDERS_KEY);
+
+    // Generate a unique frontend order ID.
+    const orderId =
+        "YS-" +
+        Date.now().toString().slice(-8) +
+        "-" +
+        Math.floor(1000 + Math.random() * 9000);
+
+    // Create order locally.
+    const order = {
+        orderId: orderId,
+
+        customer: customer,
+
+        products: cart,
+        items: cart,
+
+        subtotal: Number(subtotal),
+        discount: Number(discount),
+
+        couponCode: couponDetails
+            ? couponDetails.code
+            : null,
+
+        couponDetails: couponDetails
+            ? {
+                code: couponDetails.code,
+                type: couponDetails.type,
+                value: couponDetails.value,
+                discount: discount
+            }
+            : null,
+
+        shipping: Number(shipping),
+        shippingMethod: shippingDetails,
+
+        total: Number(total),
+
+        paymentMethod: customer.paymentMethod,
+        paymentStatus: "Pending",
+
+        orderDate: new Date().toISOString(),
+
+        status: "Pending"
+    };
+
+    // Save order in LocalStorage.
+    orders.push(order);
+
+    if (!saveArray(ORDERS_KEY, orders)) {
+        alert(
+            "Your order could not be saved. Please try again."
+        );
+        return;
+    }
+
+    // Create confirmation notification.
+    createOrderNotification(order);
+
+    // Record coupon usage.
+    if (couponDetails) {
+        const usageSaved = recordCouponUsage(
+            couponDetails.code
+        );
+
+        if (!usageSaved) {
+            console.error(
+                "Could not update coupon usage count."
+            );
+        }
+    }
+
+    // Clear cart.
+    localStorage.removeItem(CART_KEY);
+
+    // Save last order ID.
+    localStorage.setItem(
+        "yourshop-last-order",
+        order.orderId
+    );
+
+    // Confirmation message.
+    alert(
+        `Thank you, ${customer.name}! Your order has been placed successfully.\n\n` +
+        `Order ID: ${order.orderId}\n` +
+        `Shipping: ${shippingMethod.name}\n` +
+        `Delivery Charge: ${formatPrice(shipping)}\n` +
+        `Discount: ${formatPrice(discount)}\n` +
+        `Total: ${formatPrice(total)}`
+    );
+
+    // Open confirmation page.
+    window.location.href = "./confirmation.html";
+});
+
+// ============================================
+// END OF PLACE ORDER
+// ============================================
+
 
     // ============================================
     // 21. INITIALIZE CHECKOUT
