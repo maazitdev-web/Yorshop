@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {    "use strict";
 
     try {
   const response = await fetch(
-    `http://localhost:3000/api/products/${productId}`
+    `http://192.168.0.189:3000/api/products/${productId}`
 );
 
 if (!response.ok) {
@@ -221,45 +221,81 @@ console.log("Selected product loaded:", selectedProduct.name);
     if (discountBadge) {
         discountBadge.textContent = discount + "% OFF";
     }
+// ========================================
+// 7. PRODUCT IMAGE GALLERY
+// ========================================
 
-    // ========================================
-    // 7. PRODUCT IMAGE GALLERY
-    // ========================================
+const gallery = document.getElementById("product-image-gallery");
 
-    const gallery = document.getElementById("product-image-gallery");
-
-    const productImages =
-        Array.isArray(selectedProduct.images) && selectedProduct.images.length
+// Clean and validate the image URLs.
+const productImages = [
+    ...new Set(
+        (Array.isArray(selectedProduct.images)
             ? selectedProduct.images
-            : [selectedProduct.image];
+            : []
+        )
+        .filter(image =>
+            typeof image === "string" &&
+            image.trim().startsWith("https://")
+        )
+        .map(image => image.trim())
+    )
+];
 
-    if (gallery && productImage) {
-        gallery.innerHTML = "";
+// Use the main product image if the images array is empty.
+if (productImages.length === 0 && selectedProduct.image) {
+    productImages.push(selectedProduct.image);
+}
 
-        productImages.slice(0, 4).forEach((image, index) => {
-            const thumbnail = document.createElement("img");
+// Display the first valid image.
+if (productImage && productImages.length > 0) {
+    productImage.src = productImages[0];
+    productImage.alt = selectedProduct.name;
 
-            thumbnail.src = image;
-            thumbnail.alt = `${selectedProduct.name} image ${index + 1}`;
-            thumbnail.className = "product-thumbnail";
+    productImage.onerror = function () {
+        this.alt = "Product image unavailable";
+        console.error("Main product image failed:", this.src);
+    };
+}
 
-            if (index === 0) {
-                thumbnail.classList.add("active");
-            }
+if (gallery && productImage) {
+    gallery.innerHTML = "";
 
-            thumbnail.addEventListener("click", () => {
-                productImage.src = image;
+    productImages.slice(0, 4).forEach((image, index) => {
+        const thumbnail = document.createElement("img");
 
-                gallery.querySelectorAll(".product-thumbnail")
-                    .forEach(item => item.classList.remove("active"));
+        thumbnail.src = image;
+        thumbnail.alt =
+            `${selectedProduct.name} image ${index + 1}`;
 
-                thumbnail.classList.add("active");
-            });
+        thumbnail.className = "product-thumbnail";
+        thumbnail.loading = "lazy";
 
-            gallery.appendChild(thumbnail);
+        if (index === 0) {
+            thumbnail.classList.add("active");
+        }
+
+        // Handle unavailable image URLs.
+        thumbnail.onerror = function () {
+            console.error("Thumbnail image failed:", image);
+            thumbnail.classList.add("image-error");
+            thumbnail.style.display = "none";
+        };
+
+        thumbnail.addEventListener("click", () => {
+            productImage.src = image;
+            productImage.alt =
+                `${selectedProduct.name} image ${index + 1}`;
+
+            gallery.querySelectorAll(".product-thumbnail")
+                .forEach(item => item.classList.remove("active"));
+
+            thumbnail.classList.add("active");
         });
-    }
 
+        gallery.appendChild(thumbnail);
+    });
+}
     // ========================================
     // 8. STOCK VALIDATION
     // ========================================

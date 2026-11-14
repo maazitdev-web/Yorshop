@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Save customer authentication information
             localStorage.setItem("customerToken", data.token);
+            if (!response.ok) {
+    throw new Error(data.message || "Login failed.");
+}
             localStorage.setItem("customerUser", JSON.stringify(data.user));
 
             message.style.color = "#16a34a";

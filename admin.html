@@ -88,9 +88,13 @@
 </nav>
 
 
-    <a href="./index.html" class="back-to-store">
-        ← Back to Store
-    </a>
+<a href="./index.html" class="back-to-store">
+    ← Back to Store
+</a>
+
+<button type="button" id="admin-logout-button" class="admin-logout-button">
+    🚪 Admin Logout
+</button>
 
 </aside>
 
@@ -269,11 +273,21 @@
     </main>
 
 
-    <!-- JAVASCRIPT -->
+<!-- ADMIN AUTHENTICATION CHECK -->
+<script>
+    const adminToken = sessionStorage.getItem("yourshop-admin-token");
+
+    if (!adminToken) {
+        window.location.replace("./admin-login.html");
+    }
+</script>
+
+<!-- ADMIN DASHBOARD SCRIPTS -->
 <script src="./js/products.js"></script>
 <script src="./js/admin.js"></script>
 <script src="./js/admin-sidebar.js"></script>
 <script src="./js/admin-notifications.js"></script>
+<script src="./js/admin-logout.js"></script>
 
 </body>
 </html>

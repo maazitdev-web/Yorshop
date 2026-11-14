@@ -23,6 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 let orders = getArray("yourshop-orders");
+renderRecentOrders();
+updateOrderStatistics();
     const addresses = getArray("yourshop-saved-addresses");
     const wishlist = getArray("yourshop-wishlist");
     const compare = getArray("yourshop-compare");

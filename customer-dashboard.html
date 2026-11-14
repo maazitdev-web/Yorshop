@@ -439,9 +439,13 @@
         🎧 Customer Support
     </a>
 
-    <a href="./index.html">
-        🏠 Back to Store
-    </a>
+<a href="./index.html">
+    🏠 Back to Store
+</a>
+
+<button type="button" id="customer-logout-button" class="customer-logout-button">
+    🚪 Logout
+</button>
 
 </nav>
 
@@ -617,8 +621,20 @@
 
 </main>
 
+<!-- CUSTOMER AUTHENTICATION CHECK -->
+<script>
+    const customerToken = localStorage.getItem("customerToken");
+
+    if (!customerToken) {
+        window.location.replace("./customer-login.html");
+    }
+</script>
+
+<!-- CUSTOMER DASHBOARD SCRIPTS -->
 <script src="./js/currency.js"></script>
 <script src="./js/customer-dashboard.js"></script>
+<script src="./js/customer-logout.js"></script>
+
 
 </body>
 </html>

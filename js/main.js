@@ -41,11 +41,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     const applyPriceButton = document.getElementById("apply-price-filter");
     const resetPriceButton = document.getElementById("reset-price-filter");
 
+    // Hide Admin Login link when administrator is logged in
+const adminToken = sessionStorage.getItem("yourshop-admin-token");
+
+const adminLoginLinks = document.querySelectorAll(
+    'a[href="./admin-login.html"]'
+);
+
+if (adminToken) {
+    adminLoginLinks.forEach(link => {
+        link.style.display = "none";
+    });
+}
+
     // ============================================
     // 2. BACKEND PAGINATION SETTINGS
     // ============================================
 
-    const API_URL = "http://localhost:3000/api/products";
+    const API_URL = "http://192.168.0.189:3000/api/products";
 
     let currentPage = 1;
     const productsPerPage = 8;
@@ -280,56 +293,166 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ============================================
-    // 7. MOBILE NAVIGATION
+    // 7. MOBILE SLIDE-OUT NAVIGATION
     // ============================================
 
-    if (menuToggle && navLinks) {
+    const headerContent = document.getElementById("header-content");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
+
+    const categoryExpandButton = document.getElementById(
+        "category-expand-button"
+    );
+
+    const menuCategories = document.getElementById("menu-categories");
+
+    const mobileScreen = window.matchMedia("(max-width: 760px)");
+
+    function openMobileMenu() {
+
+        if (!mobileScreen.matches || !headerContent) return;
+
+        headerContent.classList.add("open");
+
+        if (menuOverlay) {
+            menuOverlay.hidden = false;
+
+            requestAnimationFrame(() => {
+                menuOverlay.classList.add("active");
+            });
+        }
+
+        document.body.classList.add("menu-open");
+
+        menuToggle.setAttribute("aria-expanded", "true");
+        menuToggle.setAttribute("aria-label", "Close navigation menu");
+        menuToggle.textContent = "✕";
+
+        headerContent.setAttribute("aria-hidden", "false");
+    }
+
+    function closeMobileMenu() {
+
+        if (!headerContent) return;
+
+        headerContent.classList.remove("open");
+
+        if (menuOverlay) {
+            menuOverlay.classList.remove("active");
+
+            setTimeout(() => {
+                if (!menuOverlay.classList.contains("active")) {
+                    menuOverlay.hidden = true;
+                }
+            }, 300);
+        }
+
+        document.body.classList.remove("menu-open");
+
+        if (menuToggle) {
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Open navigation menu");
+            menuToggle.textContent = "☰";
+        }
+
+        headerContent.setAttribute("aria-hidden", "true");
+    }
+
+    // Open and close menu button
+    if (menuToggle && headerContent) {
 
         menuToggle.addEventListener("click", () => {
 
-            navLinks.classList.toggle("active");
+            if (!mobileScreen.matches) return;
 
-            const isOpen = navLinks.classList.contains("active");
+            const isOpen = headerContent.classList.contains("open");
 
-            menuToggle.setAttribute(
-                "aria-expanded",
-                String(isOpen)
-            );
-
-            menuToggle.setAttribute(
-                "aria-label",
-                isOpen
-                    ? "Close navigation menu"
-                    : "Open navigation menu"
-            );
-
-            menuToggle.textContent = isOpen ? "✕" : "☰";
+            if (isOpen) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
 
         });
+
+    }
+
+    // Close button
+    if (menuClose) {
+        menuClose.addEventListener("click", closeMobileMenu);
+    }
+
+    // Close when dark overlay is clicked
+    if (menuOverlay) {
+        menuOverlay.addEventListener("click", closeMobileMenu);
+    }
+
+    // Close when a navigation link is selected
+    if (navLinks) {
 
         navLinks.querySelectorAll("a").forEach(link => {
 
             link.addEventListener("click", () => {
-
-                navLinks.classList.remove("active");
-
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                menuToggle.setAttribute(
-                    "aria-label",
-                    "Open navigation menu"
-                );
-
-                menuToggle.textContent = "☰";
-
+                closeMobileMenu();
             });
 
         });
 
     }
+
+    // Close after submitting search
+    if (searchForm) {
+        searchForm.addEventListener("submit", closeMobileMenu);
+    }
+
+    // Expand and collapse categories
+    if (categoryExpandButton && menuCategories) {
+
+        categoryExpandButton.addEventListener("click", () => {
+
+            const isExpanded =
+                categoryExpandButton.getAttribute("aria-expanded") === "true";
+
+            categoryExpandButton.setAttribute(
+                "aria-expanded",
+                String(!isExpanded)
+            );
+
+            menuCategories.hidden = isExpanded;
+
+        });
+
+    }
+
+    // Close menu with Escape key
+    document.addEventListener("keydown", event => {
+
+        if (event.key === "Escape") {
+            closeMobileMenu();
+        }
+
+    });
+
+    // Reset mobile menu when switching to desktop
+    mobileScreen.addEventListener("change", event => {
+
+        if (!event.matches) {
+            closeMobileMenu();
+
+            if (menuCategories) {
+                menuCategories.hidden = true;
+            }
+
+            if (categoryExpandButton) {
+                categoryExpandButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            }
+        }
+
+    });
+
 
     // ============================================
     // 8. HERO SLIDER

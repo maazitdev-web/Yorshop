@@ -23,87 +23,109 @@
          WEBSITE HEADER
     ======================================== -->
 
-    <header class="site-header">
+<header class="site-header">
 
-        <!-- Announcement Bar -->
-        <div class="announcement-bar">
-            <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
-        </div>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar">
+        <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
+    </div>
 
-        <!-- Main Header -->
-        <div class="header-main">
+    <!-- Main Header -->
+    <div class="header-main">
 
-            <!-- Logo -->
-            <a href="index.html" class="logo">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+            <span class="logo-icon">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M8 15h32l-3 25H11L8 15Z"
+                        fill="none" stroke="currentColor"
+                        stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M17 17V12a7 7 0 0 1 14 0v5"
+                        fill="none" stroke="currentColor"
+                        stroke-width="3" stroke-linecap="round"/>
+                    <path d="m19 28 4 4 7-8"
+                        fill="none" stroke="currentColor"
+                        stroke-width="3" stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+            </span>
 
-                <span class="logo-icon">
-                    <svg viewBox="0 0 48 48" aria-hidden="true">
-                        <path d="M8 15h32l-3 25H11L8 15Z"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="3"
-                            stroke-linejoin="round"/>
+            <span class="logo-text" id="store-logo-text">
+                Your<span>Shop</span>
+            </span>
+        </a>
 
-                        <path d="M17 17V12a7 7 0 0 1 14 0v5"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="3"
-                            stroke-linecap="round"/>
+        <!-- Mobile Menu Button -->
+        <button
+            type="button"
+            class="menu-toggle"
+            id="menu-toggle"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="header-content">
+            ☰
+        </button>
 
-                        <path d="m19 28 4 4 7-8"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="3"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"/>
-                    </svg>
-                </span>
+        <!-- Shared Header Content -->
+        <div class="header-content" id="header-content">
 
-                <span class="logo-text" id="store-logo-text">
-                    Your<span>Shop</span>
-                </span>
-
-            </a>
-
-
-            <!-- Navigation -->
-            <nav class="main-navigation" aria-label="Main navigation">
+            <!-- Mobile Menu Heading -->
+            <div class="mobile-menu-heading">
+                <span class="mobile-menu-title">YourShop Menu</span>
 
                 <button
                     type="button"
-                    class="menu-toggle"
-                    id="menu-toggle"
-                    aria-label="Open navigation menu"
-                    aria-expanded="false">
-
-                    ☰
-
+                    class="menu-close"
+                    id="menu-close"
+                    aria-label="Close navigation menu">
+                    &times;
                 </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="main-navigation" aria-label="Main navigation">
 
                 <ul class="nav-links" id="nav-links">
 
                     <li><a href="index.html">Home</a></li>
 
-                    <li><a href="./categories.html">All Categories</a></li>
+                    <li class="mobile-category-item">
+                        <button
+                            type="button"
+                            class="category-expand-button"
+                            id="category-expand-button"
+                            aria-expanded="false"
+                            aria-controls="menu-categories">
+                            All Categories
+                            <span class="category-arrow">⌄</span>
+                        </button>
+
+                        <ul class="menu-categories" id="menu-categories" hidden>
+                            <li><a href="./categories.html">📱 Smartphones</a></li>
+                            <li><a href="./categories.html">🎧 Headphones</a></li>
+                            <li><a href="./categories.html">💻 Laptops</a></li>
+                            <li><a href="./categories.html">⌚ Smart Watches</a></li>
+                            <li><a href="./categories.html">🔌 Accessories</a></li>
+                            <li><a href="./categories.html">🎮 Gaming</a></li>
+                            <li><a href="./categories.html">📷 Cameras</a></li>
+                            <li><a href="./categories.html">🏠 Home Appliances</a></li>
+                            <li><a href="./categories.html">👔 Men's Fashion</a></li>
+                            <li><a href="./categories.html">👗 Women's Fashion</a></li>
+                        </ul>
+                    </li>
 
                     <li><a href="#best-sellers">Best Sellers</a></li>
-
                     <li><a href="#new-arrivals">New Arrivals</a></li>
-
                     <li><a href="#footer">Contact</a></li>
-
                     <li><a href="./orders.html">My Orders</a></li>
 
                 </ul>
-
             </nav>
-
 
             <!-- Search Bar -->
             <form class="search-form" id="search-form">
 
                 <select id="search-category" aria-label="Choose search category">
-
                     <option value="all">All Categories</option>
                     <option value="smartphones">Smartphones</option>
                     <option value="headphones">Headphones</option>
@@ -115,7 +137,6 @@
                     <option value="home-appliances">Home Appliances</option>
                     <option value="mens-fashion">Men's Fashion</option>
                     <option value="womens-fashion">Women's Fashion</option>
-
                 </select>
 
                 <input
@@ -124,28 +145,17 @@
                     placeholder="Search for products..."
                     aria-label="Search products">
 
-                <button
-                    type="submit"
-                    class="search-button"
-                    aria-label="Search">
-
+                <button type="submit" class="search-button" aria-label="Search">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <circle cx="10.8" cy="10.8" r="6.8"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"/>
-
+                            fill="none" stroke="currentColor" stroke-width="2"/>
                         <path d="m16 16 5 5"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"/>
+                            fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round"/>
                     </svg>
-
                 </button>
 
             </form>
-
 
             <!-- Header Actions -->
             <div class="header-actions">
@@ -163,13 +173,12 @@
                         <span class="action-icon">♙</span>
                         <span>Account</span>
                         <span class="account-arrow">⌄</span>
-
                     </button>
 
-                    <a href="./admin.html" class="header-action">
+                    <!-- <a href="./admin.html" class="header-action">
                         <span>⚙️</span>
                         <span>Admin</span>
-                    </a>
+                    </a> -->
 
                     <div class="account-menu" id="account-menu" hidden>
 
@@ -189,50 +198,44 @@
                         <a href="./saved-addresses.html">⌖ Saved Addresses</a>
 
                     </div>
-
                 </div>
-
 
                 <!-- Wishlist -->
                 <a href="./wishlist.html" class="header-action wishlist-action">
-
                     <span class="action-icon">♡</span>
                     <span>Wishlist</span>
-
-                    <span class="wishlist-count" id="wishlist-count">
-                        0
-                    </span>
-
+                    <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-
 
                 <!-- Cart -->
                 <a href="cart.html" class="header-action cart-action">
-
                     <span class="action-icon">🛒</span>
                     <span>Cart</span>
-
-                    <span class="cart-count" id="cart-count">
-                        0
-                    </span>
-
+                    <span class="cart-count" id="cart-count">0</span>
                 </a>
-
 
                 <!-- Compare -->
                 <a href="./compare.html" class="compare-header-link">
-
                     ⚖ Compare
-
                     <span id="compare-count">0</span>
-
                 </a>
 
             </div>
 
         </div>
+    </div>
 
-    </header>
+    <!-- Mobile Dark Overlay -->
+    <button
+        type="button"
+        class="menu-overlay"
+        id="menu-overlay"
+        aria-label="Close navigation menu"
+        hidden>
+    </button>
+
+</header>
+
 
 
     <!-- ========================================
@@ -727,80 +730,80 @@
          WEBSITE FOOTER
     ======================================== -->
 
-    <footer id="footer" class="site-footer">
+<footer id="footer" class="site-footer">
 
-        <div class="contact-footer-content">
+    <div class="contact-footer-content">
 
+        <!-- Brand Section -->
+        <div class="contact-footer-brand">
 
-            <!-- Brand Section -->
-            <div class="contact-footer-brand">
+            <h2>YourShop<span>.</span></h2>
 
-                <h2>YourShop<span>.</span></h2>
-
-                <p>
-                    Your trusted online marketplace for quality products,
-                    great prices, and a better shopping experience.
-                </p>
-
-            </div>
-
-
-            <!-- Quick Links -->
-            <div class="contact-footer-column">
-
-                <h3>Quick Links</h3>
-
-                <ul>
-
-                    <li><a href="./index.html">Home</a></li>
-
-                    <li><a href="./index.html#products-section">Shop</a></li>
-
-                    <li><a href="./about.html">About Us</a></li>
-
-                    <li><a href="./contact.html">Contact Us</a></li>
-
-                    <li><a href="./orders.html">My Orders</a></li>
-
-                </ul>
-
-            </div>
-
-
-            <!-- Customer Service -->
-            <div class="contact-footer-column">
-
-                <h3>Customer Service</h3>
-
-                <ul>
-
-                    <li><a href="./faq.html">FAQs</a></li>
-
-                    <li><a href="./shipping.html">Shipping & Delivery</a></li>
-
-                    <li><a href="./returns.html">Returns & Refunds</a></li>
-
-                    <li><a href="./privacy.html">Privacy Policy</a></li>
-
-                    <li><a href="./terms.html">Terms & Conditions</a></li>
-
-                </ul>
-
-            </div>
+            <p>
+                Your trusted online marketplace for quality products,
+                great prices, and a better shopping experience.
+            </p>
 
         </div>
 
+        <!-- Quick Links -->
+        <div class="contact-footer-column">
 
-        <!-- Footer Bottom -->
-        <div class="contact-footer-bottom">
+            <h3>Quick Links</h3>
 
-            <p>© 2026 YourShop. All Rights Reserved.</p>
+            <ul>
 
-            <p>Designed for a better shopping experience.</p>
+                <li><a href="./index.html">Home</a></li>
+
+                <li><a href="./index.html#products-section">Shop</a></li>
+
+                <li><a href="./about.html">About Us</a></li>
+
+                <li><a href="./contact.html">Contact Us</a></li>
+
+                <li><a href="./orders.html">My Orders</a></li>
+
+                <li>
+                    <a href="./admin-login.html">Admin Login</a>
+                </li>
+
+            </ul>
 
         </div>
 
-    </footer>
+        <!-- Customer Service -->
+        <div class="contact-footer-column">
+
+            <h3>Customer Service</h3>
+
+            <ul>
+
+                <li><a href="./faq.html">FAQs</a></li>
+
+                <li><a href="./shipping.html">Shipping & Delivery</a></li>
+
+                <li><a href="./returns.html">Returns & Refunds</a></li>
+
+                <li><a href="./privacy.html">Privacy Policy</a></li>
+
+                <li><a href="./terms.html">Terms & Conditions</a></li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="contact-footer-bottom">
+
+        <p>© 2026 YourShop. All Rights Reserved.</p>
+
+        <p>Designed for a better shopping experience.</p>
+
+    </div>
+
+</footer>
 
 
     <!-- ========================================
