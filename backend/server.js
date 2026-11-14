@@ -14,9 +14,24 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
+// REQUEST DEBUGGING
+app.use((req, res, next) => {
+    console.log("REQUEST RECEIVED:", req.method, req.originalUrl);
+    next();
+});
+
+
+
 // ADMIN AUTHENTICATION ROUTES
 app.use("/api/admin", require("./admin-auth"));
+const customerAuth = require("./customer-auth");
 
+console.log("Customer router:", customerAuth.stack.map(route => ({
+    path: route.route?.path,
+    methods: route.route?.methods
+})));
+
+app.use("/api/customer", customerAuth);
 // ============================================
 // HOME ROUTE
 // ============================================
@@ -75,6 +90,7 @@ app.get("/api/products", async (req, res) => {
             if (!Number.isFinite(min) || min < 0) {
                 return res.status(400).json({
                     success: false,
+
                     message: "Invalid minimum price."
                 });
             }
@@ -685,6 +701,9 @@ app.post("/api/orders", async (req, res) => {
         const verifiedItems = [];
 
         // VERIFY PRODUCTS AND STOCK
+        const requestedQuantities = new Map();
+
+        // Combine duplicate product entries
         for (const item of items) {
             const productId = Number(item.id);
             const quantity = Number(item.quantity);
@@ -697,6 +716,18 @@ app.post("/api/orders", async (req, res) => {
             ) {
                 throw new Error("Invalid product or quantity.");
             }
+
+            const previousQuantity =
+                requestedQuantities.get(productId) || 0;
+
+            requestedQuantities.set(
+                productId,
+                previousQuantity + quantity
+            );
+        }
+
+        // Verify combined quantities against database stock
+        for (const [productId, quantity] of requestedQuantities) {
 
             const [products] = await connection.query(
                 "SELECT * FROM products WHERE id = ? FOR UPDATE",
@@ -733,6 +764,7 @@ app.post("/api/orders", async (req, res) => {
                 subtotal: itemSubtotal
             });
         }
+
 
         // CALCULATE TOTAL
         const finalDiscount = Math.min(
@@ -866,6 +898,8 @@ app.post("/api/orders", async (req, res) => {
 // ============================================
 
 app.patch("/api/orders/:id/status", verifyAdminToken, async (req, res) => {
+    let connection;
+
     try {
         const orderId = Number(req.params.id);
         const { status } = req.body;
@@ -898,33 +932,119 @@ app.patch("/api/orders/:id/status", verifyAdminToken, async (req, res) => {
 
         const newStatus = status.toLowerCase();
 
-        const [result] = await db.query(
-            "UPDATE orders SET status = ? WHERE id = ?",
-            [newStatus, orderId]
+        connection = await db.getConnection();
+        await connection.beginTransaction();
+
+        // Lock order row
+        const [orders] = await connection.query(
+            "SELECT * FROM orders WHERE id = ? FOR UPDATE",
+            [orderId]
         );
 
-        if (result.affectedRows === 0) {
+        if (orders.length === 0) {
+            await connection.rollback();
+
             return res.status(404).json({
                 success: false,
                 message: "Order not found."
             });
         }
 
+        const oldStatus = String(orders[0].status).toLowerCase();
+
+        // Prevent reopening cancelled orders
+        if (oldStatus === "cancelled" && newStatus !== "cancelled") {
+            await connection.rollback();
+
+            return res.status(400).json({
+                success: false,
+                message: "Cancelled orders cannot be reopened."
+            });
+        }
+
+        // Only allow cancellation before shipping
+        if (
+            newStatus === "cancelled" &&
+            !["pending", "confirmed", "processing"].includes(oldStatus)
+        ) {
+            await connection.rollback();
+
+            return res.status(400).json({
+                success: false,
+                message: "Only pending, confirmed, or processing orders can be cancelled. Shipped and delivered orders require a return process."
+            });
+        }
+
+        // Restore stock only on first cancellation
+        if (oldStatus !== "cancelled" && newStatus === "cancelled") {
+
+            const [orderItems] = await connection.query(
+                `SELECT product_id, quantity
+                 FROM order_items
+                 WHERE order_id = ?`,
+                [orderId]
+            );
+
+            for (const item of orderItems) {
+                await connection.query(
+                    `UPDATE products
+                     SET stock = stock + ?
+                     WHERE id = ?`,
+                    [
+                        Number(item.quantity),
+                        Number(item.product_id)
+                    ]
+                );
+            }
+        }
+
+        // Update order status
+        await connection.query(
+            "UPDATE orders SET status = ? WHERE id = ?",
+            [newStatus, orderId]
+        );
+
+        await connection.commit();
+
         res.json({
             success: true,
             message: "Order status updated successfully!",
             orderId,
+            previousStatus: oldStatus,
             status: newStatus
         });
 
     } catch (error) {
+
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rollbackError) {
+                console.error("Rollback error:", rollbackError.message);
+            }
+        }
+
         console.error("Update order status error:", error.message);
 
         res.status(500).json({
             success: false,
             message: "Unable to update order status."
         });
+
+    } finally {
+        if (connection) {
+            connection.release();
+        }
     }
+});
+
+// ============================================
+// REQUEST DEBUGGING
+// ============================================
+
+app.use((req, res, next) => {
+    console.log("REQUEST RECEIVED:", req.method, req.originalUrl);
+    next();
 });
 
 // ============================================

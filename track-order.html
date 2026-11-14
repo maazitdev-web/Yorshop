@@ -6,164 +6,336 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Your Order | YourShop</title>
 
+    <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="./css/track-order.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            background: #f5f7fb;
+            color: #18243a;
+        }
+
+        header {
+            background: #102a56;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header h2 {
+            font-size: 23px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        main {
+            width: 92%;
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: 27px;
+            margin-bottom: 6px;
+        }
+
+        .page-heading p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .tracking-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(20, 40, 80, .06);
+            margin-bottom: 22px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .order-header h2 {
+            font-size: 19px;
+        }
+
+        .order-date {
+            color: #7b8798;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 30px;
+            background: #fff3d6;
+            color: #946200;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-confirmed {
+            background: #e5efff;
+            color: #2457a6;
+        }
+
+        .status-processing {
+            background: #eee8ff;
+            color: #6843a8;
+        }
+
+        .status-shipped {
+            background: #e0f5ff;
+            color: #08749c;
+        }
+
+        .status-delivered {
+            background: #e1f7e9;
+            color: #168044;
+        }
+
+        .status-cancelled {
+            background: #ffe5e5;
+            color: #bd3030;
+        }
+
+        .section-title {
+            font-size: 17px;
+            margin-bottom: 22px;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            gap: 8px;
+            margin: 35px 0 20px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            height: 4px;
+            background: #e5eaf2;
+            top: 13px;
+            left: 7%;
+            right: 7%;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            height: 4px;
+            background: #1769e0;
+            top: 13px;
+            left: 7%;
+            width: 0;
+            transition: width .4s ease;
+        }
+
+        .timeline-step {
+            position: relative;
+            z-index: 1;
+            width: 20%;
+            text-align: center;
+        }
+
+        .timeline-dot {
+            width: 29px;
+            height: 29px;
+            background: #e5eaf2;
+            border: 4px solid white;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+        }
+
+        .timeline-step.completed .timeline-dot,
+        .timeline-step.current .timeline-dot {
+            background: #1769e0;
+            box-shadow: 0 0 0 2px #1769e0;
+        }
+
+        .timeline-label {
+            font-size: 11px;
+            color: #8290a3;
+            font-weight: 500;
+        }
+
+        .timeline-step.completed .timeline-label,
+        .timeline-step.current .timeline-label {
+            color: #1769e0;
+            font-weight: 600;
+        }
+
+        .status-message {
+            background: #eef5ff;
+            color: #2457a6;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 25px;
+        }
+
+        .cancelled-message {
+            background: #fff0f0;
+            color: #b52b2b;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .detail-item span {
+            display: block;
+            color: #8290a3;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .detail-item strong {
+            font-size: 14px;
+            font-weight: 500;
+            overflow-wrap: anywhere;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .product-quantity {
+            font-size: 12px;
+            color: #8290a3;
+            margin-top: 5px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .loading,
+        .error-state {
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        .error-state h2 {
+            margin-bottom: 10px;
+        }
+
+        .error-state p {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: #1769e0;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 15px 5%;
+            }
+
+            main {
+                margin: 25px auto;
+            }
+
+            .tracking-card {
+                padding: 19px;
+            }
+
+            .page-heading h1 {
+                font-size: 23px;
+            }
+
+            .timeline-label {
+                font-size: 9px;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <header class="tracking-header">
-        <a href="./index.html" class="tracking-logo">
-            Your<span>Shop</span>
-        </a>
-
-        <nav>
-            <a href="./index.html">Home</a>
-            <a href="./index.html#products">Shop</a>
-            <a href="./cart.html">Cart</a>
-            <a href="./contact.html">Contact</a>
-        </nav>
+    <header>
+        <h2>YourShop</h2>
+        <a href="./my-orders.html">← Back to My Orders</a>
     </header>
 
-    <main class="tracking-container">
-
-        <section class="tracking-intro">
-            <span class="tracking-label">YOURSHOP DELIVERY</span>
+    <main>
+        <div class="page-heading">
             <h1>Track Your Order</h1>
-            <p>Enter your Order ID to check the latest status of your purchase.</p>
-        </section>
+            <p>Follow your order from confirmation to delivery.</p>
+        </div>
 
-        <section class="tracking-search-card">
-            <form id="tracking-form">
-                <label for="tracking-order-id">Order ID</label>
-
-                <div class="tracking-input-row">
-                    <input
-                        type="text"
-                        id="tracking-order-id"
-                        placeholder="Enter your Order ID"
-                        required
-                    >
-
-                    <button type="submit" id="track-order-button">
-                        Track Order
-                    </button>
-                </div>
-
-                <p id="tracking-message" role="status"></p>
-            </form>
-        </section>
-
-        <section id="tracking-result" class="tracking-result" hidden>
-
-            <div class="tracking-order-heading">
-                <div>
-                    <span class="tracking-small-label">ORDER DETAILS</span>
-                    <h2 id="result-order-id">Order #</h2>
-                    <p id="result-order-date"></p>
-                </div>
-
-                <span id="result-status" class="status-badge">Pending</span>
+        <div id="tracking-content">
+            <div class="tracking-card loading">
+                Loading your order...
             </div>
-
-            <div class="tracking-info-grid">
-                <div class="tracking-info-box">
-                    <span>Customer</span>
-                    <strong id="result-customer">-</strong>
-                </div>
-
-                <div class="tracking-info-box">
-                    <span>Payment Method</span>
-                    <strong id="result-payment">-</strong>
-                </div>
-
-                <div class="tracking-info-box">
-                    <span>Order Total</span>
-                    <strong id="result-total">-</strong>
-                </div>
-
-                <div class="tracking-info-box">
-                    <span>Delivery City</span>
-                    <strong id="result-city">-</strong>
-                </div>
-            </div>
-
-            <div class="tracking-progress-section">
-                <h3>Delivery Progress</h3>
-                <p class="tracking-progress-description" id="progress-description">
-                    Your order progress will appear here.
-                </p>
-
-                <div class="tracking-timeline" id="tracking-timeline">
-                    <div class="timeline-step" data-step="pending">
-                        <div class="timeline-icon">1</div>
-                        <div class="timeline-text">
-                            <strong>Order Placed</strong>
-                            <span>We received your order</span>
-                        </div>
-                    </div>
-
-                    <div class="timeline-step" data-step="confirmed">
-                        <div class="timeline-icon">2</div>
-                        <div class="timeline-text">
-                            <strong>Confirmed</strong>
-                            <span>Your order is confirmed</span>
-                        </div>
-                    </div>
-
-                    <div class="timeline-step" data-step="processing">
-                        <div class="timeline-icon">3</div>
-                        <div class="timeline-text">
-                            <strong>Processing</strong>
-                            <span>Your order is being prepared</span>
-                        </div>
-                    </div>
-
-                    <div class="timeline-step" data-step="shipped">
-                        <div class="timeline-icon">4</div>
-                        <div class="timeline-text">
-                            <strong>Shipped</strong>
-                            <span>Your order is on its way</span>
-                        </div>
-                    </div>
-
-                    <div class="timeline-step" data-step="delivered">
-                        <div class="timeline-icon">5</div>
-                        <div class="timeline-text">
-                            <strong>Delivered</strong>
-                            <span>Your order has arrived</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tracking-products-section">
-                <h3>Items in Your Order</h3>
-                <div id="tracking-products"></div>
-            </div>
-
-            <div class="tracking-cancelled" id="tracking-cancelled" hidden>
-                This order has been cancelled. Please contact customer support if you need help.
-            </div>
-
-        </section>
-
-        <section class="tracking-help">
-            <h3>Need help with your order?</h3>
-            <p>If you have questions about your delivery, our support team can help.</p>
-            <a href="./contact.html">Contact Support</a>
-        </section>
-
+        </div>
     </main>
 
-    <footer class="tracking-footer">
-        <p>&copy; 2026 YourShop. All rights reserved.</p>
-    </footer>
-
-    <script src="./js/currency.js"></script>
     <script src="./js/track-order.js"></script>
+
 </body>
 </html>

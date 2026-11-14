@@ -6,15 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop Category | YourShop</title>
 
-    <link rel="stylesheet" href="./css/style.css">
-
+<link rel="stylesheet" href="./css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
-
+<body class="category-page">
     <!-- HEADER -->
     <header class="site-header">
 
@@ -74,23 +72,11 @@
                 <button type="submit">Search</button>
             </form>
 
-
-<div class="header-actions">
-    <a href="./cart.html" class="header-action cart-action">
-        <svg viewBox="0 0 24 24" width="25" height="25"
-             fill="none" stroke="currentColor"
-             stroke-width="1.8" stroke-linecap="round"
-             stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"/>
-            <circle cx="19" cy="21" r="1"/>
-            <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
-        </svg>
-
-        <span>Cart</span>
-        <span id="cart-count" class="cart-count">0</span>
-    </a>
-</div>
-
+            <div class="header-actions">
+                <a href="./cart.html" class="header-action">
+                    Cart (<span id="cart-count">0</span>)
+                </a>
+            </div>
 
         </div>
 

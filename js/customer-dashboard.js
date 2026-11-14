@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return Array.isArray(data) ? data : [];
     };
 
-    const orders = getArray("yourshop-orders");
+let orders = getArray("yourshop-orders");
     const addresses = getArray("yourshop-saved-addresses");
     const wishlist = getArray("yourshop-wishlist");
     const compare = getArray("yourshop-compare");
@@ -66,38 +66,59 @@ document.addEventListener("DOMContentLoaded", () => {
         })[char]);
     }
 
-    function getOrderDate(order) {
-        return new Date(
-            order.orderDate ||
-            order.createdAt ||
-            order.date ||
-            0
-        );
+   function getOrderDate(order) {
+    return new Date(
+        order.created_at ||
+        order.orderDate ||
+        order.createdAt ||
+        order.date ||
+        0
+    );
+}
+    function setText(id, value) {
+    const element = document.getElementById(id);
+
+    if (element) {
+        element.textContent = value;
     }
+}
 
-    // ============================================
-    // 3. CUSTOMER INFORMATION
-    // ============================================
+// ============================================
+// 3. CUSTOMER INFORMATION
+// ============================================
 
-    const savedProfile = getData("yourshop-profile");
+// Load cached profile first so the dashboard can
+// display existing information while the API loads.
 
-    const profile = savedProfile &&
-        typeof savedProfile === "object" &&
-        !Array.isArray(savedProfile)
-        ? savedProfile
-        : {};
+const savedProfile = getData("yourshop-profile");
 
-    const customerName = profile.name || "Customer";
-    const customerEmail = profile.email || "customer@example.com";
+let profile = savedProfile &&
+    typeof savedProfile === "object" &&
+    !Array.isArray(savedProfile)
+    ? savedProfile
+    : {};
 
-    const customerNameElement =
-        document.getElementById("dashboard-customer-name");
+const customerNameElement =
+    document.getElementById("dashboard-customer-name");
 
-    const customerEmailElement =
-        document.getElementById("dashboard-customer-email");
+const customerEmailElement =
+    document.getElementById("dashboard-customer-email");
 
-    const welcomeNameElement =
-        document.getElementById("welcome-customer-name");
+const welcomeNameElement =
+    document.getElementById("welcome-customer-name");
+
+// Optional profile elements.
+// Add these IDs to your HTML if you want to display them.
+
+const customerPhoneElement =
+    document.getElementById("dashboard-customer-phone");
+
+const customerCreatedElement =
+    document.getElementById("dashboard-customer-created");
+
+function displayCustomerProfile(customer) {
+    const customerName = customer.name || "Customer";
+    const customerEmail = customer.email || "Not available";
 
     if (customerNameElement) {
         customerNameElement.textContent = customerName;
@@ -108,34 +129,82 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (welcomeNameElement) {
-        welcomeNameElement.textContent = customerName.split(" ")[0];
+        welcomeNameElement.textContent =
+            customerName.split(" ")[0];
     }
 
-    // ============================================
-    // 4. ORDER STATISTICS
-    // ============================================
+    if (customerPhoneElement) {
+        customerPhoneElement.textContent =
+            customer.phone || "Not provided";
+    }
 
-    const pendingOrders = orders.filter(order =>
-        ["pending", "confirmed", "processing", "shipped"].includes(
-            normalizeStatus(order.status)
-        )
-    );
+    if (customerCreatedElement) {
+        customerCreatedElement.textContent =
+            formatDate(customer.created_at);
+    }
+}
 
-    const deliveredOrders = orders.filter(order =>
-        normalizeStatus(order.status) === "delivered"
-    );
+// Display cached information immediately.
+displayCustomerProfile(profile);
 
-    const setText = (id, value) => {
-        const element = document.getElementById(id);
+// Fetch the latest profile from the backend.
+async function loadCustomerProfile() {
+    const token = localStorage.getItem("customerToken");
 
-        if (element) {
-            element.textContent = value;
+    if (!token) {
+        console.warn(
+            "Customer login token not found. Using cached profile."
+        );
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "http://localhost:3000/api/customer/me",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Unable to load customer profile."
+            );
         }
-    };
 
-    setText("dashboard-total-orders", orders.length);
-    setText("dashboard-pending-orders", pendingOrders.length);
-    setText("dashboard-delivered-orders", deliveredOrders.length);
+        if (!data.user) {
+            throw new Error("Customer profile data is missing.");
+        }
+
+        // Update the current profile.
+        profile = data.user;
+
+        // Save the latest profile locally.
+        localStorage.setItem(
+            "yourshop-profile",
+            JSON.stringify(profile)
+        );
+
+        // Display the latest information.
+        displayCustomerProfile(profile);
+
+        console.log("Customer profile loaded successfully.");
+
+    } catch (error) {
+        console.error(
+            "Customer profile loading error:",
+            error.message
+        );
+    }
+}
+
+loadCustomerProfile();
 
     // ============================================
     // 5. OTHER STATISTICS
@@ -145,55 +214,84 @@ document.addEventListener("DOMContentLoaded", () => {
     setText("dashboard-wishlist-count", wishlist.length);
     setText("dashboard-compare-count", compare.length);
 
-    // ============================================
-    // 6. RECENT ORDERS
-    // ============================================
+// ============================================
+// 6. RECENT ORDERS
+// ============================================
 
-    const recentOrdersContainer =
-        document.getElementById("dashboard-recent-orders");
+const recentOrdersContainer =
+    document.getElementById("dashboard-recent-orders");
+
+function updateOrderStatistics() {
+    setText("dashboard-total-orders", orders.length);
+
+    setText(
+        "dashboard-pending-orders",
+        orders.filter(order =>
+            normalizeStatus(order.status) === "pending"
+        ).length
+    );
+
+    setText(
+        "dashboard-delivered-orders",
+        orders.filter(order =>
+            normalizeStatus(order.status) === "delivered"
+        ).length
+    );
+}
+
+function renderRecentOrders() {
+    if (!recentOrdersContainer) return;
 
     const recentOrders = [...orders]
         .sort((a, b) => getOrderDate(b) - getOrderDate(a))
         .slice(0, 5);
 
-    if (recentOrdersContainer) {
-        if (recentOrders.length === 0) {
-            recentOrdersContainer.innerHTML = `
-                <tr>
-                    <td colspan="4" class="empty-recent">
-                        You haven't placed any orders yet.
-                        <br>
-                        <a href="./index.html">Start shopping</a>
-                    </td>
-                </tr>
-            `;
-        } else {
-            recentOrdersContainer.innerHTML = recentOrders.map(order => {
-                const status = normalizeStatus(order.status);
-                const orderId = order.id || order.orderId || "N/A";
-                const date = formatDate(
-                    order.orderDate || order.createdAt || order.date
-                );
-
-                const total = formatPrice(
-                    order.total ??
-                    order.grandTotal ??
-                    order.totalAmount ??
-                    0
-                );
-
-                return `
-                    <tr>
-                        <td>${escapeHTML(orderId)}</td>
-                        <td>${escapeHTML(date)}</td>
-                        <td>${escapeHTML(total)}</td>
-                        <td>${escapeHTML(status.toUpperCase())}</td>
-                    </tr>
-                `;
-            }).join("");
-        }
+    if (recentOrders.length === 0) {
+        recentOrdersContainer.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty-recent">
+                    You haven't placed any orders yet.
+                    <br>
+                    <a href="./index.html">Start shopping</a>
+                </td>
+            </tr>
+        `;
+        return;
     }
 
+    recentOrdersContainer.innerHTML = recentOrders.map(order => {
+        const status = normalizeStatus(order.status);
+
+        const orderId = order.id || order.orderId || "N/A";
+
+        const date = formatDate(
+            order.created_at ||
+            order.orderDate ||
+            order.createdAt ||
+            order.date
+        );
+
+        const total = formatPrice(
+            order.total_amount ??
+            order.total ??
+            order.grandTotal ??
+            order.totalAmount ??
+            0
+        );
+
+        return `
+            <tr>
+                <td>${escapeHTML(orderId)}</td>
+                <td>${escapeHTML(date)}</td>
+                <td>${escapeHTML(total)}</td>
+                <td>${escapeHTML(status.toUpperCase())}</td>
+            </tr>
+        `;
+    }).join("");
+}
+
+renderRecentOrders();
+updateOrderStatistics();
     // ============================================
     // 7. RECENTLY PURCHASED PRODUCTS
     // ============================================
@@ -354,6 +452,65 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
         }).join("");
     }
+    // ============================================
+// LOAD CUSTOMER ORDERS FROM DATABASE
+// ============================================
+
+async function loadCustomerOrders() {
+    const token = localStorage.getItem("customerToken");
+
+    if (!token) {
+        console.warn("Customer token not found.");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "http://localhost:3000/api/customer/orders",
+            {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Unable to load customer orders."
+            );
+        }
+
+        orders = Array.isArray(data.orders)
+            ? data.orders
+            : [];
+
+        // Update dashboard statistics.
+        updateOrderStatistics();
+
+        // Display actual database orders.
+        renderRecentOrders();
+
+        // Display purchased products.
+        displayPurchasedProducts();
+
+        console.log(
+            "Customer orders loaded successfully:",
+            orders.length
+        );
+
+    } catch (error) {
+        console.error(
+            "Customer orders loading error:",
+            error.message
+        );
+    }
+}
+
+loadCustomerOrders();
 
     displayPurchasedProducts();
 

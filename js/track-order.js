@@ -1,19 +1,20 @@
 
-// ==========================================
-// YOURSHOP - ORDER TRACKING
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
-    const ORDERS_KEY = "yourshop-orders";
+    // ============================================
+    // 1. GET PAGE ELEMENTS AND CUSTOMER DETAILS
+    // ============================================
 
-    const trackingForm = document.getElementById("tracking-form");
-    const orderIdInput = document.getElementById("tracking-order-id");
-    const trackingMessage = document.getElementById("tracking-message");
-    const trackingResult = document.getElementById("tracking-result");
+    const trackingContent = document.getElementById("tracking-content");
+    const token = localStorage.getItem("customerToken");
 
-    const steps = [
+    const params = new URLSearchParams(window.location.search);
+    const requestedOrderId = (params.get("orderId") || "").trim();
+
+    const API_URL = "http://localhost:3000/api/customer/orders";
+
+    const statuses = [
         "pending",
         "confirmed",
         "processing",
@@ -21,292 +22,491 @@ document.addEventListener("DOMContentLoaded", () => {
         "delivered"
     ];
 
-    // ======================================
-    // 1. STORAGE
-    // ======================================
+    console.log("YourShop tracking page initialized.");
+    console.log("Requested order ID:", requestedOrderId);
 
-    function getOrders() {
-        try {
-            const orders = JSON.parse(
-                localStorage.getItem(ORDERS_KEY)
-            );
+    // ============================================
+    // 2. CHECK TRACKING CONTAINER
+    // ============================================
 
-            return Array.isArray(orders) ? orders : [];
-        } catch (error) {
-            console.error("Could not load orders:", error);
-            return [];
-        }
+    if (!trackingContent) {
+        console.error(
+            'Tracking container not found. Check that track-order.html has id="tracking-content".'
+        );
+        return;
     }
 
-    // ======================================
-    // 2. HELPERS
-    // ======================================
+    // ============================================
+    // 3. HELPER FUNCTIONS
+    // ============================================
 
     function escapeHTML(value) {
-        return String(value ?? "").replace(/[&<>"']/g, character => ({
+        return String(value ?? "").replace(/[&<>"']/g, char => ({
             "&": "&amp;",
             "<": "&lt;",
             ">": "&gt;",
             '"': "&quot;",
             "'": "&#039;"
-        })[character]);
+        })[char]);
     }
 
     function formatPrice(amount) {
-        if (typeof window.formatPrice === "function") {
-            return window.formatPrice(amount);
-        }
-
-        return "$" + Number(amount || 0).toFixed(2);
+        return "$" + (Number(amount) || 0).toFixed(2);
     }
 
-    function getOrderId(order) {
-        return String(
-            order.orderId ??
-            order.id ??
-            order.orderNumber ??
-            ""
-        );
+    function formatDate(value) {
+        if (!value) return "Not available";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "Not available";
+        }
+
+        return date.toLocaleString("en-US", {
+            dateStyle: "medium",
+            timeStyle: "short"
+        });
     }
 
-    function getCustomer(order) {
-        if (typeof order.customer === "object" && order.customer !== null) {
-            return order.customer.name ||
-                order.customer.fullName ||
-                order.customerName ||
-                "Customer";
-        }
+    function normalizeStatus(status) {
+        const value = String(status || "pending")
+            .toLowerCase()
+            .trim();
 
-        return order.customerName ||
-            order.name ||
-            order.customer ||
-            "Customer";
+        if (value === "completed") return "delivered";
+        if (value === "canceled") return "cancelled";
+
+        return value;
     }
 
-    function getOrderProducts(order) {
-        if (Array.isArray(order.products)) {
-            return order.products;
-        }
+    function formatStatus(status) {
+        if (!status) return "Pending";
 
-        if (Array.isArray(order.items)) {
-            return order.items;
-        }
-
-        return [];
+        return status.charAt(0).toUpperCase() + status.slice(1);
     }
 
-    function getStatus(order) {
-        const status = String(order.status || "pending")
-            .trim()
-            .toLowerCase();
+    function showError(title, message) {
+        trackingContent.innerHTML = `
+            <div class="tracking-card error-state">
+                <h2>${escapeHTML(title)}</h2>
+                <p>${escapeHTML(message)}</p>
 
-        if (status === "complete" || status === "completed") {
-            return "delivered";
-        }
-
-        if (status === "cancel" || status === "canceled") {
-            return "cancelled";
-        }
-
-        if (steps.includes(status) || status === "cancelled") {
-            return status;
-        }
-
-        return "pending";
+                <a href="./my-orders.html" class="back-button">
+                    Back to My Orders
+                </a>
+            </div>
+        `;
     }
 
-    function getStatusLabel(status) {
-        const labels = {
-            pending: "Pending",
-            confirmed: "Confirmed",
-            processing: "Processing",
-            shipped: "Shipped",
-            delivered: "Delivered",
-            cancelled: "Cancelled"
+    // ============================================
+    // 4. ORDER PROGRESS TIMELINE
+    // ============================================
+
+    function getTimelineHTML(status) {
+        const currentIndex = statuses.indexOf(status);
+
+        const progress = currentIndex < 0
+            ? 0
+            : (currentIndex / (statuses.length - 1)) * 86;
+
+        return `
+            <div class="timeline">
+
+                <div
+                    class="timeline-progress"
+                    style="width: ${progress}%">
+                </div>
+
+                ${statuses.map((step, index) => {
+                    let className = "";
+
+                    if (currentIndex >= 0 && index < currentIndex) {
+                        className = "completed";
+                    } else if (index === currentIndex) {
+                        className = "current";
+                    }
+
+                    return `
+                        <div class="timeline-step ${className}">
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-label">
+                                ${formatStatus(step)}
+                            </div>
+                        </div>
+                    `;
+                }).join("")}
+
+            </div>
+        `;
+    }
+
+    // ============================================
+    // 5. ORDER STATUS MESSAGE
+    // ============================================
+
+    function getStatusMessage(status) {
+        const messages = {
+            pending:
+                "Your order has been received and is waiting for confirmation.",
+
+            confirmed:
+                "Your order has been confirmed. Thank you for shopping with YourShop!",
+
+            processing:
+                "Your order is being prepared for shipment.",
+
+            shipped:
+                "Great news! Your order is on its way.",
+
+            delivered:
+                "Your order has been delivered successfully.",
+
+            cancelled:
+                "This order has been cancelled. Please contact customer support if you need assistance."
         };
 
-        return labels[status] || "Pending";
+        return messages[status] ||
+            "Your order status is being updated.";
     }
 
-    function showMessage(message, type) {
-        trackingMessage.textContent = message;
-        trackingMessage.className = type || "";
-    }
+    // ============================================
+    // 6. DISPLAY PURCHASED PRODUCTS
+    // ============================================
 
-    // ======================================
-    // 3. DISPLAY ORDER INFORMATION
-    // ======================================
-
-    function displayOrder(order) {
-        const orderId = getOrderId(order);
-        const status = getStatus(order);
-
-        trackingResult.hidden = false;
-
-        document.getElementById("result-order-id").textContent =
-            "Order #" + orderId;
-
-        const orderDate = order.orderDate || order.date;
-
-        document.getElementById("result-order-date").textContent =
-            orderDate
-                ? "Placed on " + new Date(orderDate).toLocaleDateString()
-                : "Order date unavailable";
-
-        document.getElementById("result-customer").textContent =
-            getCustomer(order);
-
-        document.getElementById("result-payment").textContent =
-            order.paymentMethod || "Not specified";
-
-        document.getElementById("result-total").textContent =
-            formatPrice(order.total);
-
-        document.getElementById("result-city").textContent =
-            order.city || order.customerCity || "Not specified";
-
-        const statusBadge = document.getElementById("result-status");
-
-        statusBadge.textContent = getStatusLabel(status);
-        statusBadge.className = "status-badge";
-
-        if (status === "delivered") {
-            statusBadge.classList.add("status-delivered");
-        } else if (status === "cancelled") {
-            statusBadge.classList.add("status-cancelled");
-        } else if (status === "processing" || status === "shipped") {
-            statusBadge.classList.add("status-processing");
+    function getProductsHTML(items) {
+        if (!Array.isArray(items) || items.length === 0) {
+            return "<p>Product information is unavailable.</p>";
         }
 
-        displayProgress(status);
-        displayProducts(order);
-
-        document.getElementById("tracking-cancelled").hidden =
-            status !== "cancelled";
-    }
-
-    // ======================================
-    // 4. DELIVERY PROGRESS
-    // ======================================
-
-    function displayProgress(status) {
-        const timelineSteps = document.querySelectorAll(".timeline-step");
-        const description = document.getElementById("progress-description");
-
-        timelineSteps.forEach(step => {
-            step.classList.remove("completed", "current");
-        });
-
-        if (status === "cancelled") {
-            description.textContent =
-                "This order was cancelled. Its delivery process has stopped.";
-            return;
-        }
-
-        const currentIndex = steps.indexOf(status);
-
-        timelineSteps.forEach((step, index) => {
-            if (index <= currentIndex) {
-                step.classList.add("completed");
-            }
-
-            if (index === currentIndex) {
-                step.classList.add("current");
-            }
-        });
-
-        const descriptions = {
-            pending: "We have received your order and are waiting to confirm it.",
-            confirmed: "Your order has been confirmed.",
-            processing: "Your order is being prepared for shipment.",
-            shipped: "Your order has been shipped and is on its way.",
-            delivered: "Your order has been successfully delivered."
-        };
-
-        description.textContent =
-            descriptions[status] || descriptions.pending;
-    }
-
-    // ======================================
-    // 5. DISPLAY ORDER PRODUCTS
-    // ======================================
-
-    function displayProducts(order) {
-        const productsContainer =
-            document.getElementById("tracking-products");
-
-        const products = getOrderProducts(order);
-
-        if (products.length === 0) {
-            productsContainer.innerHTML =
-                "<p>No product details are available.</p>";
-            return;
-        }
-
-        productsContainer.innerHTML = products.map(product => {
-            const name = product.name ||
-                product.title ||
+        return items.map(item => {
+            const name =
+                item.product_name ||
+                item.name ||
                 "Product";
 
-            const quantity = Number(product.quantity) || 1;
+            const quantity = Number(item.quantity) || 1;
+            const price = Number(item.price) || 0;
 
-            const price = Number(
-                product.finalPrice ??
-                product.price ??
-                0
-            );
+            const subtotal = item.subtotal != null
+                ? Number(item.subtotal)
+                : price * quantity;
 
             return `
-                <div class="tracking-product">
-                    <span>
-                        ${escapeHTML(name)}
-                        × ${quantity}
-                    </span>
+                <div class="product-item">
 
-                    <strong>${formatPrice(price * quantity)}</strong>
+                    <div>
+                        <div class="product-name">
+                            ${escapeHTML(name)}
+                        </div>
+
+                        <div class="product-quantity">
+                            Quantity: ${quantity}
+                        </div>
+                    </div>
+
+                    <div class="product-price">
+                        ${formatPrice(subtotal)}
+                    </div>
+
                 </div>
             `;
         }).join("");
     }
 
-    // ======================================
-    // 6. FIND ORDER
-    // ======================================
+    // ============================================
+    // 7. DISPLAY SELECTED ORDER
+    // ============================================
 
-    trackingForm.addEventListener("submit", event => {
-        event.preventDefault();
+    function renderOrder(order) {
+        const orderId = order.id ?? order.order_id;
+        const status = normalizeStatus(order.status);
 
-        const enteredId = orderIdInput.value.trim();
+        const statusClass =
+            statuses.includes(status) || status === "cancelled"
+                ? status
+                : "pending";
 
-        trackingResult.hidden = true;
+        const isCancelled = status === "cancelled";
 
-        if (!enteredId) {
-            showMessage("Please enter your Order ID.", "error");
-            return;
-        }
+        trackingContent.innerHTML = `
 
-        const orders = getOrders();
+            <!-- ORDER PROGRESS -->
 
-        const order = orders.find(item =>
-            getOrderId(item).toLowerCase() === enteredId.toLowerCase()
-        );
+            <section class="tracking-card">
 
-        if (!order) {
-            showMessage(
-                "Order not found. Please check your Order ID.",
-                "error"
+                <div class="order-header">
+
+                    <div>
+                        <h2>
+                            Order #${escapeHTML(orderId)}
+                        </h2>
+
+                        <p class="order-date">
+                            Placed on ${escapeHTML(formatDate(order.created_at))}
+                        </p>
+                    </div>
+
+                    <span class="status-badge status-${statusClass}">
+                        ${escapeHTML(formatStatus(status))}
+                    </span>
+
+                </div>
+
+                <h3 class="section-title" style="margin-top: 25px;">
+                    Order Progress
+                </h3>
+
+                ${
+                    isCancelled
+                        ? `
+                            <div class="status-message cancelled-message">
+                                ${escapeHTML(getStatusMessage(status))}
+                            </div>
+                        `
+                        : `
+                            ${getTimelineHTML(status)}
+
+                            <div class="status-message">
+                                ${escapeHTML(getStatusMessage(status))}
+                            </div>
+                        `
+                }
+
+            </section>
+
+
+            <!-- ORDER INFORMATION -->
+
+            <section class="tracking-card">
+
+                <h3 class="section-title">
+                    Order Information
+                </h3>
+
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <span>Order Number</span>
+                        <strong>#${escapeHTML(orderId)}</strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Payment Method</span>
+                        <strong>
+                            ${escapeHTML(order.payment_method || "Cash on Delivery")}
+                        </strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Order Total</span>
+                        <strong>
+                            ${formatPrice(order.total_amount)}
+                        </strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Order Date</span>
+                        <strong>
+                            ${escapeHTML(formatDate(order.created_at))}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SHIPPING ADDRESS -->
+
+            <section class="tracking-card">
+
+                <h3 class="section-title">
+                    Shipping Address
+                </h3>
+
+                <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <span>Customer</span>
+                        <strong>
+                            ${escapeHTML(order.customer_name || "Customer")}
+                        </strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Phone</span>
+                        <strong>
+                            ${escapeHTML(order.phone || "Not available")}
+                        </strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Email</span>
+                        <strong>
+                            ${escapeHTML(order.email || "Not available")}
+                        </strong>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>Address</span>
+                        <strong>
+                            ${escapeHTML(order.address || "Not available")}
+                            ${escapeHTML(order.city || "")}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- PURCHASED PRODUCTS -->
+
+            <section class="tracking-card">
+
+                <h3 class="section-title">
+                    Purchased Products
+                </h3>
+
+                ${getProductsHTML(order.items)}
+
+            </section>
+
+
+            <!-- BACK BUTTON -->
+
+            <div style="margin: 20px 0;">
+                <a href="./my-orders.html" class="back-button">
+                    Back to My Orders
+                </a>
+            </div>
+
+        `;
+    }
+
+    // ============================================
+    // 8. LOAD AND SELECT CUSTOMER ORDER
+    // ============================================
+
+    async function loadOrder() {
+
+        // Check login
+        if (!token) {
+            showError(
+                "Login Required",
+                "Please log in to your customer account to track your order."
             );
             return;
         }
 
-        showMessage("Order found successfully!", "success");
+        // Check order ID in URL
+        if (!requestedOrderId) {
+            showError(
+                "Order Not Selected",
+                "No order ID was found. Please open tracking from your My Orders page."
+            );
+            console.error("Missing orderId in tracking URL.");
+            return;
+        }
 
-        displayOrder(order);
+        trackingContent.innerHTML = `
+            <div class="tracking-card">
+                <p>Loading your order details...</p>
+            </div>
+        `;
 
-        trackingResult.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    });
+        try {
+            // Fetch orders from customer API
+            const response = await fetch(API_URL, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await response.json();
+
+            console.log("Customer orders API response:", data);
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Unable to load your orders."
+                );
+            }
+
+            if (data.success === false) {
+                throw new Error(
+                    data.message || "The API could not retrieve your orders."
+                );
+            }
+
+            // Support both direct and nested response formats
+            const orders = Array.isArray(data.orders)
+                ? data.orders
+                : Array.isArray(data.data?.orders)
+                    ? data.data.orders
+                    : [];
+
+            console.log(
+                "Available order IDs:",
+                orders.map(item => item.id ?? item.order_id)
+            );
+
+            console.log(
+                "Requested order ID:",
+                requestedOrderId
+            );
+
+            // Match order ID as a string to avoid number/string mismatch
+            const selectedOrder = orders.find(item => {
+                const currentId = item.id ?? item.order_id;
+
+                return String(currentId).trim() ===
+                    String(requestedOrderId).trim();
+            });
+
+            // Check whether the order was found
+            if (!selectedOrder) {
+                console.error(
+                    "Order not found. Requested ID:",
+                    requestedOrderId
+                );
+
+                showError(
+                    "Order Not Found",
+                    `We could not find order #${requestedOrderId} in your account.`
+                );
+
+                return;
+            }
+
+            console.log("Selected order:", selectedOrder);
+
+            // Display the selected order
+            renderOrder(selectedOrder);
+
+            console.log(
+                "Order tracking loaded successfully:",
+                selectedOrder.id ?? selectedOrder.order_id
+            );
+
+        } catch (error) {
+            console.error("Order tracking error:", error);
+
+            showError(
+                "Unable to Load Tracking",
+                error.message || "Please check your connection and try again."
+            );
+        }
+    }
+
+    // ============================================
+    // 9. START TRACKING
+    // ============================================
+
+    loadOrder();
 
 });

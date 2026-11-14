@@ -33,39 +33,64 @@ document.addEventListener("DOMContentLoaded", async () => {    "use strict";
     const productId = Number(urlParameters.get("id"));
 
     let databaseProducts = [];
+    let selectedProduct = null;
 
     try {
-        const response = await fetch("http://localhost:3000/api/products");
+  const response = await fetch(
+    `http://localhost:3000/api/products/${productId}`
+);
 
-        if (!response.ok) {
-            throw new Error("Backend request failed: " + response.status);
-        }
+if (!response.ok) {
+    throw new Error("Product request failed: " + response.status);
+}
 
-        const data = await response.json();
+const data = await response.json();
 
-        if (!data.success || !Array.isArray(data.products)) {
-            throw new Error("Invalid product data received.");
-        }
+if (!data.success || !data.product) {
+    throw new Error("Invalid product data received.");
+}
 
-        databaseProducts = data.products.map(product => ({
-            ...product,
+const product = data.product;
 
-            id: Number(product.id),
-            price: Number(product.price),
-            discount: Number(product.discount),
-            rating: Number(product.rating),
-            stock: Number(product.stock),
+// Safely handle product images.
+let productImages = [];
 
-            soldCount: Number(product.sold_count || 0),
+if (Array.isArray(product.images)) {
+    productImages = product.images;
+} else if (typeof product.images === "string" && product.images.trim()) {
+    try {
+        productImages = JSON.parse(product.images);
+    } catch {
+        productImages = [product.images];
+    }
+}
 
-            images: Array.isArray(product.images)
-                ? product.images
-                : JSON.parse(product.images || "[]"),
+selectedProduct = {
+        ...product,
+    id: Number(product.id),
+    price: Number(product.price),
+    discount: Number(product.discount),
+    rating: Number(product.rating),
+    stock: Number(product.stock),
+    soldCount: Number(product.sold_count || 0),
+    images: productImages,
+    category: product.category === "men-fashion"
+        ? "mens-fashion"
+        : product.category
+};
 
-            category: product.category === "men-fashion"
-                ? "mens-fashion"
-                : product.category
-        }));
+// Keep the global products array available for related products.
+const existingIndex = products.findIndex(
+    item => Number(item.id) === productId
+);
+
+if (existingIndex >= 0) {
+    products[existingIndex] = selectedProduct;
+} else {
+    products.push(selectedProduct);
+}
+
+console.log("Selected product loaded:", selectedProduct.name);
 
         // Replace frontend products with database products.
         products.splice(0, products.length, ...databaseProducts);
@@ -82,10 +107,10 @@ document.addEventListener("DOMContentLoaded", async () => {    "use strict";
         );
     }
 
-    // Find the selected product.
-    const selectedProduct = Array.isArray(products)
-        ? products.find(product => Number(product.id) === productId)
-        : null;
+    // // Find the selected product.
+    // const selectedProduct = Array.isArray(products)
+    //     ? products.find(product => Number(product.id) === productId)
+    //     : null;
 
     // Check whether the product exists.
     if (!selectedProduct) {

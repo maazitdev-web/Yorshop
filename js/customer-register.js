@@ -1,10 +1,12 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("customer-register-form");
     const message = document.getElementById("register-message");
+    const submitButton = form.querySelector(".account-submit");
 
     if (!form) return;
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const name = document.getElementById("register-name").value.trim();
@@ -36,7 +38,46 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        message.style.color = "#16a34a";
-        message.textContent = "Form validation successful! Account creation will be connected later.";
+        try {
+            submitButton.disabled = true;
+            submitButton.textContent = "Creating Account...";
+            message.style.color = "#2563eb";
+            message.textContent = "Please wait while we create your account...";
+
+            const response = await fetch("http://localhost:3000/api/customer/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Registration failed.");
+            }
+
+            message.style.color = "#16a34a";
+            message.textContent = "Account created successfully! Redirecting to login...";
+
+            form.reset();
+
+            setTimeout(() => {
+                window.location.href = "./customer-login.html";
+            }, 2000);
+
+        } catch (error) {
+            message.style.color = "#dc2626";
+            message.textContent = error.message || "Unable to connect to the server.";
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Create Account";
+        }
     });
 });

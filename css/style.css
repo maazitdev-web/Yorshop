@@ -8267,3 +8267,264 @@ body.quick-view-open {
     color: #2563eb;
     border-color: #2563eb;
 }
+
+/* =====================================
+   ALL CATEGORIES PAGE HEADER
+===================================== */
+
+.all-categories-list-page .header-main {
+    max-width: 1400px;
+    margin: auto;
+    padding: 17px 30px;
+    display: grid;
+    grid-template-columns: 210px minmax(250px, 1fr) auto;
+    align-items: center;
+    gap: 25px;
+}
+
+.all-categories-list-page .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    color: #102a56;
+}
+
+.all-categories-list-page .logo-icon {
+    width: 39px;
+    height: 39px;
+    display: flex;
+}
+
+.all-categories-list-page .logo-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.all-categories-list-page .logo-text {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.all-categories-list-page .logo-text span {
+    color: #2672d8;
+}
+
+.all-categories-list-page .header-main .search-form {
+    display: flex;
+    width: 100%;
+    height: 46px;
+    border: 1px solid #dce4ef;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.all-categories-list-page .search-form select {
+    width: 150px;
+    border: none;
+    border-right: 1px solid #e3e9f2;
+    padding: 0 10px;
+    background: #f7f9fc;
+    font-family: inherit;
+    outline: none;
+}
+
+.all-categories-list-page .search-form input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    padding: 0 14px;
+    font-family: inherit;
+}
+
+.all-categories-list-page .search-form .categories-search-button {
+    border: none;
+    padding: 0 23px;
+    background: #1769c2;
+    color: white;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.all-categories-list-page .search-form .categories-search-button:hover {
+    background: #102a56;
+}
+
+.all-categories-list-page .main-navigation .nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    padding: 13px 20px;
+    margin: 0;
+    border-top: 1px solid #edf0f5;
+}
+
+.all-categories-list-page .main-navigation .nav-links a {
+    text-decoration: none;
+    color: #34445e;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.all-categories-list-page .main-navigation .nav-links a:hover {
+    color: #1769c2;
+}
+
+@media (max-width: 900px) {
+    .all-categories-list-page .header-main {
+        grid-template-columns: 1fr auto;
+        gap: 15px;
+    }
+
+    .all-categories-list-page .header-main .search-form {
+        grid-column: 1 / -1;
+    }
+
+    .all-categories-list-page .main-navigation .nav-links {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 550px) {
+    .all-categories-list-page .header-main {
+        padding: 14px;
+    }
+
+    .all-categories-list-page .search-form select {
+        display: none;
+    }
+
+    .all-categories-list-page .search-form .categories-search-button {
+        padding: 0 12px;
+    }
+
+    .all-categories-list-page .main-navigation .nav-links {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .all-categories-list-page .main-navigation .nav-links a {
+        white-space: nowrap;
+    }
+}
+
+/* ==========================================
+   FINAL HEADER FIX - CATEGORY PAGES ONLY
+========================================== */
+
+/* CATEGORY PAGE NAVIGATION */
+.category-page .main-nav {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 32px !important;
+    padding: 14px 20px !important;
+    background: #ffffff !important;
+    border-top: 1px solid #e8edf4 !important;
+}
+
+.category-page .main-nav a {
+    display: inline-block !important;
+    color: #34445e !important;
+    text-decoration: none !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 4px 0 !important;
+}
+
+.category-page .main-nav a:hover {
+    color: #1769c2 !important;
+}
+
+/* ALL CATEGORIES NAVIGATION */
+.all-categories-list-page .main-navigation {
+    display: block !important;
+    background: #ffffff !important;
+    border-top: 1px solid #e8edf4 !important;
+}
+
+.all-categories-list-page .main-navigation .nav-links {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 32px !important;
+    padding: 14px 20px !important;
+    margin: 0 !important;
+    list-style: none !important;
+}
+
+.all-categories-list-page .main-navigation .nav-links li {
+    display: block !important;
+}
+
+.all-categories-list-page .main-navigation .nav-links a {
+    display: inline-block !important;
+    color: #34445e !important;
+    text-decoration: none !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+
+.all-categories-list-page .main-navigation .nav-links a:hover {
+    color: #1769c2 !important;
+}
+
+/* CATEGORY PAGE SEARCH BUTTON */
+.category-page .header-main .search-form button[type="submit"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    padding: 0 22px !important;
+    background: #1769c2 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+.category-page .header-main .search-form button[type="submit"]:hover {
+    background: #102a56 !important;
+}
+
+/* ALL CATEGORIES SEARCH BUTTON */
+.all-categories-list-page .header-main .search-form button[type="submit"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 23px !important;
+    background: #1769c2 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+.all-categories-list-page .header-main .search-form button[type="submit"]:hover {
+    background: #102a56 !important;
+}
+
+/* MOBILE NAVIGATION */
+@media (max-width: 550px) {
+    .category-page .main-nav,
+    .all-categories-list-page .main-navigation .nav-links {
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 18px !important;
+        overflow-x: auto !important;
+    }
+}

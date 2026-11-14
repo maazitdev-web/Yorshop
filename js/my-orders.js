@@ -1,24 +1,19 @@
-
 // ============================================
 // YOURSHOP - CUSTOMER MY ORDERS
+// Backend-connected customer order history
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
     // ========================================
-    // 1. STORAGE AND HTML ELEMENTS
+    // 1. HTML ELEMENTS AND ORDER DATA
     // ========================================
 
-    const STORAGE_KEY = "yourshop-orders";
+    const ordersList = document.getElementById("customer-orders-list");
+    const orderFilter = document.getElementById("order-filter");
 
-    const ordersList = document.getElementById(
-        "customer-orders-list"
-    );
-
-    const orderFilter = document.getElementById(
-        "order-filter"
-    );
+    let customerOrders = [];
 
     if (!ordersList) {
         console.warn("Customer orders list not found.");
@@ -26,25 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 2. GET ORDERS
-    // ========================================
-
-    function getOrders() {
-        try {
-            const orders = JSON.parse(
-                localStorage.getItem(STORAGE_KEY)
-            );
-
-            return Array.isArray(orders) ? orders : [];
-
-        } catch (error) {
-            console.error("Unable to load orders:", error);
-            return [];
-        }
-    }
-
-    // ========================================
-    // 3. HELPER FUNCTIONS
+    // 2. HELPER FUNCTIONS
     // ========================================
 
     function escapeHTML(value) {
@@ -64,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return window.formatPrice(price);
         }
 
-        return `$ ${price.toFixed(2)}`;
+        return `$${price.toFixed(2)}`;
     }
 
     function normalizeStatus(status) {
@@ -106,34 +83,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getOrderTotal(order) {
-        if (order.total !== undefined) {
+        if (order.total_amount !== undefined &&
+            order.total_amount !== null) {
+            return Number(order.total_amount) || 0;
+        }
+
+        if (order.total !== undefined &&
+            order.total !== null) {
             return Number(order.total) || 0;
         }
 
-        if (order.grandTotal !== undefined) {
+        if (order.grandTotal !== undefined &&
+            order.grandTotal !== null) {
             return Number(order.grandTotal) || 0;
         }
 
+        if (order.totalAmount !== undefined &&
+            order.totalAmount !== null) {
+            return Number(order.totalAmount) || 0;
+        }
+
         return getOrderItems(order).reduce((total, item) => {
+            if (item.subtotal !== undefined &&
+                item.subtotal !== null) {
+                return total + (Number(item.subtotal) || 0);
+            }
 
             const price = Number(
-                item.price ||
-                item.discountedPrice ||
-                0
+                item.price || item.discountedPrice || 0
             );
 
             const quantity = Number(item.quantity) || 1;
 
             return total + price * quantity;
-
         }, 0);
     }
 
     function getOrderDate(order) {
         return (
+            order.created_at ||
             order.createdAt ||
-            order.date ||
             order.orderDate ||
+            order.date ||
             ""
         );
     }
@@ -155,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getCustomerName(order) {
         return (
+            order.customer_name ||
             order.customerName ||
             order.name ||
             order.customer?.name ||
@@ -164,14 +156,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getPaymentMethod(order) {
         return (
+            order.payment_method ||
             order.paymentMethod ||
             order.payment ||
             "Cash on Delivery"
         );
     }
 
+    function getOrders() {
+        return customerOrders;
+    }
+
     // ========================================
-    // 4. ORDER STATUS TIMELINE
+    // 3. ORDER STATUS TIMELINE
     // ========================================
 
     const orderStatuses = [
@@ -183,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     function getStatusMessage(status) {
-
         if (status === "cancelled") {
             return `
                 <div class="order-cancelled-message">
@@ -201,12 +197,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     let className = "";
 
-                    if (currentIndex === -1) {
-                        className = "";
-                    } else if (index < currentIndex) {
+                    if (currentIndex >= 0 && index < currentIndex) {
                         className = "completed";
-                    } else if (index === currentIndex) {
-                        className = "active";
+                    } else if (
+                        currentIndex >= 0 &&
+                        index === currentIndex
+                    ) {
+                        className = "current";
                     }
 
                     return `
@@ -228,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 5. ORDER STATUS INFORMATION
+    // 4. ORDER STATUS INFORMATION
     // ========================================
 
     function getStatusInformation(status) {
@@ -247,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 6. ORDER PRODUCTS HTML
+    // 5. ORDER PRODUCTS HTML
     // ========================================
 
     function getProductsHTML(order) {
@@ -264,10 +261,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return items.map(item => {
 
-            const name = item.name || item.title || "Product";
+            const name =
+                item.product_name ||
+                item.name ||
+                item.productName ||
+                item.title ||
+                "Product";
 
             const image =
                 item.image ||
+                item.productImage ||
                 item.images?.[0] ||
                 "";
 
@@ -287,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             src="${escapeHTML(image)}"
                             alt="${escapeHTML(name)}"
                             class="order-product-image"
+                            loading="lazy"
                         >
                     ` : ""}
 
@@ -311,14 +315,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 7. ORDER DETAILS MODAL
+    // 6. ORDER DETAILS MODAL
     // ========================================
 
     function showOrderDetails(orderIndex) {
 
-        const orders = getOrders();
-
-        const order = orders[orderIndex];
+        const order = getOrders()[orderIndex];
 
         if (!order) {
             alert("Order not found.");
@@ -368,6 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         <p>
                             <strong>Status:</strong>
+
                             <span class="order-status status-${escapeHTML(status)}">
                                 ${escapeHTML(formatStatus(status))}
                             </span>
@@ -422,7 +425,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        // Remove an existing modal before opening another.
         document.getElementById(
             "order-details-modal"
         )?.remove();
@@ -438,6 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function closeModal() {
             modal?.remove();
+
             document.removeEventListener(
                 "keydown",
                 handleEscape
@@ -471,16 +474,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 8. RENDER CUSTOMER ORDERS
+    // 7. RENDER CUSTOMER ORDERS
     // ========================================
 
     function renderOrders() {
 
-        const orders = getOrders();
-
         const selectedFilter = orderFilter?.value || "all";
 
-        const filteredOrders = orders
+        const filteredOrders = getOrders()
             .map((order, index) => ({
                 order,
                 index
@@ -495,7 +496,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     selectedFilter;
 
             })
-            .reverse();
+            .sort((a, b) => {
+
+                const dateA =
+                    new Date(getOrderDate(a.order)).getTime() || 0;
+
+                const dateB =
+                    new Date(getOrderDate(b.order)).getTime() || 0;
+
+                return dateB - dateA;
+            });
 
         if (filteredOrders.length === 0) {
 
@@ -588,12 +598,10 @@ document.addEventListener("DOMContentLoaded", () => {
                                     View Details
                                 </button>
 
-                                <a
-                                    href="./track-order.html"
-                                    class="order-btn track-btn"
-                                >
-                                    Track Order
-                                </a>
+<a href="./track-order.html?orderId=${encodeURIComponent(getOrderId(order))}"
+   class="order-btn track-btn">
+    Track Order
+</a>
 
                                 <a
                                     href="./index.html"
@@ -614,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 9. VIEW ORDER DETAILS BUTTON
+    // 8. VIEW ORDER DETAILS BUTTON
     // ========================================
 
     ordersList.addEventListener("click", event => {
@@ -634,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 10. ORDER FILTER
+    // 9. ORDER FILTER
     // ========================================
 
     orderFilter?.addEventListener("change", () => {
@@ -642,7 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 11. OPEN ORDER FROM NOTIFICATION
+    // 10. OPEN ORDER FROM NOTIFICATION
     // ========================================
 
     function openOrderFromNotification() {
@@ -655,9 +663,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!requestedOrderId) return;
 
-        const orders = getOrders();
-
-        const orderIndex = orders.findIndex(order =>
+        const orderIndex = getOrders().findIndex(order =>
             String(getOrderId(order)) ===
             String(requestedOrderId)
         );
@@ -672,21 +678,121 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Automatically open the matching order details.
         showOrderDetails(orderIndex);
+    }
 
+    // ========================================
+    // 11. LOAD CUSTOMER ORDERS FROM BACKEND
+    // ========================================
+
+    async function loadCustomerOrders() {
+
+        const token = localStorage.getItem("customerToken");
+
+        if (!token) {
+
+            ordersList.innerHTML = `
+                <div class="empty-orders">
+
+                    <div class="empty-icon">🔒</div>
+
+                    <h3>Please Login</h3>
+
+                    <p>
+                        Please log in to view your orders.
+                    </p>
+
+                    <a href="./index.html" class="order-btn shop-btn">
+                        Back to Store
+                    </a>
+
+                </div>
+            `;
+
+            return;
+        }
+
+        ordersList.innerHTML = `
+            <div class="empty-orders">
+
+                <div class="empty-icon">📦</div>
+
+                <h3>Loading Your Orders...</h3>
+
+                <p>
+                    Please wait while we retrieve your orders.
+                </p>
+
+            </div>
+        `;
+
+        try {
+
+            const response = await fetch(
+                "http://localhost:3000/api/customer/orders",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    "Unable to load your orders."
+                );
+            }
+
+            customerOrders = Array.isArray(data.orders)
+                ? data.orders
+                : [];
+
+            renderOrders();
+
+            openOrderFromNotification();
+
+            console.log(
+                "My Orders loaded successfully:",
+                customerOrders.length
+            );
+
+        } catch (error) {
+
+            console.error(
+                "My Orders loading error:",
+                error
+            );
+
+            ordersList.innerHTML = `
+                <div class="empty-orders">
+
+                    <div class="empty-icon">⚠️</div>
+
+                    <h3>Unable to Load Orders</h3>
+
+                    <p>
+                        Please refresh the page and try again.
+                    </p>
+
+                </div>
+            `;
+        }
     }
 
     // ========================================
     // 12. INITIALIZE
     // ========================================
 
-    renderOrders();
-
-    openOrderFromNotification();
+    loadCustomerOrders();
 
     console.log(
-        "YourShop customer orders loaded successfully."
+        "YourShop customer orders page initialized."
     );
 
 });
