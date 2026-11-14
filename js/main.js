@@ -53,20 +53,16 @@ if (adminToken) {
         link.style.display = "none";
     });
 }
+// ============================================
+// 2. LOCAL PRODUCT PAGINATION SETTINGS
+// ============================================
 
-    // ============================================
-    // 2. BACKEND PAGINATION SETTINGS
-    // ============================================
+let currentPage = 1;
+const productsPerPage = 8;
+let totalPages = 1;
+let totalProducts = 0;
 
-    const API_URL = "http://192.168.0.189:3000/api/products";
-
-    let currentPage = 1;
-    const productsPerPage = 8;
-    let totalPages = 1;
-    let totalProducts = 0;
-
-    // Identifies the latest search request.
-    let searchRequestId = 0;
+let searchRequestId = 0;
 
     // ============================================
     // 3. CHECK PRODUCTS.JS
@@ -86,72 +82,6 @@ if (adminToken) {
     // 4. LOAD PRODUCTS FROM MYSQL
     // ============================================
 
-    try {
-
-        const response = await fetch(
-            `${API_URL}?limit=100`
-        );
-
-        if (!response.ok) {
-            throw new Error(
-                "Backend request failed: " + response.status
-            );
-        }
-
-        const data = await response.json();
-
-        if (!data.success || !Array.isArray(data.products)) {
-            throw new Error("Invalid product data received.");
-        }
-
-        const databaseProducts = data.products.map(product => {
-
-            let productImages = [];
-
-            try {
-                productImages = Array.isArray(product.images)
-                    ? product.images
-                    : JSON.parse(product.images || "[]");
-            } catch (error) {
-                productImages = [];
-            }
-
-            return {
-                ...product,
-                id: Number(product.id),
-                price: Number(product.price),
-                discount: Number(product.discount),
-                rating: Number(product.rating),
-                stock: Number(product.stock),
-                soldCount: Number(product.sold_count || 0),
-                images: productImages
-            };
-
-        });
-
-        products.splice(
-            0,
-            products.length,
-            ...databaseProducts
-        );
-
-        console.log(
-            "All products loaded from MySQL:",
-            products.length
-        );
-
-    } catch (error) {
-
-        console.error(
-            "MySQL product loading failed:",
-            error.message
-        );
-
-        console.log(
-            "Using existing local products as fallback."
-        );
-
-    }
     // ============================================
     // 5. LOAD CENTRAL INVENTORY STOCK
     // ============================================
@@ -1037,238 +967,147 @@ if (adminToken) {
 
     }
 
-    // ============================================
-    // 15. SEARCH, FILTER AND SORT PRODUCTS
-    // ============================================
-
-    async function displayFilteredProducts(page = 1) {
-
-        // Every new request gets a unique ID.
-        const requestId = ++searchRequestId;
-
-        try {
-
-            const query = searchInput
-                ? searchInput.value.trim()
-                : "";
-
-            let category = searchCategory
-                ? searchCategory.value
-                : "all";
-
-            if (category === "mens-fashion") {
-                category = "men-fashion";
-            }
-
-            const minPrice = minPriceInput
-                ? minPriceInput.value.trim()
-                : "";
-
-            const maxPrice = maxPriceInput
-                ? maxPriceInput.value.trim()
-                : "";
-
-            // Sorting
-            let sortBy = "id";
-            let sortOrder = "DESC";
-
-            if (sortSelect) {
-
-                switch (sortSelect.value) {
-
-                    case "popular":
-                        sortBy = "sold_count";
-                        sortOrder = "DESC";
-                        break;
-
-                    case "newest":
-                        sortBy = "id";
-                        sortOrder = "DESC";
-                        break;
-
-                    case "price-low":
-                        sortBy = "price";
-                        sortOrder = "ASC";
-                        break;
-
-                    case "price-high":
-                        sortBy = "price";
-                        sortOrder = "DESC";
-                        break;
-
-                    case "rating":
-                        sortBy = "rating";
-                        sortOrder = "DESC";
-                        break;
-
-                    default:
-                        sortBy = "id";
-                        sortOrder = "DESC";
-
-                }
-
-            }
-
-            // Build query parameters
-            const params = new URLSearchParams();
-
-            if (query) {
-                params.set("search", query);
-            }
-
-            if (category !== "all") {
-                params.set("category", category);
-            }
-
-            if (minPrice !== "") {
-                params.set("minPrice", minPrice);
-            }
-
-            if (maxPrice !== "") {
-                params.set("maxPrice", maxPrice);
-            }
-
-            params.set("sortBy", sortBy);
-            params.set("sortOrder", sortOrder);
-            params.set("page", String(page));
-            params.set("limit", String(productsPerPage));
-
-            // Request products from backend
-            const response = await fetch(
-                `${API_URL}?${params.toString()}`
-            );
-
-            const data = await response.json();
-
-            // Ignore older responses.
-            if (requestId !== searchRequestId) {
-                return;
-            }
-
-            if (!response.ok || !data.success) {
-
-                throw new Error(
-                    data.message || "Unable to load products."
-                );
-
-            }
-
-            if (!Array.isArray(data.products)) {
-                throw new Error(
-                    "Invalid products received from server."
-                );
-            }
-
-            // Convert database products
-            const filteredProducts = data.products.map(product => {
-
-                let productImages = [];
-
-                try {
-
-                    productImages = Array.isArray(product.images)
-                        ? product.images
-                        : JSON.parse(product.images || "[]");
-
-                } catch (error) {
-
-                    productImages = [];
-
-                }
-
-                return {
-                    ...product,
-
-                    id: Number(product.id),
-                    price: Number(product.price),
-                    discount: Number(product.discount),
-                    rating: Number(product.rating),
-                    stock: Number(product.stock),
-                    soldCount: Number(product.sold_count || 0),
-
-                    images: productImages,
-
-                    category: product.category === "men-fashion"
-                        ? "mens-fashion"
-                        : product.category
-                };
-
-            });
-
-            // Update pagination
-            totalProducts = Number(data.totalProducts) || 0;
-            totalPages = Number(data.totalPages) || 1;
-            currentPage = Number(data.currentPage) || 1;
-
-            // Update product count
-            const productCount = document.getElementById(
-                "product-count"
-            );
-
-            if (productCount) {
-
-                const start = totalProducts === 0
-                    ? 0
-                    : (currentPage - 1) * productsPerPage + 1;
-
-                const end = Math.min(
-                    currentPage * productsPerPage,
-                    totalProducts
-                );
-
-                productCount.textContent =
-                    `Showing ${start}–${end} of ${totalProducts} products`;
-
-            }
-
-            // Display products
-            displayProducts(filteredProducts);
-
-            // Display pagination
-            renderProductPagination();
-
-            console.log("Filtered products loaded:", {
-                search: query,
-                category,
-                totalProducts,
-                currentPage,
-                totalPages,
-                displayedProducts: filteredProducts.length
-            });
-
-        } catch (error) {
-
-            // Ignore errors from outdated requests.
-            if (requestId !== searchRequestId) {
-                return;
-            }
-
-            console.error(
-                "Product filtering error:",
-                error
-            );
-
-            if (productGrid) {
-
-                productGrid.innerHTML =
-                    "<p>Unable to load products. Please try again.</p>";
-
-            }
-
-            const productCount = document.getElementById(
-                "product-count"
-            );
-
-            if (productCount) {
-
-                productCount.textContent =
-                    "Unable to load products.";
-
-            }
-
-        }
-
+// ============================================
+// 15. SEARCH, FILTER AND SORT PRODUCTS LOCALLY
+// ============================================
+
+function displayFilteredProducts(page = 1) {
+
+    const query = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : "";
+
+    const category = searchCategory
+        ? searchCategory.value
+        : "all";
+
+    const minPrice = minPriceInput && minPriceInput.value.trim() !== ""
+        ? Number(minPriceInput.value)
+        : null;
+
+    const maxPrice = maxPriceInput && maxPriceInput.value.trim() !== ""
+        ? Number(maxPriceInput.value)
+        : null;
+
+    // Start with all locally available products.
+    let filteredProducts = [...products];
+
+    // Search by product name.
+    if (query) {
+        filteredProducts = filteredProducts.filter(product =>
+            String(product.name || "").toLowerCase().includes(query)
+        );
     }
+
+    // Filter by category.
+    if (category && category !== "all") {
+        filteredProducts = filteredProducts.filter(product =>
+            product.category === category
+        );
+    }
+
+    // Filter by minimum price.
+    if (minPrice !== null) {
+        filteredProducts = filteredProducts.filter(product =>
+            Number(product.price) >= minPrice
+        );
+    }
+
+    // Filter by maximum price.
+    if (maxPrice !== null) {
+        filteredProducts = filteredProducts.filter(product =>
+            Number(product.price) <= maxPrice
+        );
+    }
+
+    // Sort products.
+    if (sortSelect) {
+        switch (sortSelect.value) {
+
+            case "popular":
+                filteredProducts.sort((a, b) =>
+                    Number(b.soldCount || 0) - Number(a.soldCount || 0)
+                );
+                break;
+
+            case "newest":
+                filteredProducts.sort((a, b) =>
+                    Number(b.id) - Number(a.id)
+                );
+                break;
+
+            case "price-low":
+                filteredProducts.sort((a, b) =>
+                    Number(a.price) - Number(b.price)
+                );
+                break;
+
+            case "price-high":
+                filteredProducts.sort((a, b) =>
+                    Number(b.price) - Number(a.price)
+                );
+                break;
+
+            case "rating":
+                filteredProducts.sort((a, b) =>
+                    Number(b.rating) - Number(a.rating)
+                );
+                break;
+        }
+    }
+
+    // Calculate pagination.
+    totalProducts = filteredProducts.length;
+
+    totalPages = Math.max(
+        1,
+        Math.ceil(totalProducts / productsPerPage)
+    );
+
+    currentPage = Math.min(
+        Math.max(1, page),
+        totalPages
+    );
+
+    const startIndex = (currentPage - 1) * productsPerPage;
+
+    const paginatedProducts = filteredProducts.slice(
+        startIndex,
+        startIndex + productsPerPage
+    );
+
+    // Update product count.
+    const productCount = document.getElementById("product-count");
+
+    if (productCount) {
+
+        const start = totalProducts === 0
+            ? 0
+            : startIndex + 1;
+
+        const end = Math.min(
+            startIndex + productsPerPage,
+            totalProducts
+        );
+
+        productCount.textContent =
+            `Showing ${start}–${end} of ${totalProducts} products`;
+    }
+
+    // Display products and pagination.
+    displayProducts(paginatedProducts);
+
+    renderProductPagination();
+
+    console.log("Local products displayed:", {
+        search: query,
+        category,
+        totalProducts,
+        currentPage,
+        totalPages,
+        displayedProducts: paginatedProducts.length
+    });
+}
 
     // ============================================
     // 16. ADD PRODUCT TO CART
@@ -1944,8 +1783,8 @@ if (section) {
 
     updateCompareButtons();
 
-    // Load first page from MySQL
-    displayFilteredProducts(1);
+// Load first page from local products
+displayFilteredProducts(1);
 
     console.log(
         "YourShop main.js loaded successfully."
