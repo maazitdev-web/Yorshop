@@ -66,6 +66,178 @@ router.get("/orders", verifyCustomerToken, async (req, res) => {
 
 console.log("CUSTOMER AUTH FILE LOADED!");
 
+// ============================================
+// GET CUSTOMER NOTIFICATIONS
+// ============================================
+
+router.get("/notifications", verifyCustomerToken, async (req, res) => {
+    try {
+        const customerEmail = req.customer.email;
+
+        const [notifications] = await db.execute(
+            `SELECT
+                id,
+                customer_email,
+                order_id,
+                title,
+                message,
+                category,
+                is_read,
+                created_at
+             FROM customer_notifications
+             WHERE LOWER(customer_email) = LOWER(?)
+             ORDER BY created_at DESC`,
+            [customerEmail]
+        );
+
+        return res.json({
+            success: true,
+            total: notifications.length,
+            unread: notifications.filter(
+                item => Number(item.is_read) === 0
+            ).length,
+            notifications: notifications.map(item => ({
+                id: item.id,
+                orderId: item.order_id,
+                title: item.title,
+                message: item.message,
+                category: item.category,
+                read: Boolean(item.is_read),
+                createdAt: item.created_at
+            }))
+        });
+
+    } catch (error) {
+        console.error("Get notifications error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to load notifications."
+        });
+    }
+});
+
+
+// ============================================
+// MARK ONE NOTIFICATION AS READ
+// ============================================
+
+router.patch("/notifications/:id/read", verifyCustomerToken, async (req, res) => {
+    try {
+        const notificationId = Number(req.params.id);
+
+        if (!Number.isSafeInteger(notificationId) || notificationId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid notification ID."
+            });
+        }
+
+        const [result] = await db.execute(
+            `UPDATE customer_notifications
+             SET is_read = 1
+             WHERE id = ?
+             AND LOWER(customer_email) = LOWER(?)`,
+            [notificationId, req.customer.email]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Notification not found."
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: "Notification marked as read."
+        });
+
+    } catch (error) {
+        console.error("Mark notification read error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to update notification."
+        });
+    }
+});
+
+
+// ============================================
+// MARK ALL CUSTOMER NOTIFICATIONS AS READ
+// ============================================
+
+router.patch("/notifications/read-all", verifyCustomerToken, async (req, res) => {
+    try {
+        await db.execute(
+            `UPDATE customer_notifications
+             SET is_read = 1
+             WHERE LOWER(customer_email) = LOWER(?)`,
+            [req.customer.email]
+        );
+
+        return res.json({
+            success: true,
+            message: "All notifications marked as read."
+        });
+
+    } catch (error) {
+        console.error("Mark all notifications read error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to update notifications."
+        });
+    }
+});
+
+
+// ============================================
+// DELETE ONE CUSTOMER NOTIFICATION
+// ============================================
+
+router.delete("/notifications/:id", verifyCustomerToken, async (req, res) => {
+    try {
+        const notificationId = Number(req.params.id);
+
+        if (!Number.isSafeInteger(notificationId) || notificationId <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid notification ID."
+            });
+        }
+
+        const [result] = await db.execute(
+            `DELETE FROM customer_notifications
+             WHERE id = ?
+             AND LOWER(customer_email) = LOWER(?)`,
+            [notificationId, req.customer.email]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Notification not found."
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: "Notification deleted successfully."
+        });
+
+    } catch (error) {
+        console.error("Delete notification error:", error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to delete notification."
+        });
+    }
+});
+
+
 
 // ============================================
 // CHANGE CUSTOMER PASSWORD
