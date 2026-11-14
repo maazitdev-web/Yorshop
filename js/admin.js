@@ -1,9 +1,11 @@
 
 // ==========================================
-// YOURSHOP - ADMIN DASHBOARD JAVASCRIPT
+// YOURSHOP - ADMIN DASHBOARD
+// MYSQL + JWT AUTHENTICATION
+// + RECENT ACTIVITY
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     "use strict";
 
     // ======================================
@@ -19,19 +21,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const overviewProductCount = document.getElementById("overview-product-count");
     const recentActivityList = document.getElementById("recent-activity-list");
 
+    const API_URL = "http://localhost:3000/api/orders";
+    const TOKEN_KEY = "yourshop-admin-token";
+
+    let databaseOrders = [];
+
     // ======================================
-    // 2. LOAD PRODUCTS
+    // 2. JWT AUTHENTICATION
+    // ======================================
+
+    function getAdminToken() {
+        return sessionStorage.getItem(TOKEN_KEY);
+    }
+
+    function getAuthHeaders() {
+        const token = getAdminToken();
+
+        if (!token) {
+            throw new Error("Admin login required. Please log in again.");
+        }
+
+        return {
+            "Authorization": `Bearer ${token}`
+        };
+    }
+
+    // ======================================
+    // 3. GET ADMIN PRODUCTS
     // ======================================
 
     function getAdminProducts() {
         try {
-            const savedProducts = localStorage.getItem("yourshop-admin-products");
+            const savedProducts = localStorage.getItem(
+                "yourshop-admin-products"
+            );
 
-            if (!savedProducts) return [];
+            const parsedProducts = JSON.parse(savedProducts || "[]");
 
-            const parsedProducts = JSON.parse(savedProducts);
+            return Array.isArray(parsedProducts)
+                ? parsedProducts
+                : [];
 
-            return Array.isArray(parsedProducts) ? parsedProducts : [];
         } catch (error) {
             console.error("Error loading admin products:", error);
             return [];
@@ -39,13 +69,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 3. GET ALL PRODUCTS
+    // 4. GET ALL PRODUCTS
     // ======================================
 
     function getAllProducts() {
-        const originalProducts = Array.isArray(window.products)
-            ? window.products
-            : [];
+        const originalProducts =
+            typeof products !== "undefined" && Array.isArray(products)
+                ? products
+                : [];
 
         const adminProducts = getAdminProducts();
         const productMap = new Map();
@@ -66,38 +97,97 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 4. UPDATE PRODUCT STATISTICS
+    // 5. UPDATE PRODUCT STATISTICS
     // ======================================
 
     function loadProducts() {
         const productList = getAllProducts();
         const count = productList.length;
 
-        if (totalProducts) totalProducts.textContent = count;
-        if (overviewProductCount) overviewProductCount.textContent = count;
+        if (totalProducts) {
+            totalProducts.textContent = count;
+        }
 
-        return productList;
+        if (overviewProductCount) {
+            overviewProductCount.textContent = count;
+        }
     }
 
     // ======================================
-    // 5. GET ORDERS
+    // 6. LOAD ORDERS FROM MYSQL
+    // JWT TOKEN REQUIRED
     // ======================================
 
-    function getOrders() {
+    async function loadOrders() {
+        if (recentOrders) {
+            recentOrders.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        Loading orders from MySQL...
+                    </td>
+                </tr>
+            `;
+        }
+
         try {
-            const savedOrders = JSON.parse(
-                localStorage.getItem("yourshop-orders") || "[]"
+            const response = await fetch(API_URL, {
+                method: "GET",
+                headers: getAuthHeaders()
+            });
+
+            const data = await response.json();
+
+            if (response.status === 401 || response.status === 403) {
+                throw new Error(
+                    data.message ||
+                    "Your admin session has expired. Please log in again."
+                );
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    "Backend request failed: " + response.status
+                );
+            }
+
+            if (
+                !data.success ||
+                !Array.isArray(data.orders)
+            ) {
+                throw new Error("Invalid order data received.");
+            }
+
+            databaseOrders = data.orders;
+
+            console.log(
+                "Admin dashboard orders loaded from MySQL:",
+                databaseOrders.length
             );
 
-            return Array.isArray(savedOrders) ? savedOrders : [];
+            return databaseOrders;
+
         } catch (error) {
-            console.error("Error loading orders:", error);
+            console.error("MySQL orders error:", error.message);
+
+            databaseOrders = [];
+
+            if (recentOrders) {
+                recentOrders.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:20px;">
+                            ${escapeHTML(error.message)}
+                        </td>
+                    </tr>
+                `;
+            }
+
             return [];
         }
     }
 
     // ======================================
-    // 6. FORMAT CURRENCY
+    // 7. FORMAT CURRENCY
     // ======================================
 
     function formatCurrency(amount) {
@@ -108,11 +198,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 7. GET CUSTOMER NAME
+    // 8. ESCAPE HTML
+    // ======================================
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]);
+    }
+
+    // ======================================
+    // 9. GET CUSTOMER NAME
     // ======================================
 
     function getCustomerName(order) {
         return (
+            order.customer_name ||
             order.customer?.name ||
             order.customerName ||
             order.name ||
@@ -121,17 +226,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 8. GET ORDER DATE
+    // 10. GET ORDER DATE
     // ======================================
 
     function getOrderDate(order) {
-        const dateValue = order.date || order.createdAt;
+        const dateValue =
+            order.created_at ||
+            order.date ||
+            order.createdAt;
 
         if (!dateValue) return "N/A";
 
         const date = new Date(dateValue);
 
-        if (Number.isNaN(date.getTime())) return "N/A";
+        if (Number.isNaN(date.getTime())) {
+            return "N/A";
+        }
 
         return date.toLocaleDateString("en-US", {
             day: "numeric",
@@ -141,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 9. UPDATE DASHBOARD STATISTICS
+    // 11. UPDATE DASHBOARD STATISTICS
     // ======================================
 
     function updateStatistics(orders) {
@@ -164,7 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const revenue = orders.reduce((total, order) => {
-            const amount = Number(order.total);
+            const amount = Number(
+                order.total_amount ?? order.total
+            );
 
             return total + (
                 Number.isFinite(amount) ? amount : 0
@@ -177,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 10. DISPLAY RECENT ORDERS
+    // 12. DISPLAY RECENT ORDERS
     // ======================================
 
     function displayRecentOrders(orders) {
@@ -196,13 +308,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const latestOrders = [...orders].reverse().slice(0, 5);
+        const latestOrders = orders.slice(0, 5);
 
-        latestOrders.forEach((order, index) => {
+        latestOrders.forEach(order => {
             const row = document.createElement("tr");
 
             const orderId = document.createElement("td");
-            orderId.textContent = order.id || `#${index + 1}`;
+            orderId.textContent = "YS" + order.id;
 
             const customerCell = document.createElement("td");
             customerCell.textContent = getCustomerName(order);
@@ -211,14 +323,16 @@ document.addEventListener("DOMContentLoaded", () => {
             dateCell.textContent = getOrderDate(order);
 
             const totalCell = document.createElement("td");
-            totalCell.textContent = formatCurrency(order.total);
+            totalCell.textContent = formatCurrency(
+                order.total_amount ?? order.total
+            );
 
             const statusCell = document.createElement("td");
             const statusBadge = document.createElement("span");
 
             const status = String(order.status || "Pending");
-            statusBadge.textContent = status;
 
+            statusBadge.textContent = status;
             statusBadge.style.display = "inline-block";
             statusBadge.style.padding = "5px 10px";
             statusBadge.style.borderRadius = "20px";
@@ -230,15 +344,18 @@ document.addEventListener("DOMContentLoaded", () => {
             if (normalizedStatus === "delivered") {
                 statusBadge.style.background = "#dcfce7";
                 statusBadge.style.color = "#15803d";
+
             } else if (
                 normalizedStatus === "cancelled" ||
                 normalizedStatus === "canceled"
             ) {
                 statusBadge.style.background = "#fee2e2";
                 statusBadge.style.color = "#b91c1c";
+
             } else if (normalizedStatus === "shipped") {
                 statusBadge.style.background = "#fef3c7";
                 statusBadge.style.color = "#b45309";
+
             } else {
                 statusBadge.style.background = "#eff6ff";
                 statusBadge.style.color = "#2563eb";
@@ -259,11 +376,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 11. RECENT ACTIVITY HELPERS
+    // 13. RECENT ACTIVITY HELPERS
     // ======================================
 
     function getDateValue(item) {
-        const value = item.createdAt || item.date || item.timestamp;
+        const value =
+            item.created_at ||
+            item.createdAt ||
+            item.date ||
+            item.timestamp;
+
         const date = value ? new Date(value) : null;
 
         return date && !Number.isNaN(date.getTime())
@@ -283,7 +405,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function addActivity(activities, icon, title, description, date) {
+    function addActivity(
+        activities,
+        icon,
+        title,
+        description,
+        date
+    ) {
         activities.push({
             icon,
             title,
@@ -294,22 +422,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 12. COLLECT RECENT ACTIVITIES
+    // 14. COLLECT RECENT ACTIVITIES
     // ======================================
 
     function getRecentActivities() {
         const activities = [];
-        const orders = getOrders();
 
-        // Customer orders
-        orders.forEach(order => {
+        // Customer orders from MySQL
+        databaseOrders.forEach(order => {
             const date = getDateValue(order);
 
             addActivity(
                 activities,
                 "🛒",
                 "New customer order",
-                `${getCustomerName(order)} placed order ${order.id || ""} — ${formatCurrency(order.total)}`,
+                `${getCustomerName(order)} placed order YS${order.id} — ${formatCurrency(order.total_amount)}`,
                 date
             );
         });
@@ -322,17 +449,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (Array.isArray(tickets)) {
                 tickets.forEach(ticket => {
-                    const date = getDateValue(ticket);
-
                     addActivity(
                         activities,
                         "🎧",
                         "New support ticket",
                         `${ticket.name || ticket.customerName || "Customer"} — ${ticket.subject || ticket.category || "Support request"}`,
-                        date
+                        getDateValue(ticket)
                     );
                 });
             }
+
         } catch (error) {
             console.error("Error loading support activities:", error);
         }
@@ -345,22 +471,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (Array.isArray(questions)) {
                 questions.forEach(question => {
-                    const date = getDateValue(question);
-
                     addActivity(
                         activities,
                         "❓",
                         "New product question",
                         `${question.name || "Customer"} — ${question.question || "Asked a product question"}`,
-                        date
+                        getDateValue(question)
                     );
                 });
             }
+
         } catch (error) {
             console.error("Error loading product questions:", error);
         }
 
-        // Product reviews (stored separately for each product)
+        // Product reviews
         try {
             const reviewKeys = [];
 
@@ -373,31 +498,34 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             reviewKeys.forEach(key => {
-                const reviews = JSON.parse(localStorage.getItem(key) || "[]");
+                const reviews = JSON.parse(
+                    localStorage.getItem(key) || "[]"
+                );
 
                 if (!Array.isArray(reviews)) return;
 
                 reviews.forEach(review => {
-                    const date = getDateValue(review);
-
                     addActivity(
                         activities,
                         "⭐",
                         "New customer review",
                         `${review.name || review.customerName || "Customer"} — ${review.rating || "N/A"} star rating`,
-                        date
+                        getDateValue(review)
                     );
                 });
             });
+
         } catch (error) {
             console.error("Error loading review activities:", error);
         }
 
-        return activities.sort((a, b) => b.sortTime - a.sortTime);
+        return activities.sort(
+            (a, b) => b.sortTime - a.sortTime
+        );
     }
 
     // ======================================
-    // 13. DISPLAY RECENT ACTIVITIES
+    // 15. DISPLAY RECENT ACTIVITIES
     // ======================================
 
     function displayRecentActivities() {
@@ -409,6 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (activities.length === 0) {
             const emptyMessage = document.createElement("p");
+
             emptyMessage.className = "activity-empty";
             emptyMessage.textContent = "No recent activity yet.";
 
@@ -440,18 +569,19 @@ document.addEventListener("DOMContentLoaded", () => {
             time.textContent = getDisplayDate(activity.date);
 
             item.append(icon, content, time);
+
             recentActivityList.appendChild(item);
         });
     }
 
     // ======================================
-    // 14. REFRESH DASHBOARD
+    // 16. REFRESH DASHBOARD
     // ======================================
 
-    function refreshDashboard() {
+    async function refreshDashboard() {
         loadProducts();
 
-        const orders = getOrders();
+        const orders = await loadOrders();
 
         updateStatistics(orders);
         displayRecentOrders(orders);
@@ -459,10 +589,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ======================================
-    // 15. INITIALIZE DASHBOARD
+    // 17. INITIALIZE DASHBOARD
     // ======================================
 
-    refreshDashboard();
+    await refreshDashboard();
 
-    console.log("YourShop Admin Dashboard loaded successfully.");
+    console.log(
+        "YourShop Admin Dashboard loaded successfully."
+    );
 });

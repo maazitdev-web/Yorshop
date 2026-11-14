@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,634 +19,824 @@
 
 <body>
 
-    <!-- Website Header -->
+    <!-- ========================================
+         WEBSITE HEADER
+    ======================================== -->
 
-<header class="site-header">
+    <header class="site-header">
 
- <div class="announcement-bar">
-    <p>
-        Free Shipping | Exclusive Discounts | Special Offers Every Day
-    </p>
-</div>
-    <!-- Main Header -->
-    <div class="header-main">
-
-   
-
-        <!-- Custom Logo -->
-        <a href="index.html" class="logo">
-
-            <span class="logo-icon">
-                <svg viewBox="0 0 48 48" aria-hidden="true">
-                    <path d="M8 15h32l-3 25H11L8 15Z"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="3"
-                          stroke-linejoin="round"/>
-
-                    <path d="M17 17V12a7 7 0 0 1 14 0v5"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="3"
-                          stroke-linecap="round"/>
-
-                    <path d="m19 28 4 4 7-8"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                </svg>
-            </span>
-
-<span class="logo-text" id="store-logo-text">
-    Your<span>Shop</span>
-</span>
-
-        </a>
-
-        <!-- Search Bar -->
-        <form class="search-form" id="search-form">
-
-            <select id="search-category" aria-label="Choose search category">
-                <option value="all">All Categories</option>
-                <option value="smartphones">Smartphones</option>
-                <option value="headphones">Headphones</option>
-                <option value="laptops">Laptops</option>
-                <option value="smart-watches">Smart Watches</option>
-                <option value="accessories">Accessories</option>
-                <option value="gaming">Gaming</option>
-                <option value="cameras">Cameras</option>
-                <option value="home-appliances">Home Appliances</option>
-                <option value="mens-fashion">Men's Fashion</option>
-                <option value="womens-fashion">Women's Fashion</option>
-            </select>
-
-            <input
-                type="search"
-                id="product-search"
-                placeholder="Search for products..."
-                aria-label="Search products"
-            >
-
-            <button type="submit" class="search-button" aria-label="Search">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="10.8" cy="10.8" r="6.8"
-                            fill="none" stroke="currentColor" stroke-width="2"/>
-                    <path d="m16 16 5 5"
-                          fill="none" stroke="currentColor" stroke-width="2"
-                          stroke-linecap="round"/>
-                </svg>
-            </button>
-
-        </form>
-
-        <!-- Header Actions -->
-<div class="header-actions">
-
-<!-- Account Dropdown -->
-<div class="account-dropdown" id="account-dropdown">
-
-    <button
-        type="button"
-        class="header-action account-toggle"
-        id="account-toggle"
-        aria-expanded="false"
-        aria-controls="account-menu"
-    >
-        <span class="action-icon">♙</span>
-        <span>Account</span>
-        <span class="account-arrow">⌄</span>
-    </button>
-    <a href="./admin.html" class="header-action">
-    <span>⚙️</span>
-    <span>Admin</span>
-</a>
-
-    <div class="account-menu" id="account-menu" hidden>
-
-        <div class="account-menu-heading">
-            <strong>Welcome to YourShop!</strong>
-            <p>Manage your shopping account</p>
+        <!-- Announcement Bar -->
+        <div class="announcement-bar">
+            <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
         </div>
 
-        <a href="./customer-login.html">
-            <span>↪</span> Login
-        </a>
+        <!-- Main Header -->
+        <div class="header-main">
 
-        <a href="./customer-register.html">
-            <span>＋</span> Create Account
-        </a>
+            <!-- Logo -->
+            <a href="index.html" class="logo">
 
-        <div class="account-menu-divider"></div>
+                <span class="logo-icon">
+                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M8 15h32l-3 25H11L8 15Z"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linejoin="round"/>
 
-        <a href="./customer-dashboard.html">
-            <span>▦</span> My Dashboard
-        </a>
+                        <path d="M17 17V12a7 7 0 0 1 14 0v5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"/>
 
-        <a href="./my-orders.html">
-            <span>▤</span> My Orders
-        </a>
+                        <path d="m19 28 4 4 7-8"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"/>
+                    </svg>
+                </span>
 
-        <a href="./customer-profile.html">
-            <span>♙</span> My Profile
-        </a>
+                <span class="logo-text" id="store-logo-text">
+                    Your<span>Shop</span>
+                </span>
 
-        <a href="./saved-addresses.html">
-            <span>⌖</span> Saved Addresses
-        </a>
-
-    </div>
-
-</div>
-<!-- Wishlist -->
-<a href="./wishlist.html" class="header-action wishlist-action">
-    <span class="action-icon">♡</span>
-    <span>Wishlist</span>
-    <span class="wishlist-count" id="wishlist-count">0</span>
-</a>
-
-    <!-- Shopping Cart -->
-    <a href="cart.html" class="header-action cart-action">
-        <span class="action-icon">🛒</span>
-        <span>Cart</span>
-        <span class="cart-count" id="cart-count">0</span>
-    </a>
-         <a href="./compare.html" class="compare-header-link">
-    ⚖ Compare
-    <span id="compare-count">0</span>
-</a>
-
-</div>
+            </a>
 
 
-<!-- MAIN NAVIGATION -->
-<nav class="main-navigation" aria-label="Main navigation">
+            <!-- Navigation -->
+            <nav class="main-navigation" aria-label="Main navigation">
 
-    <!-- Mobile Menu Button -->
-    <button
-        type="button"
-        class="menu-toggle"
-        id="menu-toggle"
-        aria-label="Open navigation menu"
-        aria-expanded="false"
-    >
-        ☰
-    </button>
+                <button
+                    type="button"
+                    class="menu-toggle"
+                    id="menu-toggle"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false">
 
-    <!-- Navigation Links -->
-    <ul class="nav-links" id="nav-links">
+                    ☰
 
-        <li>
-            <a href="index.html">Home</a>
-        </li>
+                </button>
 
-        <li>
-    <a href="./categories.html">All Categories</a>
-</li>
+                <ul class="nav-links" id="nav-links">
 
-        <li>
-            <a href="#best-sellers">Best Sellers</a>
-        </li>
+                    <li><a href="index.html">Home</a></li>
 
-        <li>
-            <a href="#new-arrivals">New Arrivals</a>
-        </li>
+                    <li><a href="./categories.html">All Categories</a></li>
 
-        <li>
-            <a href="#footer">Contact</a>
-        </li>
+                    <li><a href="#best-sellers">Best Sellers</a></li>
 
-        <li>
-            <a href="./orders.html">My Orders</a>
-        </li>
+                    <li><a href="#new-arrivals">New Arrivals</a></li>
 
-    </ul>
+                    <li><a href="#footer">Contact</a></li>
 
-</nav>
+                    <li><a href="./orders.html">My Orders</a></li>
 
-</header>
+                </ul>
+
+            </nav>
 
 
-    <!-- Main Website Content -->
+            <!-- Search Bar -->
+            <form class="search-form" id="search-form">
+
+                <select id="search-category" aria-label="Choose search category">
+
+                    <option value="all">All Categories</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="headphones">Headphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="smart-watches">Smart Watches</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="home-appliances">Home Appliances</option>
+                    <option value="mens-fashion">Men's Fashion</option>
+                    <option value="womens-fashion">Women's Fashion</option>
+
+                </select>
+
+                <input
+                    type="search"
+                    id="product-search"
+                    placeholder="Search for products..."
+                    aria-label="Search products">
+
+                <button
+                    type="submit"
+                    class="search-button"
+                    aria-label="Search">
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="10.8" cy="10.8" r="6.8"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"/>
+
+                        <path d="m16 16 5 5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"/>
+                    </svg>
+
+                </button>
+
+            </form>
+
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+
+                <!-- Account -->
+                <div class="account-dropdown" id="account-dropdown">
+
+                    <button
+                        type="button"
+                        class="header-action account-toggle"
+                        id="account-toggle"
+                        aria-expanded="false"
+                        aria-controls="account-menu">
+
+                        <span class="action-icon">♙</span>
+                        <span>Account</span>
+                        <span class="account-arrow">⌄</span>
+
+                    </button>
+
+                    <a href="./admin.html" class="header-action">
+                        <span>⚙️</span>
+                        <span>Admin</span>
+                    </a>
+
+                    <div class="account-menu" id="account-menu" hidden>
+
+                        <div class="account-menu-heading">
+                            <strong>Welcome to YourShop!</strong>
+                            <p>Manage your shopping account</p>
+                        </div>
+
+                        <a href="./customer-login.html">↪ Login</a>
+                        <a href="./customer-register.html">＋ Create Account</a>
+
+                        <div class="account-menu-divider"></div>
+
+                        <a href="./customer-dashboard.html">▦ My Dashboard</a>
+                        <a href="./my-orders.html">▤ My Orders</a>
+                        <a href="./customer-profile.html">♙ My Profile</a>
+                        <a href="./saved-addresses.html">⌖ Saved Addresses</a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Wishlist -->
+                <a href="./wishlist.html" class="header-action wishlist-action">
+
+                    <span class="action-icon">♡</span>
+                    <span>Wishlist</span>
+
+                    <span class="wishlist-count" id="wishlist-count">
+                        0
+                    </span>
+
+                </a>
+
+
+                <!-- Cart -->
+                <a href="cart.html" class="header-action cart-action">
+
+                    <span class="action-icon">🛒</span>
+                    <span>Cart</span>
+
+                    <span class="cart-count" id="cart-count">
+                        0
+                    </span>
+
+                </a>
+
+
+                <!-- Compare -->
+                <a href="./compare.html" class="compare-header-link">
+
+                    ⚖ Compare
+
+                    <span id="compare-count">0</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ========================================
+         MAIN WEBSITE CONTENT
+    ======================================== -->
+
     <main>
 
-        <!-- Hero Slider -->
-
-<!-- HERO IMAGE SLIDER -->
-<section class="hero-slider" id="hero">
-
-    <!-- Slide 1 -->
-    <div class="hero-slide active">
-
-        <div class="hero-content">
-            <span class="hero-label">WELCOME TO YOURSHOP</span>
-
-            <h1>
-                Everything You Need,
-                <span>All in One Place.</span>
-            </h1>
-
-            <p>
-                Discover amazing products and enjoy shopping
-                with great deals every day.
-            </p>
-
-            <a href="#products-section" class="hero-button">
-                Shop Now
-            </a>
-        </div>
-
-    </div>
-
-
-    <!-- Slide 2 -->
-    <div class="hero-slide">
-
-        <div class="hero-content">
-            <span class="hero-label">LATEST TECHNOLOGY</span>
-
-            <h1>
-                Upgrade Your
-                <span>Everyday Life.</span>
-            </h1>
-
-            <p>
-                Explore smartphones, laptops and smart gadgets
-                at amazing prices.
-            </p>
-
-            <a href="#products-section" class="hero-button">
-                Explore Products
-            </a>
-        </div>
-
-    </div>
-
-
-    <!-- Slide 3 -->
-    <div class="hero-slide">
-
-        <div class="hero-content">
-            <span class="hero-label">SPECIAL OFFERS</span>
-
-            <h1>
-                Big Deals.
-                <span>Better Shopping.</span>
-            </h1>
-
-            <p>
-                Find your favourite products and enjoy
-                exciting shopping offers.
-            </p>
-
-            <a href="#products-section" class="hero-button">
-                Discover Deals
-            </a>
-        </div>
-
-    </div>
-
-
-    <!-- Slider Navigation Dots -->
-    <div class="hero-dots">
-
-        <button class="hero-dot active"
-                type="button"
-                aria-label="Show slide 1"></button>
-
-        <button class="hero-dot"
-                type="button"
-                aria-label="Show slide 2"></button>
-
-        <button class="hero-dot"
-                type="button"
-                aria-label="Show slide 3"></button>
-
-    </div>
-
-</section>
-
-
-<!-- ========================================
-     RECENTLY VIEWED PRODUCTS
-======================================== -->
-
-<section class="recently-viewed-section" id="recently-viewed-section">
-
-    <div class="section-heading">
-        <span class="section-label">YOUR SHOPPING HISTORY</span>
-        <h2>Recently Viewed Products</h2>
-        <p>Continue exploring products you viewed recently.</p>
-    </div>
-
-    <div class="recently-viewed-grid" id="recently-viewed-grid">
-        <!-- Recently viewed products load here -->
-    </div>
-
-</section>
-
-<!-- ========================================
-     RECOMMENDED PRODUCTS
-======================================== -->
-
-<section class="recommended-section" id="recommended-section">
-
-    <div class="section-heading">
-        <span class="section-label">PICKED FOR YOU</span>
-        <h2>Recommended For You</h2>
-        <p>Discover products selected based on your interests.</p>
-    </div>
-
-    <div class="recommended-grid" id="recommended-grid">
-        <!-- Recommended products load here -->
-    </div>
-
-</section>
-
-
-
-
-        <!-- Shopping Area -->
-        <section id="shopping">
-
-  
-
-<!-- CATEGORIES SIDEBAR -->
-<aside class="categories-sidebar" id="categories-sidebar">
-
-    <div class="sidebar-heading">
-
-
-<h2 id="footer-store-name">YourShop<span>.</span></h2>
-
-    </div>
-
-    <ul class="category-list">
-
-        <li><a href="./category.html?category=smartphones">Smartphones</a></li>
-
-        <li><a href="./category.html?category=headphones">Headphones</a></li>
-
-        <li><a href="./category.html?category=laptops">Laptops</a></li>
-
-        <li><a href="./category.html?category=smart-watches">Smart Watches</a></li>
-
-        <li><a href="./category.html?category=accessories">Accessories</a></li>
-
-        <li><a href="./category.html?category=gaming">Gaming</a></li>
-
-        <li><a href="./category.html?category=cameras">Cameras</a></li>
-
-        <li><a href="./category.html?category=home-appliances">Home Appliances</a></li>
-
-        <li><a href="./category.html?category=mens-fashion">Men's Fashion</a></li>
-
-        <li><a href="./category.html?category=womens-fashion">Women's Fashion</a></li>
-
-    </ul>
-
-</aside>
-
-<!-- PRODUCTS SECTION -->
-<section class="products-section" id="products-section">
-
-    <!-- Products Heading -->
-    <div class="products-heading">
 
         <!-- ========================================
-     BEST SELLERS SECTION
-======================================== -->
+             HERO SLIDER
+        ======================================== -->
 
-<section class="best-sellers-section" id="best-sellers">
+        <section class="hero-slider" id="hero">
 
-    <div class="section-heading">
-        <span class="section-label">CUSTOMER FAVORITES</span>
-        <h2>Our Best Sellers</h2>
-        <p>Explore some of our most popular product picks.</p>
-    </div>
+            <!-- Slide 1 -->
+            <div class="hero-slide active">
 
-    <div class="best-sellers-grid" id="best-sellers-grid">
-        <!-- Best seller products will load here -->
-    </div>
+                <div class="hero-content">
 
-</section>
+                    <span class="hero-label">
+                        WELCOME TO YOURSHOP
+                    </span>
 
-<!-- ========================================
-     NEW ARRIVALS SECTION
-======================================== -->
+                    <h1>
+                        Everything You Need,
+                        <span>All in One Place.</span>
+                    </h1>
 
-<section class="new-arrivals-section" id="new-arrivals">
+                    <p>
+                        Discover amazing products and enjoy shopping
+                        with great deals every day.
+                    </p>
 
-    <div class="section-heading">
-        <span class="section-label">JUST ARRIVED</span>
-        <h2>New Arrivals</h2>
-        <p>Discover the latest additions to YourShop.</p>
-    </div>
+                    <a href="#products-section" class="hero-button">
+                        Shop Now
+                    </a>
 
-    <div class="new-arrivals-grid" id="new-arrivals-grid">
-        <!-- New arrival products will load here -->
-    </div>
+                </div>
 
-</section>
-
-<!-- ========================================
-     SPECIAL OFFERS SECTION
-======================================== -->
-<section class="special-offers-section" id="special-offers">
-
-    <div class="section-heading">
-        <span class="section-label">LIMITED TIME DEALS</span>
-        <h2>Special Offers</h2>
-        <p>Enjoy amazing discounts on selected products.</p>
-    </div>
-
-    <div class="special-offers-content">
-
-        <div class="offer-banner">
-            <span class="offer-tag">SPECIAL DEAL</span>
-            <h3>Save More on Your Favorites!</h3>
-            <p>Discover selected products at amazing prices.</p>
-            <a href="#products-section" class="offer-button">
-                Shop Now
-            </a>
-        </div>
-
-    </div>
-
-</section>
+            </div>
 
 
-        <div>
-            <span class="section-label">EXPLORE YOURSHOP</span>
-            <h2>Featured Products</h2>
-            <p>Discover our popular products and latest deals.</p>
-        </div>
+            <!-- Slide 2 -->
+            <div class="hero-slide">
 
-    </div>
+                <div class="hero-content">
 
-    <!-- Product Sorting -->
- <div class="products-toolbar">
+                    <span class="hero-label">
+                        LATEST TECHNOLOGY
+                    </span>
 
-    <p>Our Products</p>
+                    <h1>
+                        Upgrade Your
+                        <span>Everyday Life.</span>
+                    </h1>
 
-    <!-- Price Filter -->
-    <div class="price-filter">
+                    <p>
+                        Explore smartphones, laptops and smart gadgets
+                        at amazing prices.
+                    </p>
 
-        <label for="min-price">Min Price ($)</label>
-        <input
-            type="number"
-            id="min-price"
-            placeholder="Min"
-            min="0"
-        >
+                    <a href="#products-section" class="hero-button">
+                        Explore Products
+                    </a>
 
-        <label for="max-price">Max Price ($)</label>
-        <input
-            type="number"
-            id="max-price"
-            placeholder="Max"
-            min="0"
-        >
+                </div>
 
-        <button type="button" id="apply-price-filter">
-            Apply
-        </button>
+            </div>
 
-        <button type="button" id="reset-price-filter">
-            Reset
-        </button>
 
-    </div>
+            <!-- Slide 3 -->
+            <div class="hero-slide">
 
-    <!-- Sorting -->
-    <div class="sort-container">
+                <div class="hero-content">
 
-        <label for="sort-products">Sort By:</label>
+                    <span class="hero-label">
+                        SPECIAL OFFERS
+                    </span>
 
-<select id="sort-products">
-    <option value="featured">Featured</option>
-    <option value="popular">Most Popular</option>
-    <option value="newest">Newest First</option>
-    <option value="price-low">Price: Low to High</option>
-    <option value="price-high">Price: High to Low</option>
-    <option value="rating">Top Rated</option>
-</select>
+                    <h1>
+                        Big Deals.
+                        <span>Better Shopping.</span>
+                    </h1>
 
-    </div>
+                    <p>
+                        Find your favourite products and enjoy
+                        exciting shopping offers.
+                    </p>
 
-</div>
-    <!-- Product Cards Will Be Added Here -->
-    <div class="product-grid" id="product-grid">
+                    <a href="#products-section" class="hero-button">
+                        Discover Deals
+                    </a>
 
-        <!-- JavaScript will display products here -->
+                </div>
 
-    </div>
+            </div>
 
-</section>
+
+            <!-- Slider Navigation Dots -->
+            <div class="hero-dots">
+
+                <button
+                    class="hero-dot active"
+                    type="button"
+                    aria-label="Show slide 1">
+                </button>
+
+                <button
+                    class="hero-dot"
+                    type="button"
+                    aria-label="Show slide 2">
+                </button>
+
+                <button
+                    class="hero-dot"
+                    type="button"
+                    aria-label="Show slide 3">
+                </button>
+
+            </div>
 
         </section>
 
+
+        <!-- ========================================
+             RECENTLY VIEWED PRODUCTS
+        ======================================== -->
+
+        <section class="recently-viewed-section" id="recently-viewed-section">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    YOUR SHOPPING HISTORY
+                </span>
+
+                <h2>Recently Viewed Products</h2>
+
+                <p>
+                    Continue exploring products you viewed recently.
+                </p>
+
+            </div>
+
+            <div class="recently-viewed-grid" id="recently-viewed-grid">
+                <!-- Recently viewed products load here -->
+            </div>
+
+        </section>
+
+
+        <!-- ========================================
+             RECOMMENDED PRODUCTS
+        ======================================== -->
+
+        <section class="recommended-section" id="recommended-section">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    PICKED FOR YOU
+                </span>
+
+                <h2>Recommended For You</h2>
+
+                <p>
+                    Discover products selected based on your interests.
+                </p>
+
+            </div>
+
+            <div class="recommended-grid" id="recommended-grid">
+                <!-- Recommended products load here -->
+            </div>
+
+        </section>
+
+
+        <!-- ========================================
+             SHOPPING AREA
+        ======================================== -->
+
+        <section id="shopping">
+
+
+            <!-- CATEGORIES SIDEBAR -->
+            <aside class="categories-sidebar" id="categories-sidebar">
+
+                <div class="sidebar-heading">
+
+                    <h2 id="footer-store-name">
+                        YourShop<span>.</span>
+                    </h2>
+
+                </div>
+
+                <ul class="category-list">
+
+                    <li><a href="./category.html?category=smartphones">Smartphones</a></li>
+
+                    <li><a href="./category.html?category=headphones">Headphones</a></li>
+
+                    <li><a href="./category.html?category=laptops">Laptops</a></li>
+
+                    <li><a href="./category.html?category=smart-watches">Smart Watches</a></li>
+
+                    <li><a href="./category.html?category=accessories">Accessories</a></li>
+
+                    <li><a href="./category.html?category=gaming">Gaming</a></li>
+
+                    <li><a href="./category.html?category=cameras">Cameras</a></li>
+
+                    <li><a href="./category.html?category=home-appliances">Home Appliances</a></li>
+
+                    <li><a href="./category.html?category=mens-fashion">Men's Fashion</a></li>
+
+                    <li><a href="./category.html?category=womens-fashion">Women's Fashion</a></li>
+
+                </ul>
+
+            </aside>
+
+
+            <!-- ========================================
+                 MAIN PRODUCTS SECTION
+            ======================================== -->
+
+            <section class="products-section" id="products-section">
+
+                <!-- Products Heading -->
+                <div class="products-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            EXPLORE YOURSHOP
+                        </span>
+
+                        <h2>Featured Products</h2>
+
+                        <p>
+                            Discover our popular products and latest deals.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Products Toolbar -->
+                <div class="products-toolbar">
+
+                    <p>Our Products</p>
+
+
+                    <!-- Price Filter -->
+                    <div class="price-filter">
+
+                        <label for="min-price">
+                            Min Price ($)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="min-price"
+                            placeholder="Min"
+                            min="0">
+
+
+                        <label for="max-price">
+                            Max Price ($)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="max-price"
+                            placeholder="Max"
+                            min="0">
+
+
+                        <button type="button" id="apply-price-filter">
+                            Apply
+                        </button>
+
+                        <button type="button" id="reset-price-filter">
+                            Reset
+                        </button>
+
+                    </div>
+
+
+                    <!-- Sorting -->
+                    <div class="sort-container">
+
+                        <label for="sort-products">
+                            Sort By:
+                        </label>
+
+                        <select id="sort-products">
+
+                            <option value="featured">Featured</option>
+
+                            <option value="popular">Most Popular</option>
+
+                            <option value="newest">Newest First</option>
+
+                            <option value="price-low">Price: Low to High</option>
+
+                            <option value="price-high">Price: High to Low</option>
+
+                            <option value="rating">Top Rated</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Product Grid -->
+                <div class="product-grid" id="product-grid">
+
+                    <!-- JavaScript will display products here -->
+
+                </div>
+
+
+                <!-- Product Count -->
+                <div id="product-count" class="product-count">
+                    Showing products...
+                </div>
+
+
+                <!-- Product Pagination -->
+                <div class="pagination" id="product-pagination"></div>
+
+            </section>
+
+        </section>
+
+
+        <!-- ========================================
+             BEST SELLERS SECTION
+        ======================================== -->
+
+        <section class="best-sellers-section" id="best-sellers">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    CUSTOMER FAVORITES
+                </span>
+
+                <h2>Our Best Sellers</h2>
+
+                <p>
+                    Explore some of our most popular product picks.
+                </p>
+
+            </div>
+
+            <div class="best-sellers-grid" id="best-sellers-grid">
+                <!-- Best seller products will load here -->
+            </div>
+
+        </section>
+
+
+        <!-- ========================================
+             NEW ARRIVALS SECTION
+        ======================================== -->
+
+        <section class="new-arrivals-section" id="new-arrivals">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    JUST ARRIVED
+                </span>
+
+                <h2>New Arrivals</h2>
+
+                <p>
+                    Discover the latest additions to YourShop.
+                </p>
+
+            </div>
+
+            <div class="new-arrivals-grid" id="new-arrivals-grid">
+                <!-- New arrival products will load here -->
+            </div>
+
+        </section>
+
+
+        <!-- ========================================
+             SPECIAL OFFERS SECTION
+        ======================================== -->
+
+        <section class="special-offers-section" id="special-offers">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    LIMITED TIME DEALS
+                </span>
+
+                <h2>Special Offers</h2>
+
+                <p>
+                    Enjoy amazing discounts on selected products.
+                </p>
+
+            </div>
+
+            <div class="special-offers-content">
+
+                <div class="offer-banner">
+
+                    <span class="offer-tag">
+                        SPECIAL DEAL
+                    </span>
+
+                    <h3>
+                        Save More on Your Favorites!
+                    </h3>
+
+                    <p>
+                        Discover selected products at amazing prices.
+                    </p>
+
+                    <a href="#products-section" class="offer-button">
+                        Shop Now
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
     </main>
 
-<!-- ========================================
-     NEWSLETTER SECTION
-======================================== -->
-<section class="newsletter-section" id="newsletter">
 
-    <div class="newsletter-content">
-        <div class="newsletter-text">
-            <span>STAY CONNECTED</span>
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>
-                Get updates about new arrivals, exclusive offers,
-                and special discounts.
-            </p>
+    <!-- ========================================
+         NEWSLETTER SECTION
+    ======================================== -->
+
+    <section class="newsletter-section" id="newsletter">
+
+        <div class="newsletter-content">
+
+            <div class="newsletter-text">
+
+                <span>STAY CONNECTED</span>
+
+                <h2>Subscribe to Our Newsletter</h2>
+
+                <p>
+                    Get updates about new arrivals, exclusive offers,
+                    and special discounts.
+                </p>
+
+            </div>
+
+
+            <form id="newsletter-form" class="newsletter-form">
+
+                <input
+                    type="email"
+                    id="newsletter-email"
+                    placeholder="Enter your email address"
+                    required>
+
+                <button type="submit">
+                    Subscribe
+                </button>
+
+            </form>
+
+
+            <p id="newsletter-message" class="newsletter-message"></p>
+
         </div>
 
-        <form id="newsletter-form" class="newsletter-form">
-            <input
-                type="email"
-                id="newsletter-email"
-                placeholder="Enter your email address"
-                required
-            >
+    </section>
 
-            <button type="submit">Subscribe</button>
-        </form>
 
-        <p id="newsletter-message" class="newsletter-message"></p>
-    </div>
+    <!-- ========================================
+         WEBSITE FOOTER
+    ======================================== -->
 
-</section>
+    <footer id="footer" class="site-footer">
 
-<!-- Website Footer -->
-<footer id="footer" class="site-footer">
+        <div class="contact-footer-content">
 
-    <div class="contact-footer-content">
 
-        <!-- Brand Section -->
-        <div class="contact-footer-brand">
-            <h2>YourShop<span>.</span></h2>
-            <p>
-                Your trusted online marketplace for quality products,
-                great prices, and a better shopping experience.
-            </p>
+            <!-- Brand Section -->
+            <div class="contact-footer-brand">
+
+                <h2>YourShop<span>.</span></h2>
+
+                <p>
+                    Your trusted online marketplace for quality products,
+                    great prices, and a better shopping experience.
+                </p>
+
+            </div>
+
+
+            <!-- Quick Links -->
+            <div class="contact-footer-column">
+
+                <h3>Quick Links</h3>
+
+                <ul>
+
+                    <li><a href="./index.html">Home</a></li>
+
+                    <li><a href="./index.html#products-section">Shop</a></li>
+
+                    <li><a href="./about.html">About Us</a></li>
+
+                    <li><a href="./contact.html">Contact Us</a></li>
+
+                    <li><a href="./orders.html">My Orders</a></li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Customer Service -->
+            <div class="contact-footer-column">
+
+                <h3>Customer Service</h3>
+
+                <ul>
+
+                    <li><a href="./faq.html">FAQs</a></li>
+
+                    <li><a href="./shipping.html">Shipping & Delivery</a></li>
+
+                    <li><a href="./returns.html">Returns & Refunds</a></li>
+
+                    <li><a href="./privacy.html">Privacy Policy</a></li>
+
+                    <li><a href="./terms.html">Terms & Conditions</a></li>
+
+                </ul>
+
+            </div>
+
         </div>
 
-        <!-- Quick Links -->
-        <div class="contact-footer-column">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="./index.html">Home</a></li>
-                <li><a href="./index.html#products">Shop</a></li>
-                <li><a href="./about.html">About Us</a></li>
-                <li><a href="./contact.html">Contact Us</a></li>
-                <li><a href="./orders.html">My Orders</a></li>
-            </ul>
+
+        <!-- Footer Bottom -->
+        <div class="contact-footer-bottom">
+
+            <p>© 2026 YourShop. All Rights Reserved.</p>
+
+            <p>Designed for a better shopping experience.</p>
+
         </div>
 
-        <!-- Customer Service -->
-        <div class="contact-footer-column">
-            <h3>Customer Service</h3>
-            <ul>
-                <li><a href="./faq.html">FAQs</a></li>
-                <li><a href="./shipping.html">Shipping & Delivery</a></li>
-                <li><a href="./returns.html">Returns & Refunds</a></li>
-                <li><a href="./privacy.html">Privacy Policy</a></li>
-                <li><a href="./terms.html">Terms & Conditions</a></li>
-            </ul>
-        </div>
+    </footer>
 
-    </div>
 
-    <div class="contact-footer-bottom">
-        <p>© 2026 YourShop. All Rights Reserved.</p>
-        <p>Designed for a better shopping experience.</p>
-    </div>
+    <!-- ========================================
+         JAVASCRIPT FILES
+    ======================================== -->
 
-</footer>
+    <script src="./js/products.js"></script>
 
-    <!-- Main JavaScript -->
-<script src="./js/products.js"></script>
-<script src="./js/currency.js"></script>
-<script src="./js/main.js"></script>
-<script src="./js/storefront-settings.js"></script>
-<script src="./js/recently-viewed.js"></script>
-<script src="./js/recommended-products.js"></script>
-<script src="./js/account-menu.js"></script>
+    <script src="./js/currency.js"></script>
 
-<!-- FLOATING SUPPORT BUTTON -->
-<a href="./support.html"
-   class="floating-support-btn"
-   title="Customer Support"
-   aria-label="Open Customer Support">
+    <script src="./js/main.js"></script>
 
-    <span class="support-icon">🎧</span>
-    <span class="support-tooltip">Need Help?</span>
+    <script src="./js/storefront-settings.js"></script>
 
-</a>
+    <script src="./js/recently-viewed.js"></script>
+
+    <script src="./js/recommended-products.js"></script>
+
+    <script src="./js/account-menu.js"></script>
+
+
+    <!-- FLOATING SUPPORT BUTTON -->
+    <a
+        href="./support.html"
+        class="floating-support-btn"
+        title="Customer Support"
+        aria-label="Open Customer Support">
+
+        <span class="support-icon">🎧</span>
+
+        <span class="support-tooltip">
+            Need Help?
+        </span>
+
+    </a>
+
 
 </body>
 </html>
-

@@ -1040,14 +1040,19 @@ document.addEventListener("DOMContentLoaded", () => {
             (Number(coupons[index].usedCount) || 0) + 1;
 
         return saveArray(COUPONS_KEY, coupons);
+
+
+
     }
+
+    
 
     // ============================================
     // 20. PLACE ORDER
     // ============================================
 
-    checkoutForm.addEventListener("submit", event => {
-        event.preventDefault();
+checkoutForm.addEventListener("submit", async event => {
+            event.preventDefault();
 
         // Reload the latest cart.
         cart = loadArray(CART_KEY);
@@ -1143,16 +1148,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const orders = loadArray(ORDERS_KEY);
 
-        const order = {
-            orderId: "YS" + Date.now(),
 
+        // Send order to MySQL backend
+        let databaseOrder;
+
+        try {
+            placeOrderButton.disabled = true;
+            placeOrderButton.textContent = "Placing Order...";
+
+            const response = await fetch(
+                "http://localhost:3000/api/orders",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        customer,
+                        items: cart.map(product => ({
+                            id: Number(product.id),
+                            quantity: Number(product.quantity)
+                        })),
+                        shipping,
+                        discount
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(
+                    result.message || "Unable to place your order."
+                );
+            }
+
+            databaseOrder = result;
+
+            console.log("Order saved in MySQL:", databaseOrder);
+
+        } catch (error) {
+            console.error("Order API error:", error);
+
+            alert(
+                "Your order could not be placed.\n\n" +
+                error.message
+            );
+
+            return;
+
+        } finally {
+            placeOrderButton.disabled = false;
+            placeOrderButton.textContent = "Place Order";
+        }
+
+        const order = {
+            
+orderId: databaseOrder.orderCode,
+databaseOrderId: databaseOrder.orderId,
             customer,
 
             products: cart,
             items: cart,
 
-            subtotal,
-            discount,
+subtotal: Number(databaseOrder.subtotal),
+discount: Number(databaseOrder.discount),
 
             couponCode: couponDetails
                 ? couponDetails.code
@@ -1167,10 +1227,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 : null,
 
-            shipping,
+shipping: Number(databaseOrder.shipping),
             shippingMethod: shippingDetails,
 
-            total,
+           total: Number(databaseOrder.total),
 
             paymentMethod: customer.paymentMethod,
             paymentStatus: "Pending",

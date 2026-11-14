@@ -63,21 +63,25 @@ select {
 ================================= */
 
 .header-main {
+    width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px 5%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 30px;
-}
+    padding: 18px 5%;
 
+    display: grid;
+    grid-template-columns: auto minmax(250px, 1fr) auto;
+    grid-template-areas: "logo search actions";
+
+    align-items: center;
+    gap: 24px;
+}
 
 /* =================================
    5. CUSTOM LOGO
 ================================= */
 
 .logo {
+    grid-area: logo;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -112,21 +116,26 @@ select {
     color: #3977cf;
 }
 
-
 /* =================================
    6. SEARCH FORM
 ================================= */
 
 .search-form {
-    flex: 1;
-    max-width: 650px;
-    height: 48px;
+    grid-area: search;
+
     display: flex;
     align-items: center;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 650px;
+    height: 48px;
+
     background-color: #ffffff;
     border: 1px solid #cbd8e9;
     border-radius: 8px;
     overflow: hidden;
+
     transition: border-color 0.3s ease,
                 box-shadow 0.3s ease;
 }
@@ -137,13 +146,18 @@ select {
 }
 
 .search-form select {
+    flex-shrink: 0;
+    width: 155px;
+    max-width: 35%;
     height: 100%;
-    max-width: 155px;
     padding: 0 10px;
+
     border: none;
     outline: none;
+
     background-color: #f5f8fc;
     color: #263c5c;
+
     font-size: 12px;
     cursor: pointer;
 }
@@ -151,11 +165,14 @@ select {
 .search-form input {
     flex: 1;
     min-width: 0;
+    width: 100%;
     height: 100%;
     padding: 0 15px;
+
     border: none;
     outline: none;
     background-color: transparent;
+
     font-size: 13px;
 }
 
@@ -164,14 +181,18 @@ select {
 }
 
 .search-button {
+    flex-shrink: 0;
     width: 52px;
     height: 100%;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     border: none;
     background-color: #102a56;
     color: #ffffff;
+
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -185,26 +206,32 @@ select {
     height: 21px;
 }
 
-
 /* =================================
    7. ACCOUNT AND CART
 ================================= */
 
 .header-actions {
+    grid-area: actions;
+
     display: flex;
     align-items: center;
-    gap: 22px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .header-action {
     display: flex;
     align-items: center;
     gap: 7px;
+
     position: relative;
+
     color: #102a56;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
+
     transition: color 0.3s ease;
 }
 
@@ -220,17 +247,159 @@ select {
     position: absolute;
     top: -10px;
     left: 14px;
+
     min-width: 18px;
     height: 18px;
     padding: 0 4px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     background-color: #3977cf;
     color: #ffffff;
     border-radius: 50px;
+
     font-size: 10px;
     font-weight: 700;
+}
+
+/* =================================
+   RESPONSIVE HEADER
+================================= */
+
+@media (max-width: 1100px) {
+
+    .header-main {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "logo actions"
+            "search search";
+
+        gap: 18px;
+    }
+
+    .search-form {
+        max-width: 100%;
+    }
+
+    .header-actions {
+        gap: 12px;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .header-main {
+        padding: 15px 5%;
+        gap: 15px;
+    }
+
+    .logo-text {
+        font-size: 22px;
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .header-actions {
+        gap: 10px;
+    }
+
+    .header-action {
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    .action-icon {
+        font-size: 18px;
+    }
+
+    .search-form {
+        height: 45px;
+    }
+
+    .search-form select {
+        width: 115px;
+        font-size: 10px;
+        padding: 0 5px;
+    }
+
+    .search-form input {
+        padding: 0 9px;
+        font-size: 12px;
+    }
+
+    .search-button {
+        width: 43px;
+    }
+
+}
+
+/* =================================
+   MOBILE NAVIGATION
+================================= */
+
+@media (max-width: 1000px) {
+
+    .main-navigation {
+        justify-content: flex-start;
+        position: relative;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+
+        background-color: #ffffff;
+
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+
+        padding: 10px 20px;
+        box-sizing: border-box;
+
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .nav-links li a {
+        width: 100%;
+        padding: 13px 5px;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .main-navigation {
+        justify-content: flex-start;
+        padding: 8px 5%;
+    }
+
+    .nav-links {
+        padding: 10px 5%;
+    }
+
 }
 
 
@@ -7869,4 +8038,232 @@ body.quick-view-open {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
     }
+}
+
+/* =====================================
+   YOURSHOP - PRODUCT PAGINATION
+===================================== */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 35px 0;
+    padding: 15px;
+}
+
+.pagination button {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 15px;
+    border: 1px solid #dce5f2;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #102a56;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: #102a56;
+    color: #ffffff;
+    border-color: #102a56;
+    transform: translateY(-2px);
+}
+
+.pagination button.active {
+    background: #1769e0;
+    color: #ffffff;
+    border-color: #1769e0;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(23, 105, 224, 0.2);
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .pagination {
+        gap: 6px;
+    }
+
+    .pagination button {
+        min-width: 36px;
+        height: 38px;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+}
+
+
+
+
+/* ==========================================
+   YOURSHOP - ONE LINE HEADER FIX
+========================================== */
+
+@media (min-width: 1101px) {
+
+    .header-main {
+        width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 14px 20px;
+        box-sizing: border-box;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+    }
+
+    /* Logo */
+    .logo {
+        flex-shrink: 0;
+        gap: 7px;
+    }
+
+    .logo-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-text {
+        font-size: 21px;
+    }
+
+    /* Navigation */
+    .main-navigation {
+        flex: 0 0 auto;
+        width: auto;
+        min-height: auto;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .nav-links {
+        display: flex !important;
+        width: auto;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: nowrap;
+        margin: 0;
+    }
+
+    .nav-links li a {
+        padding: 8px 0;
+        font-size: 12px;
+    }
+
+    /* Search */
+    .search-form {
+        flex: 1 1 220px;
+        min-width: 180px;
+        max-width: 350px;
+        height: 42px;
+    }
+
+    .search-form select {
+        width: 115px;
+        font-size: 10px;
+    }
+
+    .search-form input {
+        font-size: 12px;
+        padding: 0 8px;
+    }
+
+    .search-button {
+        width: 42px;
+    }
+
+    /* Header Actions */
+    .header-actions {
+        display: flex;
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .header-action {
+        font-size: 11px;
+        gap: 4px;
+    }
+
+    .action-icon {
+        font-size: 17px;
+    }
+
+    .compare-header-link {
+        font-size: 11px;
+        white-space: nowrap;
+    }
+}
+
+
+
+
+/* CATEGORY PAGE HEADER BRANDING */
+
+.site-header .header-main > .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: #2563eb;
+}
+
+.site-header .logo-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.site-header .logo-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.site-header .logo-text {
+    color: #102a56;
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.site-header .logo-text span {
+    color: #2563eb;
+}
+
+.site-header .cart-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 15px;
+    color: #102a56;
+    background: #ffffff;
+    border: 1px solid #dbe5f2;
+    border-radius: 9px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.site-header .cart-action:hover {
+    color: #2563eb;
+    border-color: #2563eb;
 }

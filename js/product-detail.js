@@ -3,8 +3,7 @@
 // YOURSHOP - PRODUCT DETAILS JAVASCRIPT
 // ============================================
 
-document.addEventListener("DOMContentLoaded", () => {
-    "use strict";
+document.addEventListener("DOMContentLoaded", async () => {    "use strict";
 
     // ========================================
     // 1. GET HTML ELEMENTS
@@ -26,77 +25,78 @@ document.addEventListener("DOMContentLoaded", () => {
     const buyNowButton = document.getElementById("detail-buy-now");
 
     const stockStatusElement = document.getElementById("detail-stock-status");
-
     // ========================================
-    // 2. GET PRODUCT
+    // 2. GET PRODUCT FROM MYSQL BACKEND
     // ========================================
 
     const urlParameters = new URLSearchParams(window.location.search);
     const productId = Number(urlParameters.get("id"));
 
-    // ========================================
-    // 2.1 LOAD CENTRAL INVENTORY STOCK
-    // ========================================
+    let databaseProducts = [];
 
     try {
-        const savedStock = JSON.parse(
-            localStorage.getItem("yourshop-inventory-stock") || "{}"
-        );
+        const response = await fetch("http://localhost:3000/api/products");
 
-        if (
-            savedStock &&
-            typeof savedStock === "object" &&
-            !Array.isArray(savedStock) &&
-            Array.isArray(products)
-        ) {
-            products.forEach(product => {
-                const productKey = String(product.id);
-
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        savedStock,
-                        productKey
-                    )
-                ) {
-                    const stock = Number(savedStock[productKey]);
-
-                    if (
-                        Number.isSafeInteger(stock) &&
-                        stock >= 0
-                    ) {
-                        product.stock = stock;
-                    }
-                }
-            });
+        if (!response.ok) {
+            throw new Error("Backend request failed: " + response.status);
         }
 
-        console.log("Product detail inventory synchronized.");
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.products)) {
+            throw new Error("Invalid product data received.");
+        }
+
+        databaseProducts = data.products.map(product => ({
+            ...product,
+
+            id: Number(product.id),
+            price: Number(product.price),
+            discount: Number(product.discount),
+            rating: Number(product.rating),
+            stock: Number(product.stock),
+
+            soldCount: Number(product.sold_count || 0),
+
+            images: Array.isArray(product.images)
+                ? product.images
+                : JSON.parse(product.images || "[]"),
+
+            category: product.category === "men-fashion"
+                ? "mens-fashion"
+                : product.category
+        }));
+
+        // Replace frontend products with database products.
+        products.splice(0, products.length, ...databaseProducts);
+
+        console.log(
+            "Products successfully loaded from MySQL:",
+            products.length
+        );
 
     } catch (error) {
-        console.error("Could not load inventory stock:", error);
+        console.error(
+            "Could not load products from MySQL:",
+            error.message
+        );
     }
 
-
+    // Find the selected product.
     const selectedProduct = Array.isArray(products)
         ? products.find(product => Number(product.id) === productId)
         : null;
 
+    // Check whether the product exists.
     if (!selectedProduct) {
-        const container = document.querySelector(".product-details-container");
-
-        if (container) {
-            container.innerHTML = `
-                <div class="no-products-message">
-                    <h3>Product Not Found!</h3>
-                    <p>This product may not exist.</p>
-                    <a href="./index.html">Return to Shopping</a>
-                </div>
-            `;
-        }
+        document.body.innerHTML = `
+            <h2>Product Not Found</h2>
+            <p>Please return to the shop and select another product.</p>
+            <a href="./index.html">Back to Shop</a>
+        `;
 
         return;
     }
-
     // ========================================
     // 3. HELPER FUNCTIONS
     // ========================================

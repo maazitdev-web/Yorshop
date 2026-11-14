@@ -24,9 +24,35 @@
 
         <div class="header-main">
 
-            <a href="./index.html" class="logo">
-                YourShop
-            </a>
+
+<!-- YOURSHOP LOGO -->
+<a href="./index.html" class="logo">
+    <span class="logo-icon">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M8 15h32l-3 25H11L8 15Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linejoin="round"/>
+
+            <path d="M17 17V12a7 7 0 0 1 14 0v5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"/>
+
+            <path d="m19 28 4 4 7-8"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+    </span>
+
+    <span class="logo-text">Your<span>Shop</span></span>
+</a>
+
 
             <form class="search-form" id="search-form">
                 <select id="search-category">
@@ -48,11 +74,23 @@
                 <button type="submit">Search</button>
             </form>
 
-            <div class="header-actions">
-                <a href="./cart.html" class="header-action">
-                    Cart (<span id="cart-count">0</span>)
-                </a>
-            </div>
+
+<div class="header-actions">
+    <a href="./cart.html" class="header-action cart-action">
+        <svg viewBox="0 0 24 24" width="25" height="25"
+             fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round"
+             stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="19" cy="21" r="1"/>
+            <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+        </svg>
+
+        <span>Cart</span>
+        <span id="cart-count" class="cart-count">0</span>
+    </a>
+</div>
+
 
         </div>
 
