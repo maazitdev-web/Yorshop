@@ -1,15 +1,39 @@
 
-// ==========================================
-// YOURSHOP - ADMIN ORDERS MANAGEMENT
-// MYSQL + JWT AUTHENTICATION
-// + ACTIVITY LOG INTEGRATION
-// ==========================================
+ // ==========================================
+ // YOURSHOP - ADMIN ORDERS MANAGEMENT
+ // FRONTEND-ONLY VERSION
+ // LOCALSTORAGE + ACTIVITY LOG
+ // ==========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
     // ======================================
-    // 1. GET HTML ELEMENTS
+    // 1. ADMIN AUTHENTICATION
+    // ======================================
+
+    let adminSession = null;
+
+    try {
+        adminSession = JSON.parse(
+            sessionStorage.getItem("yourshop-admin-session") || "null"
+        );
+    } catch (error) {
+        adminSession = null;
+    }
+
+    if (
+        !adminSession ||
+        adminSession.role !== "admin" ||
+        adminSession.email !== "admin@yourshop.com"
+    ) {
+        sessionStorage.removeItem("yourshop-admin-session");
+        window.location.replace("./admin-login.html");
+        return;
+    }
+
+    // ======================================
+    // 2. GET HTML ELEMENTS
     // ======================================
 
     const ordersList = document.getElementById("admin-orders-list");
@@ -21,8 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const completedOrders = document.getElementById("admin-completed-orders");
     const cancelledOrders = document.getElementById("admin-cancelled-orders");
 
-    const API_URL = "http://localhost:3000/api/orders";
-    const TOKEN_KEY = "yourshop-admin-token";
+    const ORDERS_KEY = "yourshop-orders";
 
     let orders = [];
 
@@ -32,54 +55,91 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 2. JWT AUTHENTICATION HELPERS
+    // 3. LOCALSTORAGE HELPERS
     // ======================================
 
-    function getAdminToken() {
-        return sessionStorage.getItem(TOKEN_KEY);
-    }
+    function getOrdersFromStorage() {
+        try {
+            const savedOrders = JSON.parse(
+                localStorage.getItem(ORDERS_KEY) || "[]"
+            );
 
-    function getAuthHeaders(additionalHeaders = {}) {
-        const token = getAdminToken();
-
-        if (!token) {
-            throw new Error("Admin login required. Please log in again.");
+            return Array.isArray(savedOrders) ? savedOrders : [];
+        } catch (error) {
+            console.error("Error loading orders:", error);
+            return [];
         }
+    }
 
-        return {
-            ...additionalHeaders,
-            "Authorization": `Bearer ${token}`
-        };
+    function saveOrders() {
+        try {
+            localStorage.setItem(
+                ORDERS_KEY,
+                JSON.stringify(orders)
+            );
+            return true;
+        } catch (error) {
+            console.error("Error saving orders:", error);
+            alert("Unable to save the order. Please check browser storage.");
+            return false;
+        }
     }
 
     // ======================================
-    // 3. HELPER FUNCTIONS
+    // 4. HELPER FUNCTIONS
     // ======================================
 
     function getCustomerName(order) {
-        return order.customer_name || "Guest Customer";
+        return (
+            order.customerName ||
+            order.customer_name ||
+            order.customer?.name ||
+            order.name ||
+            "Guest Customer"
+        );
     }
 
     function getCustomerEmail(order) {
-        return order.email || "N/A";
+        return (
+            order.customerEmail ||
+            order.email ||
+            order.customer?.email ||
+            "N/A"
+        );
     }
 
     function getCustomerPhone(order) {
-        return order.phone || "N/A";
+        return (
+            order.customerPhone ||
+            order.phone ||
+            order.customer?.phone ||
+            "N/A"
+        );
     }
 
     function getOrderId(order) {
-        return "YS" + order.id;
+        return "YS" + (order.id ?? order.orderId ?? "N/A");
     }
 
     function getOrderTotal(order) {
-        return Number(order.total_amount) || 0;
+        return Number(
+            order.total ??
+            order.total_amount ??
+            order.grandTotal ??
+            0
+        ) || 0;
     }
 
     function getOrderDate(order) {
-        if (!order.created_at) return "N/A";
+        const value =
+            order.createdAt ||
+            order.created_at ||
+            order.date ||
+            order.timestamp;
 
-        const date = new Date(order.created_at);
+        if (!value) return "N/A";
+
+        const date = new Date(value);
 
         if (Number.isNaN(date.getTime())) return "N/A";
 
@@ -127,8 +187,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         })[character]);
     }
 
+    function getOrderItems(order) {
+        return Array.isArray(order.items) ? order.items : [];
+    }
+
     // ======================================
-    // 4. UPDATE ORDER STATISTICS
+    // 5. UPDATE ORDER STATISTICS
     // ======================================
 
     function updateStatistics() {
@@ -156,73 +220,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 5. LOAD ORDERS FROM MYSQL
-    // JWT TOKEN REQUIRED
+    // 6. LOAD ORDERS FROM LOCALSTORAGE
     // ======================================
 
-    async function loadOrders() {
-        ordersList.innerHTML = `
-            <tr>
-                <td colspan="6">
-                    Loading orders from MySQL...
-                </td>
-            </tr>
-        `;
+    function loadOrders() {
+        orders = getOrdersFromStorage();
 
-        try {
-            const response = await fetch(API_URL, {
-                method: "GET",
-                headers: getAuthHeaders()
-            });
+        console.log("Orders loaded from LocalStorage:", orders.length);
 
-            const data = await response.json();
-
-            if (response.status === 401 || response.status === 403) {
-                throw new Error(
-                    data.message || "Your admin session has expired. Please log in again."
-                );
-            }
-
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Backend error: " + response.status
-                );
-            }
-
-            if (!data.success || !Array.isArray(data.orders)) {
-                throw new Error("Invalid order data received.");
-            }
-
-            orders = data.orders;
-
-            console.log("Orders loaded from MySQL:", orders.length);
-
-            updateStatistics();
-            displayOrders();
-
-        } catch (error) {
-            console.error("Unable to load orders:", error.message);
-
-            orders = [];
-
-            ordersList.innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align:center; padding:25px;">
-                        ${escapeHTML(error.message)}
-                    </td>
-                </tr>
-            `;
-
-            updateStatistics();
-        }
+        updateStatistics();
+        displayOrders();
     }
 
     // ======================================
-    // 6. UPDATE ORDER STATUS IN MYSQL
-    // JWT TOKEN REQUIRED
+    // 7. UPDATE ORDER STATUS
     // ======================================
 
-    async function updateOrderStatus(orderId, newStatus, selectElement) {
+    function updateOrderStatus(orderId, newStatus, selectElement) {
         const allowedStatuses = [
             "pending",
             "confirmed",
@@ -237,10 +251,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const previousStatus = selectElement.dataset.previousStatus;
-
-        const order = orders.find(
-            item => Number(item.id) === Number(orderId)
+        const order = orders.find(item =>
+            String(item.id ?? item.orderId) === String(orderId)
         );
 
         if (!order) {
@@ -252,78 +264,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (oldStatus === newStatus) return;
 
-        selectElement.disabled = true;
+        const confirmed = window.confirm(
+            `Change order ${getOrderId(order)} from ${formatStatus(oldStatus)} to ${formatStatus(newStatus)}?`
+        );
 
-        try {
-            const response = await fetch(
-                `${API_URL}/${orderId}/status`,
-                {
-                    method: "PATCH",
-
-                    headers: getAuthHeaders({
-                        "Content-Type": "application/json"
-                    }),
-
-                    body: JSON.stringify({
-                        status: newStatus
-                    })
-                }
-            );
-
-            const result = await response.json();
-
-            if (response.status === 401 || response.status === 403) {
-                throw new Error(
-                    result.message || "Admin session expired. Please log in again."
-                );
-            }
-
-            if (!response.ok || !result.success) {
-                throw new Error(
-                    result.message || "Status update failed."
-                );
-            }
-
-            // Update local order data
-            order.status = result.status;
-
-            // ==================================
-            // SAVE ADMIN ACTIVITY
-            // ==================================
-
-            if (typeof window.logAdminActivity === "function") {
-                window.logAdminActivity(
-                    "Order Status Updated",
-                    `Order ${getOrderId(order)} changed from ${formatStatus(oldStatus)} to ${formatStatus(result.status)}.`,
-                    "orders"
-                );
-
-                console.log("Order activity saved.");
-            } else {
-                console.warn("Admin Activity Logger is not loaded.");
-            }
-
-            selectElement.dataset.previousStatus = result.status;
-
-            updateStatistics();
-            displayOrders();
-
-            alert("Order status updated successfully!");
-
-        } catch (error) {
-            console.error("Status update error:", error);
-
-            selectElement.value = previousStatus;
-
-            alert(error.message);
-
-        } finally {
-            selectElement.disabled = false;
+        if (!confirmed) {
+            selectElement.value = oldStatus;
+            return;
         }
+
+        const oldOrderData = { ...order };
+
+        order.status = newStatus;
+        order.updatedAt = new Date().toISOString();
+
+        if (!saveOrders()) {
+            Object.assign(order, oldOrderData);
+            selectElement.value = oldStatus;
+            return;
+        }
+
+        // Save admin activity
+        if (typeof window.logAdminActivity === "function") {
+            window.logAdminActivity(
+                "Order Status Updated",
+                `Order ${getOrderId(order)} changed from ${formatStatus(oldStatus)} to ${formatStatus(newStatus)}.`,
+                "orders"
+            );
+        }
+
+        console.log(
+            `Order ${getOrderId(order)} status updated:`,
+            oldStatus,
+            "to",
+            newStatus
+        );
+
+        updateStatistics();
+        displayOrders();
+
+        alert("Order status updated successfully!");
     }
 
     // ======================================
-    // 7. DISPLAY ORDERS
+    // 8. DISPLAY ORDERS
     // ======================================
 
     function displayOrders() {
@@ -337,20 +321,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const matchesSearch =
                 orderId.includes(searchText) ||
-                customer.includes(searchText);
+                customer.toLowerCase().includes(searchText) ||
+                getCustomerEmail(order).toLowerCase().includes(searchText);
 
             let matchesStatus = selectedStatus === "all";
 
             if (selectedStatus === "completed") {
                 matchesStatus = status === "delivered";
-
             } else if (selectedStatus === "processing") {
                 matchesStatus = [
                     "confirmed",
                     "processing",
                     "shipped"
                 ].includes(status);
-
             } else if (selectedStatus !== "all") {
                 matchesStatus = status === selectedStatus;
             }
@@ -371,6 +354,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         ordersList.innerHTML = filteredOrders.map(order => {
             const status = getStatus(order);
+            const id = order.id ?? order.orderId;
 
             return `
                 <tr>
@@ -385,19 +369,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <td>
                         <select
                             class="order-status-select"
-                            data-order-id="${escapeHTML(order.id)}"
+                            data-order-id="${escapeHTML(id)}"
                             data-previous-status="${escapeHTML(status)}">
 
                             <option value="pending" ${status === "pending" ? "selected" : ""}>Pending</option>
-
                             <option value="confirmed" ${status === "confirmed" ? "selected" : ""}>Confirmed</option>
-
                             <option value="processing" ${status === "processing" ? "selected" : ""}>Processing</option>
-
                             <option value="shipped" ${status === "shipped" ? "selected" : ""}>Shipped</option>
-
                             <option value="delivered" ${status === "delivered" ? "selected" : ""}>Delivered</option>
-
                             <option value="cancelled" ${status === "cancelled" ? "selected" : ""}>Cancelled</option>
 
                         </select>
@@ -408,7 +387,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             type="button"
                             class="view-order-button"
                             data-action="view"
-                            data-id="${escapeHTML(order.id)}">
+                            data-id="${escapeHTML(id)}">
                             View
                         </button>
                     </td>
@@ -418,13 +397,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 8. ORDER STATUS DROPDOWN EVENT
+    // 9. ORDER STATUS DROPDOWN EVENT
     // ======================================
 
     ordersList.addEventListener("change", event => {
-        const select = event.target.closest(
-            ".order-status-select"
-        );
+        const select = event.target.closest(".order-status-select");
 
         if (!select) return;
 
@@ -436,40 +413,72 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ======================================
-    // 9. VIEW ORDER DETAILS
+    // 10. VIEW ORDER DETAILS
     // ======================================
 
     function viewOrder(orderId) {
-        const order = orders.find(
-            item => Number(item.id) === Number(orderId)
+        const order = orders.find(item =>
+            String(item.id ?? item.orderId) === String(orderId)
         );
 
         if (!order) return;
 
-        const items = Array.isArray(order.items)
-            ? order.items
-            : [];
+        const items = getOrderItems(order);
 
         const productsHTML = items.length
-            ? items.map(item => `
-                <div class="modal-product-row">
-                    <div class="modal-product-info">
-                        <h4>${escapeHTML(item.product_name)}</h4>
-                        <p>Quantity: ${Number(item.quantity) || 0}</p>
-                        <p>Unit price: ${formatPrice(item.price)}</p>
-                    </div>
+            ? items.map(item => {
+                const name =
+                    item.product_name ||
+                    item.name ||
+                    item.title ||
+                    "Product";
 
-                    <div class="modal-product-price">
-                        ${formatPrice(item.subtotal)}
+                const quantity = Number(item.quantity) || 0;
+                const price = Number(item.price) || 0;
+
+                const subtotal = Number(
+                    item.subtotal ??
+                    item.total ??
+                    price * quantity
+                ) || 0;
+
+                return `
+                    <div class="modal-product-row">
+                        <div class="modal-product-info">
+                            <h4>${escapeHTML(name)}</h4>
+                            <p>Quantity: ${quantity}</p>
+                            <p>Unit price: ${formatPrice(price)}</p>
+                        </div>
+
+                        <div class="modal-product-price">
+                            ${formatPrice(subtotal)}
+                        </div>
                     </div>
-                </div>
-            `).join("")
+                `;
+            }).join("")
             : `<p class="modal-empty">No product details available.</p>`;
 
         const modal = document.createElement("div");
 
         modal.className = "order-modal-overlay";
         modal.id = "order-details-modal";
+
+        const address = order.address || order.shippingAddress?.address || "N/A";
+        const city = order.city || order.shippingAddress?.city || "N/A";
+        const postalCode = order.postalCode || order.postal_code || "N/A";
+
+        const paymentMethod =
+            order.paymentMethod ||
+            order.payment_method ||
+            "N/A";
+
+        const subtotal = Number(
+            order.subtotal ?? order.subTotal ?? getOrderTotal(order)
+        ) || 0;
+
+        const shipping = Number(
+            order.shippingCost ?? order.shipping_cost ?? order.shipping ?? 0
+        ) || 0;
 
         modal.innerHTML = `
             <div class="order-details-modal">
@@ -519,22 +528,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         <div class="modal-info-card">
                             <span>Payment Method</span>
-                            <strong>${escapeHTML(order.payment_method || "N/A")}</strong>
+                            <strong>${escapeHTML(paymentMethod)}</strong>
                         </div>
 
                         <div class="modal-info-card">
                             <span>Address</span>
-                            <strong>${escapeHTML(order.address || "N/A")}</strong>
+                            <strong>${escapeHTML(address)}</strong>
                         </div>
 
                         <div class="modal-info-card">
                             <span>City</span>
-                            <strong>${escapeHTML(order.city || "N/A")}</strong>
+                            <strong>${escapeHTML(city)}</strong>
                         </div>
 
                         <div class="modal-info-card">
                             <span>Postal Code</span>
-                            <strong>${escapeHTML(order.postal_code || "N/A")}</strong>
+                            <strong>${escapeHTML(postalCode)}</strong>
                         </div>
 
                     </div>
@@ -546,17 +555,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     <div class="modal-total-section">
                         <span>Subtotal</span>
-                        <strong>${formatPrice(order.subtotal)}</strong>
+                        <strong>${formatPrice(subtotal)}</strong>
                     </div>
 
                     <div class="modal-total-section">
                         <span>Shipping</span>
-                        <strong>${formatPrice(order.shipping_cost)}</strong>
+                        <strong>${formatPrice(shipping)}</strong>
                     </div>
 
                     <div class="modal-total-section">
                         <span>Order Total</span>
-                        <strong>${formatPrice(order.total_amount)}</strong>
+                        <strong>${formatPrice(getOrderTotal(order))}</strong>
                     </div>
 
                 </div>
@@ -599,7 +608,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 10. VIEW BUTTON EVENT
+    // 11. VIEW BUTTON EVENT
     // ======================================
 
     ordersList.addEventListener("click", event => {
@@ -613,20 +622,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ======================================
-    // 11. SEARCH AND FILTER
+    // 12. SEARCH AND FILTER
     // ======================================
 
     searchInput.addEventListener("input", displayOrders);
-
     statusFilter.addEventListener("change", displayOrders);
 
     // ======================================
-    // 12. INITIALIZE
+    // 13. INITIALIZE
     // ======================================
 
-    await loadOrders();
+    loadOrders();
 
-    console.log(
-        "YourShop Admin Orders page loaded successfully."
-    );
+    console.log("YourShop Admin Orders loaded successfully.");
 });

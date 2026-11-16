@@ -7,32 +7,87 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const compareGrid = document.getElementById("compare-grid");
     const compareMessage = document.getElementById("compare-message");
+    // ============================================
+// CUSTOMER SESSION
+// ============================================
+
+let customerSession = null;
+
+try {
+    customerSession = JSON.parse(
+        sessionStorage.getItem("yourshop-customer-session") || "null"
+    );
+} catch (error) {
+    customerSession = null;
+}
+
+if (
+    !customerSession ||
+    customerSession.role !== "customer" ||
+    !customerSession.userId
+) {
+    alert("Please log in to access product comparison.");
+    window.location.replace("./customer-login.html");
+    return;
+}
+
+const customerId = String(customerSession.userId);
 
     // Get saved comparison products
-    function getCompareList() {
+function getCompareList() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem("yourshop-compare") || "[]"
+        );
 
-        try {
-            const saved = JSON.parse(
-                localStorage.getItem("yourshop-compare")
-            ) || [];
+        if (!Array.isArray(saved)) return [];
 
-            return Array.isArray(saved) ? saved.map(Number) : [];
+        return saved
+            .filter(item =>
+                String(item.customerId) === customerId
+            )
+            .map(item => Number(item.productId));
 
-        } catch (error) {
-            return [];
-        }
-
+    } catch (error) {
+        console.error("Could not load comparison list:", error);
+        return [];
     }
+}
 
     // Save comparison products
-    function saveCompareList(list) {
+function saveCompareList(list) {
+    try {
+        // Load all customers' comparison records
+        const saved = JSON.parse(
+            localStorage.getItem("yourshop-compare") || "[]"
+        );
+
+        const allComparisons = Array.isArray(saved) ? saved : [];
+
+        // Preserve other customers' comparison products
+        const otherCustomers = allComparisons.filter(
+            item => String(item.customerId) !== customerId
+        );
+
+        // Create records for this customer
+        const customerComparisons = list.map(productId => ({
+            customerId: customerId,
+            productId: Number(productId)
+        }));
 
         localStorage.setItem(
             "yourshop-compare",
-            JSON.stringify(list)
+            JSON.stringify([
+                ...otherCustomers,
+                ...customerComparisons
+            ])
         );
 
+    } catch (error) {
+        console.error("Could not save comparison list:", error);
+        alert("Unable to save your comparison list.");
     }
+}
 
     // Display comparison products
     function displayComparison() {

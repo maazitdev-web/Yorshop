@@ -19,34 +19,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const message = document.getElementById("profile-message");
 
-    // Sidebar elements
     const sidebarName = document.querySelector(".profile-user h3");
     const sidebarEmail = document.querySelector(".profile-user p");
-
-    const API_URL = "http://localhost:3000/api/customer/me";
-
-    let originalValues = {};
-
+sessionStorage.setItem(
+    CUSTOMER_SESSION_KEY,
+    JSON.stringify(customerSession)
+);
     // ============================================
-    // 2. DISPLAY PROFILE MESSAGE
+    // 3. DISPLAY MESSAGE
     // ============================================
 
-    function showMessage(text, color) {
+    function showMessage(text, color = "#64748b") {
         message.textContent = text;
         message.style.color = color;
     }
 
     // ============================================
-    // 3. ENABLE / DISABLE FORM
+    // 4. EDIT MODE
     // ============================================
 
     function setEditMode(enabled) {
         nameInput.disabled = !enabled;
         phoneInput.disabled = !enabled;
+        countryInput.disabled = !enabled;
 
-        // Email and country remain read-only.
+        // Email cannot be changed here.
         emailInput.disabled = true;
-        countryInput.disabled = true;
 
         editButton.hidden = enabled;
         saveButton.hidden = !enabled;
@@ -54,16 +52,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================================
-    // 4. DISPLAY CUSTOMER INFORMATION
+    // 5. DISPLAY CUSTOMER INFORMATION
     // ============================================
 
     function displayProfile(customer) {
         nameInput.value = customer.name || "";
         emailInput.value = customer.email || "";
         phoneInput.value = customer.phone || "";
-
-        // Country is not stored in the current users table.
-        countryInput.value = "";
+        countryInput.value = customer.country || "";
 
         if (sidebarName) {
             sidebarName.textContent = customer.name || "Customer";
@@ -75,43 +71,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ============================================
-    // 5. LOAD CUSTOMER PROFILE FROM BACKEND
+    // 6. LOAD CUSTOMER PROFILE
     // ============================================
 
-    async function loadProfile() {
-        const token = localStorage.getItem("customerToken");
-
-        if (!token) {
-            showMessage(
-                "Please log in to view your profile.",
-                "#dc2626"
+    function loadProfile() {
+        try {
+            const customers = JSON.parse(
+                localStorage.getItem(CUSTOMERS_KEY) || "[]"
             );
 
-            editButton.disabled = true;
-            return;
-        }
-
-        try {
-            const response = await fetch(API_URL, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Unable to load profile."
-                );
+            if (!Array.isArray(customers)) {
+                throw new Error("Customer data is invalid.");
             }
 
-            if (!data.user) {
-                throw new Error("Customer profile not found.");
+            currentCustomer = customers.find(customer =>
+                String(customer.id) === String(customerSession.userId)
+            );
+
+            if (!currentCustomer) {
+                throw new Error("Your customer account could not be found.");
             }
 
-            displayProfile(data.user);
+            displayProfile(currentCustomer);
 
             originalValues = {
                 name: nameInput.value,
@@ -120,25 +101,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 country: countryInput.value
             };
 
-            localStorage.setItem(
-                "yourshop-profile",
-                JSON.stringify(data.user)
-            );
-
             console.log("Customer profile loaded successfully.");
 
         } catch (error) {
             console.error("Profile loading error:", error);
-
-            showMessage(
-                error.message || "Unable to load your profile.",
-                "#dc2626"
-            );
+            showMessage(error.message, "#dc2626");
+            editButton.disabled = true;
         }
     }
 
     // ============================================
-    // 6. EDIT PROFILE BUTTON
+    // 7. EDIT PROFILE
     // ============================================
 
     editButton.addEventListener("click", () => {
@@ -150,13 +123,12 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         setEditMode(true);
-
-        showMessage("", "");
+        showMessage("");
         nameInput.focus();
     });
 
     // ============================================
-    // 7. CANCEL EDITING
+    // 8. CANCEL EDITING
     // ============================================
 
     cancelButton.addEventListener("click", () => {
@@ -166,29 +138,19 @@ document.addEventListener("DOMContentLoaded", () => {
         countryInput.value = originalValues.country;
 
         setEditMode(false);
-
-        showMessage("Changes discarded.", "#64748b");
+        showMessage("Changes discarded.");
     });
 
     // ============================================
-    // 8. SAVE PROFILE TO DATABASE
+    // 9. SAVE PROFILE
     // ============================================
 
-    form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", event => {
         event.preventDefault();
-
-        const token = localStorage.getItem("customerToken");
-
-        if (!token) {
-            showMessage(
-                "Please log in again to update your profile.",
-                "#dc2626"
-            );
-            return;
-        }
 
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
+        const country = countryInput.value.trim();
 
         if (!name) {
             showMessage("Please enter your full name.", "#dc2626");
@@ -212,42 +174,59 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        if (country.length > 60) {
+            showMessage(
+                "Country cannot exceed 60 characters.",
+                "#dc2626"
+            );
+            return;
+        }
+
         saveButton.disabled = true;
         saveButton.textContent = "Saving...";
 
         try {
-            const response = await fetch(API_URL, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    name,
-                    phone
-                })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Unable to update profile."
-                );
-            }
-
-            if (!data.user) {
-                throw new Error("Updated profile data is missing.");
-            }
-
-            // Display updated customer information.
-            displayProfile(data.user);
-
-            // Save updated profile locally.
-            localStorage.setItem(
-                "yourshop-profile",
-                JSON.stringify(data.user)
+            const customers = JSON.parse(
+                localStorage.getItem(CUSTOMERS_KEY) || "[]"
             );
+
+            if (!Array.isArray(customers)) {
+                throw new Error("Customer data is invalid.");
+            }
+
+            const customerIndex = customers.findIndex(customer =>
+                String(customer.id) === String(customerSession.userId)
+            );
+
+            if (customerIndex === -1) {
+                throw new Error("Customer account not found.");
+            }
+
+            // Update only the logged-in customer's record.
+            customers[customerIndex] = {
+                ...customers[customerIndex],
+                name,
+                phone,
+                country
+            };
+
+            localStorage.setItem(
+                CUSTOMERS_KEY,
+                JSON.stringify(customers)
+            );
+
+            currentCustomer = customers[customerIndex];
+
+            // Update the active customer session.
+            customerSession.name = name;
+            customerSession.phone = phone;
+
+localStorage.setItem(
+    CUSTOMER_SESSION_KEY,
+    JSON.stringify(customerSession)
+);
+
+            displayProfile(currentCustomer);
 
             originalValues = {
                 name: nameInput.value,
@@ -267,7 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error("Profile update error:", error);
-
             showMessage(
                 error.message || "Unable to update your profile.",
                 "#dc2626"
@@ -280,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ============================================
-    // 9. INITIALIZE PROFILE PAGE
+    // 10. INITIALIZE PROFILE PAGE
     // ============================================
 
     setEditMode(false);

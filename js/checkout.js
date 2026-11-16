@@ -22,6 +22,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const SHIPPING_KEY = "yourshop-shipping-methods";
 
     // ============================================
+// CUSTOMER LOGIN REQUIREMENT
+// ============================================
+
+const CUSTOMER_SESSION_KEY = "yourshop-customer-session";
+
+let customerSession = null;
+
+try {
+    customerSession = JSON.parse(
+        sessionStorage.getItem(CUSTOMER_SESSION_KEY)
+    );
+} catch (error) {
+    customerSession = null;
+}
+
+if (
+    !customerSession ||
+    customerSession.role !== "customer" ||
+    !customerSession.userId
+) {
+    alert("Please log in to your customer account before checkout.");
+
+    window.location.replace("./customer-login.html");
+    return;
+}
+
+    // ============================================
     // 2. HTML ELEMENTS
     // ============================================
 
@@ -807,19 +834,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return escapeHTML(value);
     }
 
-    function loadSavedAddresses() {
-        try {
-            const addresses = JSON.parse(
-                localStorage.getItem(SAVED_ADDRESSES_KEY) || "[]"
-            );
+function loadSavedAddresses() {
+    try {
+        const addresses = JSON.parse(
+            localStorage.getItem(SAVED_ADDRESSES_KEY) || "[]"
+        );
 
-            return Array.isArray(addresses) ? addresses : [];
+        if (!Array.isArray(addresses)) return [];
 
-        } catch (error) {
-            console.error("Could not load saved addresses:", error);
-            return [];
-        }
+        return addresses.filter(address =>
+            String(address.customerId) === String(customerSession.userId)
+        );
+
+    } catch (error) {
+        console.error("Could not load saved addresses:", error);
+        return [];
     }
+}
 
     function fillCheckoutAddress(address) {
         document.getElementById("customer-name").value =
@@ -1003,6 +1034,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const notification = {
             id: "NOT-" + Date.now(),
 
+            customerId: order.customerId,
+customerEmail: order.customerEmail,
             title: "Order Confirmed!",
 
             message: `Your order ${order.orderId} has been successfully placed. Your total is ${formatPrice(order.total)}.`,
@@ -1155,10 +1188,15 @@ checkoutForm.addEventListener("submit", async event => {
         Math.floor(1000 + Math.random() * 9000);
 
     // Create order locally.
-    const order = {
-        orderId: orderId,
+const order = {
+    orderId,
 
-        customer: customer,
+    // Link this order to the logged-in customer
+    customerId: customerSession.userId,
+    customerEmail: customerSession.email,
+    customerName: customerSession.name,
+
+    customer: customer,
 
         products: cart,
         items: cart,

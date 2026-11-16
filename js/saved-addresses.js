@@ -19,33 +19,96 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let editingAddressId = null;
 
+
+// ==========================================
+// CUSTOMER SESSION
+// ==========================================
+
+let customerSession = null;
+
+try {
+    const savedSession = JSON.parse(
+        localStorage.getItem("yourshop-customer-session") || "null"
+    );
+
+    if (savedSession && (savedSession.id || savedSession.userId)) {
+        customerSession = {
+            ...savedSession,
+            role: "customer",
+            userId: savedSession.id || savedSession.userId
+        };
+    }
+} catch (error) {
+    console.error("Customer session error:", error);
+    customerSession = null;
+}
+
+if (!customerSession || !customerSession.userId) {
+    alert("Please log in to manage your saved addresses.");
+    window.location.replace("./customer-login.html");
+    return;
+}
+
+const customerId = String(customerSession.userId);
+
     // ==========================================
     // 2. LOAD AND SAVE ADDRESSES
     // ==========================================
 
-    function loadAddresses() {
-        try {
-            const saved = JSON.parse(localStorage.getItem(ADDRESSES_KEY));
-            return Array.isArray(saved) ? saved : [];
-        } catch (error) {
-            console.error("Could not load addresses:", error);
-            return [];
-        }
-    }
+   function loadAddresses() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(ADDRESSES_KEY) || "[]"
+        );
 
-    function saveAddresses(addresses) {
-        try {
-            localStorage.setItem(
-                ADDRESSES_KEY,
-                JSON.stringify(addresses)
-            );
-            return true;
-        } catch (error) {
-            console.error("Could not save addresses:", error);
-            showMessage("Unable to save address. Please try again.", "error");
-            return false;
-        }
+        if (!Array.isArray(saved)) return [];
+
+        return saved.filter(address =>
+            String(address.customerId) === customerId
+        );
+
+    } catch (error) {
+        console.error("Could not load addresses:", error);
+        return [];
     }
+}
+function saveAddresses(addresses) {
+    try {
+        // Load addresses belonging to all customers
+        const allAddresses = JSON.parse(
+            localStorage.getItem(ADDRESSES_KEY) || "[]"
+        );
+
+        // Keep other customers' addresses
+        const otherCustomersAddresses = allAddresses.filter(
+            address => String(address.customerId) !== customerId
+        );
+
+        // Attach the current customer's ID
+        const customerAddresses = addresses.map(address => ({
+            ...address,
+            customerId: customerId
+        }));
+
+        // Combine both lists
+        const updatedAddresses = [
+            ...otherCustomersAddresses,
+            ...customerAddresses
+        ];
+
+        localStorage.setItem(
+            ADDRESSES_KEY,
+            JSON.stringify(updatedAddresses)
+        );
+
+        return true;
+
+    } catch (error) {
+        console.error("Could not save addresses:", error);
+        showMessage("Unable to save address. Please try again.", "error");
+        return false;
+    }
+}
 
     // ==========================================
     // 3. SECURITY: ESCAPE HTML

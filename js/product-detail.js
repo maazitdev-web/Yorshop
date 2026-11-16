@@ -253,25 +253,84 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 5. RECENTLY VIEWED PRODUCTS
+    // 5. CUSTOMER-SPECIFIC RECENTLY VIEWED
     // ========================================
 
     const recentlyViewedKey = "yourshop-recently-viewed";
 
-    let recentlyViewed = getArrayFromStorage(recentlyViewedKey);
+    // Get the currently logged-in customer.
+    let recentlyViewedSession = null;
 
-    recentlyViewed = recentlyViewed.filter(
-        id => Number(id) !== Number(selectedProduct.id)
-    );
+    try {
+        recentlyViewedSession = JSON.parse(
+            sessionStorage.getItem("yourshop-customer-session") || "null"
+        );
+    } catch (error) {
+        recentlyViewedSession = null;
+    }
 
-    recentlyViewed.unshift(Number(selectedProduct.id));
+    // Save history only for a valid customer session.
+    if (
+        recentlyViewedSession &&
+        recentlyViewedSession.role === "customer" &&
+        recentlyViewedSession.userId
+    ) {
+        const currentCustomerId = String(
+            recentlyViewedSession.userId
+        );
 
-    recentlyViewed = recentlyViewed.slice(0, 8);
+        try {
+            const allRecentlyViewed = getArrayFromStorage(
+                recentlyViewedKey
+            );
 
-    saveArrayToStorage(
-        recentlyViewedKey,
-        recentlyViewed
-    );
+            // Find this customer's existing viewing history.
+            const customerHistory = allRecentlyViewed.find(item =>
+                item &&
+                String(item.customerId) === currentCustomerId &&
+                Array.isArray(item.productIds)
+            );
+
+            // Get the existing product IDs.
+            let customerProductIds = customerHistory
+                ? [...customerHistory.productIds]
+                : [];
+
+            // Remove this product if it was already viewed.
+            customerProductIds = customerProductIds.filter(
+                id => Number(id) !== Number(selectedProduct.id)
+            );
+
+            // Add the current product to the beginning.
+            customerProductIds.unshift(Number(selectedProduct.id));
+
+            // Keep only the latest 8 products.
+            customerProductIds = customerProductIds.slice(0, 8);
+
+            // Preserve every other customer's history.
+            const otherCustomersHistory = allRecentlyViewed.filter(
+                item =>
+                    !item ||
+                    String(item.customerId) !== currentCustomerId
+            );
+
+            // Save updated history.
+            saveArrayToStorage(recentlyViewedKey, [
+                ...otherCustomersHistory,
+                {
+                    customerId: currentCustomerId,
+                    productIds: customerProductIds
+                }
+            ]);
+
+        } catch (error) {
+            console.error(
+                "Could not save customer recently viewed products:",
+                error
+            );
+        }
+    }
+
 
     // ========================================
     // 6. PRODUCT PRICE

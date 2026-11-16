@@ -1,6 +1,7 @@
 
 // ============================================
 // YOURSHOP - CUSTOMER NOTIFICATIONS
+// Customer-specific LocalStorage version
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -23,7 +24,33 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentFilter = "all";
 
     // ========================================
-    // 2. NOTIFICATION ICONS
+    // 2. CUSTOMER SESSION PROTECTION
+    // ========================================
+
+    let customerSession = null;
+
+    try {
+        customerSession = JSON.parse(
+            sessionStorage.getItem("yourshop-customer-session") || "null"
+        );
+    } catch (error) {
+        customerSession = null;
+    }
+
+    if (
+        !customerSession ||
+        customerSession.role !== "customer" ||
+        !customerSession.userId
+    ) {
+        alert("Please log in to view your notifications.");
+        window.location.replace("./customer-login.html");
+        return;
+    }
+
+    const customerId = String(customerSession.userId);
+
+    // ========================================
+    // 3. NOTIFICATION ICONS
     // ========================================
 
     const notificationIcons = {
@@ -33,18 +60,23 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // ========================================
-    // 3. GET AND SAVE NOTIFICATIONS
+    // 4. GET CUSTOMER NOTIFICATIONS
     // ========================================
 
     function getNotifications() {
         try {
             const notifications = JSON.parse(
-                localStorage.getItem(STORAGE_KEY)
+                localStorage.getItem(STORAGE_KEY) || "[]"
             );
 
-            return Array.isArray(notifications)
-                ? notifications
-                : [];
+            if (!Array.isArray(notifications)) {
+                return [];
+            }
+
+            // Only return notifications belonging to this customer.
+            return notifications.filter(notification =>
+                String(notification.customerId) === customerId
+            );
 
         } catch (error) {
             console.error("Unable to load notifications:", error);
@@ -52,15 +84,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function saveNotifications(notifications) {
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(notifications)
-        );
+    // ========================================
+    // 5. SAVE CUSTOMER NOTIFICATIONS
+    // ========================================
+
+    function saveNotifications(customerNotifications) {
+        try {
+            const allNotifications = JSON.parse(
+                localStorage.getItem(STORAGE_KEY) || "[]"
+            );
+
+            const otherCustomersNotifications = Array.isArray(allNotifications)
+                ? allNotifications.filter(notification =>
+                    String(notification.customerId) !== customerId
+                )
+                : [];
+
+            // Preserve other customers' notifications.
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify([
+                    ...otherCustomersNotifications,
+                    ...customerNotifications.map(notification => ({
+                        ...notification,
+                        customerId
+                    }))
+                ])
+            );
+
+        } catch (error) {
+            console.error("Unable to save notifications:", error);
+            alert("Unable to save notifications. Please try again.");
+        }
     }
 
     // ========================================
-    // 4. HELPER FUNCTIONS
+    // 6. HELPER FUNCTIONS
     // ========================================
 
     function escapeHTML(value) {
@@ -102,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 5. UPDATE NOTIFICATION STATISTICS
+    // 7. UPDATE NOTIFICATION STATISTICS
     // ========================================
 
     function updateStatistics(notifications) {
@@ -144,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 6. FILTER NOTIFICATIONS
+    // 8. FILTER NOTIFICATIONS
     // ========================================
 
     function getFilteredNotifications(notifications) {
@@ -176,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 7. RENDER NOTIFICATIONS
+    // 9. RENDER NOTIFICATIONS
     // ========================================
 
     function renderNotifications() {
@@ -289,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 8. FILTER BUTTON EVENTS
+    // 10. FILTER BUTTON EVENTS
     // ========================================
 
     filterButtons.forEach(button => {
@@ -309,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 9. NOTIFICATION CLICK EVENTS
+    // 11. NOTIFICATION CLICK EVENTS
     // ========================================
 
     notificationList?.addEventListener("click", event => {
@@ -379,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 10. KEYBOARD ACCESSIBILITY
+    // 12. KEYBOARD ACCESSIBILITY
     // ========================================
 
     notificationList?.addEventListener("keydown", event => {
@@ -406,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 11. MARK ALL AS READ
+    // 13. MARK ALL AS READ
     // ========================================
 
     markAllReadButton?.addEventListener("click", () => {
@@ -423,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 12. CLEAR ALL NOTIFICATIONS
+    // 14. CLEAR ALL NOTIFICATIONS
     // ========================================
 
     clearNotificationsButton?.addEventListener("click", () => {
@@ -447,13 +506,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 13. INITIALIZE
+    // 15. INITIALIZE
     // ========================================
 
     renderNotifications();
 
     console.log(
-        "YourShop notifications loaded successfully."
+        "YourShop customer notifications loaded successfully."
     );
 
 });

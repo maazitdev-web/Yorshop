@@ -214,7 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
             ...(Array.isArray(product.images) ? product.images : [])
         ];
 
-        // Remove empty URLs and duplicates.
         return sources.filter((url, index, array) => {
 
             return (
@@ -290,7 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let currentImageIndex = 0;
 
-        // If no image URLs exist, show the placeholder.
         if (imageSources.length === 0) {
 
             imageElement.onerror = null;
@@ -299,7 +297,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Try the next image whenever one fails.
         imageElement.onerror = function () {
 
             currentImageIndex++;
@@ -310,7 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             } else {
 
-                // All available images failed.
                 this.onerror = null;
                 this.src = getImagePlaceholder();
 
@@ -320,7 +316,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         };
 
-        // Start with the first available image.
         imageElement.src = imageSources[0];
     }
 
@@ -710,7 +705,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        // Apply image fallback to Quick View image.
         const quickViewImage = details.querySelector(
             ".quick-view-product-image"
         );
@@ -809,20 +803,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>
 
             </div>
-<div class="product-info">
 
-    <span class="product-category">
-        ${category}
-    </span>
+            <div class="product-info">
 
-    <h3>
-        <a
-            href="./product-detail.html?id=${encodeURIComponent(product.id)}"
-            class="product-title-link"
-        >
-            ${product.name || "Unnamed product"}
-        </a>
-    </h3>
+                <span class="product-category">
+                    ${category}
+                </span>
+
+                <h3>
+                    <a
+                        href="./product-detail.html?id=${encodeURIComponent(product.id)}"
+                        class="product-title-link"
+                    >
+                        ${product.name || "Unnamed product"}
+                    </a>
+                </h3>
 
                 <div class="product-rating">
                     ⭐ ${Number(product.rating || 0).toFixed(1)} / 5
@@ -869,7 +864,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        // Apply automatic image fallback to this product card.
         const productImage = card.querySelector(
             ".product-card-image"
         );
@@ -984,7 +978,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (totalPages <= 1) return;
 
-        // Previous button.
         const previousButton = document.createElement("button");
 
         previousButton.type = "button";
@@ -1000,7 +993,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         pagination.appendChild(previousButton);
 
-        // Page numbers.
         for (let page = 1; page <= totalPages; page++) {
 
             const pageButton = document.createElement("button");
@@ -1025,7 +1017,6 @@ document.addEventListener("DOMContentLoaded", () => {
             pagination.appendChild(pageButton);
         }
 
-        // Next button.
         const nextButton = document.createElement("button");
 
         nextButton.type = "button";
@@ -1064,10 +1055,8 @@ document.addEventListener("DOMContentLoaded", () => {
             ? Number(maxPriceInput.value)
             : null;
 
-        // Start with all locally available products.
         let filteredProducts = [...products];
 
-        // Search by product name.
         if (query) {
 
             filteredProducts = filteredProducts.filter(product =>
@@ -1075,7 +1064,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         }
 
-        // Filter by category.
         if (category && category !== "all") {
 
             filteredProducts = filteredProducts.filter(product =>
@@ -1083,7 +1071,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         }
 
-        // Filter by minimum price.
         if (minPrice !== null) {
 
             filteredProducts = filteredProducts.filter(product =>
@@ -1091,7 +1078,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         }
 
-        // Filter by maximum price.
         if (maxPrice !== null) {
 
             filteredProducts = filteredProducts.filter(product =>
@@ -1099,7 +1085,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         }
 
-        // Sort products.
         if (sortSelect) {
 
             switch (sortSelect.value) {
@@ -1146,7 +1131,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Calculate pagination.
         totalProducts = filteredProducts.length;
 
         totalPages = Math.max(
@@ -1166,7 +1150,6 @@ document.addEventListener("DOMContentLoaded", () => {
             startIndex + productsPerPage
         );
 
-        // Update product count.
         const productCount = document.getElementById("product-count");
 
         if (productCount) {
@@ -1502,10 +1485,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (card && card.dataset.productId) {
 
-        window.location.href =
-    `./product-detail.html?id=${product.id}`;
+            const productId = card.dataset.productId;
+
+            window.location.href =
+                `./product-detail.html?id=${encodeURIComponent(productId)}`;
         }
-    }
+
+    } // IMPORTANT: Close handleProductClick here.
 
     // Attach product events to all grids.
     [
@@ -1586,7 +1572,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!category || !productGrid) return;
 
-            // Normalize category names.
             if (category === "mens-fashion") {
                 category = "men-fashion";
             }
@@ -1830,7 +1815,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateCompareButtons();
 
-    // Load first page from local products.
     displayFilteredProducts(1);
 
     console.log(

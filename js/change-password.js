@@ -1,5 +1,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
+
+    // ============================================
+    // 1. HTML ELEMENTS
+    // ============================================
 
     const form = document.getElementById("change-password-form");
 
@@ -9,11 +14,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const message = document.getElementById("password-message");
 
-    // SHOW / HIDE PASSWORD
+    // ============================================
+    // 2. STORAGE KEYS AND CUSTOMER SESSION
+    // ============================================
+
+    const CUSTOMERS_KEY = "yourshop-customers";
+    const SESSION_KEY = "yourshop-customer-session";
+
+    let customerSession = null;
+
+    try {
+        customerSession = JSON.parse(
+            sessionStorage.getItem(SESSION_KEY) || "null"
+        );
+    } catch (error) {
+        customerSession = null;
+    }
+
+    if (
+        !customerSession ||
+        customerSession.role !== "customer" ||
+        !customerSession.userId
+    ) {
+        alert("Please log in to change your password.");
+        window.location.replace("./customer-login.html");
+        return;
+    }
+
+    // ============================================
+    // 3. LOAD REGISTERED CUSTOMERS
+    // ============================================
+
+    function getCustomers() {
+        const customers = JSON.parse(
+            localStorage.getItem(CUSTOMERS_KEY) || "[]"
+        );
+
+        if (!Array.isArray(customers)) {
+            throw new Error("Customer account data is invalid.");
+        }
+
+        return customers;
+    }
+
+    function showMessage(text, color = "#dc2626") {
+        message.textContent = text;
+        message.style.color = color;
+    }
+
+    // ============================================
+    // 4. SHOW / HIDE PASSWORD
+    // ============================================
+
     document.querySelectorAll(".toggle-password").forEach(button => {
-
         button.addEventListener("click", () => {
-
             const input = document.getElementById(button.dataset.target);
 
             if (!input) return;
@@ -25,53 +79,95 @@ document.addEventListener("DOMContentLoaded", () => {
                 input.type = "password";
                 button.textContent = "Show";
             }
-
         });
-
     });
 
-    // PASSWORD FORM VALIDATION
-    form.addEventListener("submit", event => {
+    // ============================================
+    // 5. UPDATE CUSTOMER PASSWORD
+    // ============================================
 
+    form.addEventListener("submit", event => {
         event.preventDefault();
 
         const current = currentPassword.value;
         const newPass = newPassword.value;
         const confirm = confirmPassword.value;
 
-        message.style.color = "#dc2626";
-
         if (!current || !newPass || !confirm) {
-            message.textContent = "Please complete all password fields.";
+            showMessage("Please complete all password fields.");
             return;
         }
 
         if (newPass.length < 8) {
-            message.textContent = "New password must contain at least 8 characters.";
+            showMessage(
+                "New password must contain at least 8 characters."
+            );
             return;
         }
 
         if (newPass === current) {
-            message.textContent = "Your new password must be different from your current password.";
+            showMessage(
+                "Your new password must be different from your current password."
+            );
             return;
         }
 
         if (newPass !== confirm) {
-            message.textContent = "New passwords do not match.";
+            showMessage("New passwords do not match.");
             return;
         }
 
-        message.style.color = "#16a34a";
+        try {
+            const customers = getCustomers();
 
-        message.textContent =
-            "Validation successful! Password updating will be connected when backend authentication is ready.";
+            // Find only the logged-in customer's account.
+            const customerIndex = customers.findIndex(customer =>
+                String(customer.id) === String(customerSession.userId)
+            );
 
-        form.reset();
+            if (customerIndex === -1) {
+                showMessage("Customer account not found.");
+                return;
+            }
 
-        document.querySelectorAll(".toggle-password").forEach(button => {
-            button.textContent = "Show";
-        });
+            const customer = customers[customerIndex];
 
+            // Verify the current password.
+            if (customer.password !== current) {
+                showMessage("Your current password is incorrect.");
+                return;
+            }
+
+            // Save the new password.
+            customers[customerIndex] = {
+                ...customer,
+                password: newPass
+            };
+
+            localStorage.setItem(
+                CUSTOMERS_KEY,
+                JSON.stringify(customers)
+            );
+
+            showMessage(
+                "Password updated successfully!",
+                "#16a34a"
+            );
+
+            form.reset();
+
+            document.querySelectorAll(".toggle-password").forEach(button => {
+                button.textContent = "Show";
+            });
+
+            console.log("Customer password updated successfully.");
+
+        } catch (error) {
+            console.error("Password update error:", error);
+            showMessage(
+                error.message || "Unable to update your password."
+            );
+        }
     });
 
     console.log("YourShop Change Password loaded successfully.");

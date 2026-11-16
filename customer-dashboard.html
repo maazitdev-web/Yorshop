@@ -438,6 +438,7 @@
     <a href="./support.html">
         🎧 Customer Support
     </a>
+    <a href="./support.html">Customer Support</a>
 
 <a href="./index.html">
     🏠 Back to Store
@@ -621,18 +622,27 @@
 
 </main>
 
-<!-- CUSTOMER AUTHENTICATION CHECK -->
 <script>
-    const customerToken = localStorage.getItem("customerToken");
+    console.log("TEST: Dashboard HTML loaded");
 
-    if (!customerToken) {
-        window.location.replace("./customer-login.html");
-    }
+    console.log(
+        "CUSTOMER SESSION:",
+        JSON.parse(
+            localStorage.getItem("yourshop-customer-session") || "null"
+        )
+    );
+
+    console.log(
+        "REGISTERED CUSTOMERS:",
+        JSON.parse(
+            localStorage.getItem("yourshop-customers") || "[]"
+        )
+    );
 </script>
 
-<!-- CUSTOMER DASHBOARD SCRIPTS -->
 <script src="./js/currency.js"></script>
 <script src="./js/customer-dashboard.js"></script>
+
 <script src="./js/customer-logout.js"></script>
 
 

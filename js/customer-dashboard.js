@@ -1,61 +1,77 @@
 
+/* ==========================================
+   YOURSHOP - CUSTOMER DASHBOARD
+   FRONTEND-ONLY VERSION
+   LOCALSTORAGE AUTHENTICATION
+========================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
-    // ============================================
+    // ======================================
     // 1. STORAGE HELPERS
-    // ============================================
+    // ======================================
 
-    const getData = (key) => {
+    function getStorage(key, fallback = []) {
         try {
             const data = JSON.parse(localStorage.getItem(key));
-
-            return data ?? [];
+            return data ?? fallback;
         } catch (error) {
-            console.error(`Unable to load ${key}:`, error);
-            return [];
+            console.error(`Error reading ${key}:`, error);
+            return fallback;
         }
-    };
+    }
 
-    const getArray = (key) => {
-        const data = getData(key);
-        return Array.isArray(data) ? data : [];
-    };
+    function saveStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
 
-let orders = getArray("yourshop-orders");
-renderRecentOrders();
-updateOrderStatistics();
-    const addresses = getArray("yourshop-saved-addresses");
-    const wishlist = getArray("yourshop-wishlist");
-    const compare = getArray("yourshop-compare");
-
-    // ============================================
+    // ======================================
     // 2. HELPER FUNCTIONS
-    // ============================================
+    // ======================================
 
-    function normalizeStatus(status) {
-        const value = String(status || "pending").toLowerCase();
-
-        if (value === "completed") return "delivered";
-        if (value === "canceled") return "cancelled";
-
-        return value;
+    function getElement(id) {
+        return document.getElementById(id);
     }
 
-    function formatPrice(amount) {
-        return typeof window.formatPrice === "function"
-            ? window.formatPrice(amount)
-            : `$${Number(amount || 0).toFixed(2)}`;
+    function setText(id, value) {
+        const element = getElement(id);
+
+        if (element) {
+            element.textContent = value ?? "";
+        }
     }
 
-    function formatDate(date) {
-        if (!date) return "N/A";
+    function formatPrice(value) {
+        const amount = Number(value) || 0;
 
-        const parsedDate = new Date(date);
+        if (typeof window.formatPrice === "function") {
+            return window.formatPrice(amount);
+        }
 
-        if (Number.isNaN(parsedDate.getTime())) return "N/A";
+        return "$" + amount.toFixed(2);
+    }
 
-        return parsedDate.toLocaleDateString();
+    function formatDate(value) {
+        if (!value) return "Not available";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return "Not available";
+        }
+
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        });
+    }
+
+    function getStatus(value) {
+        return String(value || "Pending")
+            .toLowerCase()
+            .replace(/[-_]/g, " ");
     }
 
     function escapeHTML(value) {
@@ -64,569 +80,307 @@ updateOrderStatistics();
             "<": "&lt;",
             ">": "&gt;",
             '"': "&quot;",
-            "'": "&#39;"
+            "'": "&#039;"
         })[char]);
     }
 
-   function getOrderDate(order) {
-    return new Date(
-        order.created_at ||
-        order.orderDate ||
-        order.createdAt ||
-        order.date ||
-        0
+    // ======================================
+    // 3. CUSTOMER SESSION
+    // ======================================
+
+    const customerSession = getStorage(
+        "yourshop-customer-session",
+        null
     );
-}
-    function setText(id, value) {
-    const element = document.getElementById(id);
 
-    if (element) {
-        element.textContent = value;
-    }
-}
+console.log("DASHBOARD SESSION:", customerSession);
 
-// ============================================
-// 3. CUSTOMER INFORMATION
-// ============================================
+console.log(
+    "REGISTERED CUSTOMERS:",
+    getStorage("yourshop-customers", [])
+);
 
-// Load cached profile first so the dashboard can
-// display existing information while the API loads.
 
-const savedProfile = getData("yourshop-profile");
-
-let profile = savedProfile &&
-    typeof savedProfile === "object" &&
-    !Array.isArray(savedProfile)
-    ? savedProfile
-    : {};
-
-const customerNameElement =
-    document.getElementById("dashboard-customer-name");
-
-const customerEmailElement =
-    document.getElementById("dashboard-customer-email");
-
-const welcomeNameElement =
-    document.getElementById("welcome-customer-name");
-
-// Optional profile elements.
-// Add these IDs to your HTML if you want to display them.
-
-const customerPhoneElement =
-    document.getElementById("dashboard-customer-phone");
-
-const customerCreatedElement =
-    document.getElementById("dashboard-customer-created");
-
-function displayCustomerProfile(customer) {
-    const customerName = customer.name || "Customer";
-    const customerEmail = customer.email || "Not available";
-
-    if (customerNameElement) {
-        customerNameElement.textContent = customerName;
-    }
-
-    if (customerEmailElement) {
-        customerEmailElement.textContent = customerEmail;
-    }
-
-    if (welcomeNameElement) {
-        welcomeNameElement.textContent =
-            customerName.split(" ")[0];
-    }
-
-    if (customerPhoneElement) {
-        customerPhoneElement.textContent =
-            customer.phone || "Not provided";
-    }
-
-    if (customerCreatedElement) {
-        customerCreatedElement.textContent =
-            formatDate(customer.created_at);
-    }
-}
-
-// Display cached information immediately.
-displayCustomerProfile(profile);
-
-// Fetch the latest profile from the backend.
-async function loadCustomerProfile() {
-    const token = localStorage.getItem("customerToken");
-
-    if (!token) {
-        console.warn(
-            "Customer login token not found. Using cached profile."
-        );
+    if (!customerSession || !customerSession.id) {
+        alert("Please login to access your dashboard.");
+        window.location.href = "./customer-login.html";
         return;
     }
 
-    try {
-        const response = await fetch(
-            "http://localhost:3000/api/customer/me",
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+    // ======================================
+    // 4. GET REGISTERED CUSTOMER
+    // ======================================
 
-        const data = await response.json();
+    const customers = getStorage("yourshop-customers", []);
 
-        if (!response.ok) {
-            throw new Error(
-                data.message || "Unable to load customer profile."
-            );
-        }
-
-        if (!data.user) {
-            throw new Error("Customer profile data is missing.");
-        }
-
-        // Update the current profile.
-        profile = data.user;
-
-        // Save the latest profile locally.
-        localStorage.setItem(
-            "yourshop-profile",
-            JSON.stringify(profile)
-        );
-
-        // Display the latest information.
-        displayCustomerProfile(profile);
-
-        console.log("Customer profile loaded successfully.");
-
-    } catch (error) {
-        console.error(
-            "Customer profile loading error:",
-            error.message
-        );
-    }
-}
-
-loadCustomerProfile();
-
-    // ============================================
-    // 5. OTHER STATISTICS
-    // ============================================
-
-    setText("dashboard-address-count", addresses.length);
-    setText("dashboard-wishlist-count", wishlist.length);
-    setText("dashboard-compare-count", compare.length);
-
-// ============================================
-// 6. RECENT ORDERS
-// ============================================
-
-const recentOrdersContainer =
-    document.getElementById("dashboard-recent-orders");
-
-function updateOrderStatistics() {
-    setText("dashboard-total-orders", orders.length);
-
-    setText(
-        "dashboard-pending-orders",
-        orders.filter(order =>
-            normalizeStatus(order.status) === "pending"
-        ).length
+    const registeredCustomer = customers.find(customer =>
+        String(customer.id) === String(customerSession.id)
     );
 
-    setText(
-        "dashboard-delivered-orders",
-        orders.filter(order =>
-            normalizeStatus(order.status) === "delivered"
-        ).length
-    );
-}
+    console.log("MATCHED CUSTOMER:", registeredCustomer);
 
-function renderRecentOrders() {
-    if (!recentOrdersContainer) return;
+    if (!registeredCustomer) {
+        localStorage.removeItem("yourshop-customer-session");
 
-    const recentOrders = [...orders]
-        .sort((a, b) => getOrderDate(b) - getOrderDate(a))
-        .slice(0, 5);
-
-    if (recentOrders.length === 0) {
-        recentOrdersContainer.innerHTML = `
-            <tr>
-                <td colspan="4" class="empty-recent">
-                    You haven't placed any orders yet.
-                    <br>
-                    <a href="./index.html">Start shopping</a>
-                </td>
-            </tr>
-        `;
+        alert("Customer account not found. Please login again.");
+        window.location.href = "./customer-login.html";
         return;
     }
 
-    recentOrdersContainer.innerHTML = recentOrders.map(order => {
-        const status = normalizeStatus(order.status);
+    const customer = registeredCustomer;
 
-        const orderId = order.id || order.orderId || "N/A";
+    // ======================================
+    // 5. DISPLAY CUSTOMER PROFILE
+    // ======================================
 
-        const date = formatDate(
-            order.created_at ||
-            order.orderDate ||
-            order.createdAt ||
-            order.date
-        );
+    setText("dashboard-customer-name", customer.name);
+    setText("dashboard-customer-email", customer.email);
+    setText("welcome-customer-name", customer.name);
+    setText("dashboard-customer-phone", customer.phone || "Not provided");
 
-        const total = formatPrice(
-            order.total_amount ??
-            order.total ??
-            order.grandTotal ??
-            order.totalAmount ??
-            0
-        );
+    setText(
+        "dashboard-customer-created",
+        formatDate(customer.createdAt)
+    );
 
-        return `
-            <tr>
-                <td>${escapeHTML(orderId)}</td>
-                <td>${escapeHTML(date)}</td>
-                <td>${escapeHTML(total)}</td>
-                <td>${escapeHTML(status.toUpperCase())}</td>
-            </tr>
-        `;
-    }).join("");
-}
+    // ======================================
+    // 6. LOAD CUSTOMER DATA
+    // ======================================
 
-renderRecentOrders();
-updateOrderStatistics();
-    // ============================================
-    // 7. RECENTLY PURCHASED PRODUCTS
-    // ============================================
+    const customerId = String(customer.id);
 
-    function getOrderProducts(order) {
-        const items = Array.isArray(order.items) && order.items.length
-            ? order.items
-            : Array.isArray(order.products)
-                ? order.products
-                : [];
+    const allOrders = getStorage("yourshop-orders", []);
+    const allAddresses = getStorage("yourshop-saved-addresses", []);
+    const allWishlist = getStorage("yourshop-wishlist", []);
+    const allCompare = getStorage("yourshop-compare", []);
+    const allNotifications = getStorage("yourshop-notifications", []);
 
-        return items;
-    }
+    const customerOrders = allOrders.filter(item =>
+        String(item.customerId) === customerId
+    );
 
-    function getPurchasedProducts() {
-        const sortedOrders = [...orders]
-            .filter(order => normalizeStatus(order.status) !== "cancelled")
-            .sort((a, b) => getOrderDate(b) - getOrderDate(a));
+    const customerAddresses = allAddresses.filter(item =>
+        String(item.customerId) === customerId
+    );
 
-        const purchasedProducts = [];
-        const seenProducts = new Set();
+    const customerWishlist = allWishlist.filter(item =>
+        String(item.customerId) === customerId
+    );
 
-        sortedOrders.forEach(order => {
-            const items = getOrderProducts(order);
+    const customerCompare = allCompare.filter(item =>
+        String(item.customerId) === customerId
+    );
 
-            items.forEach(item => {
-                const product = item.product &&
-                    typeof item.product === "object"
-                    ? item.product
-                    : item;
+    const customerNotifications = allNotifications.filter(item =>
+        String(item.customerId) === customerId
+    );
 
-                const id = product.id ??
-                    product.productId ??
-                    item.productId;
+    // ======================================
+    // 7. DASHBOARD STATISTICS
+    // ======================================
 
-                const name = product.name ||
-                    product.productName ||
-                    item.name ||
-                    item.productName ||
-                    "Purchased Product";
+    const pendingOrders = customerOrders.filter(order => {
+        const status = getStatus(order.status);
 
-                const uniqueKey = id != null
-                    ? String(id)
-                    : name.toLowerCase();
+        return status === "pending" ||
+               status === "processing" ||
+               status === "confirmed";
+    });
 
-                if (seenProducts.has(uniqueKey)) return;
+    const deliveredOrders = customerOrders.filter(order =>
+        getStatus(order.status) === "delivered"
+    );
 
-                seenProducts.add(uniqueKey);
+    setText("dashboard-total-orders", customerOrders.length);
+    setText("dashboard-pending-orders", pendingOrders.length);
+    setText("dashboard-delivered-orders", deliveredOrders.length);
 
-                const image = product.image ||
-                    product.images?.[0] ||
-                    item.image ||
-                    item.productImage ||
-                    "";
+    setText("dashboard-address-count", customerAddresses.length);
+    setText("dashboard-wishlist-count", customerWishlist.length);
+    setText("dashboard-compare-count", customerCompare.length);
 
-                const price = Number(
-                    item.finalPrice ??
-                    item.discountedPrice ??
-                    item.price ??
-                    product.price ??
-                    0
-                );
+    // ======================================
+    // 8. DISPLAY RECENT ORDERS
+    // ======================================
 
-                purchasedProducts.push({
-                    id,
-                    name,
-                    image,
-                    price,
-                    quantity: Number(item.quantity) || 1,
-                    status: normalizeStatus(order.status),
-                    orderId: order.id || order.orderId || ""
-                });
-            });
-        });
-
-        return purchasedProducts.slice(0, 6);
-    }
-
-    function displayPurchasedProducts() {
-        const container = document.getElementById(
-            "dashboard-purchased-products"
-        );
+    function displayRecentOrders() {
+        const container = getElement("dashboard-recent-orders");
 
         if (!container) return;
 
-        const purchasedProducts = getPurchasedProducts();
-
-        if (purchasedProducts.length === 0) {
+        if (customerOrders.length === 0) {
             container.innerHTML = `
-                <p class="empty-recent">
-                    You haven't purchased any products yet.
-                    <br>
-                    <a href="./index.html">Start shopping</a>
+                <p class="empty-message">
+                    You have not placed any orders yet.
                 </p>
             `;
-
             return;
         }
 
-        container.innerHTML = purchasedProducts.map(product => {
-            const productLink = product.id != null
-                ? `./product-detail.html?id=${encodeURIComponent(product.id)}`
-                : "./my-orders.html";
+        const recentOrders = [...customerOrders]
+            .sort((a, b) => {
+                return new Date(b.createdAt || b.date || 0) -
+                       new Date(a.createdAt || a.date || 0);
+            })
+            .slice(0, 5);
 
-            return `
-                <article class="purchased-product-card">
+        container.innerHTML = recentOrders.map(order => {
+            const orderId = order.orderNumber || order.id || "N/A";
 
-                    ${product.image ? `
-                        <img
-                            src="${escapeHTML(product.image)}"
-                            alt="${escapeHTML(product.name)}"
-                            loading="lazy"
-                        >
-                    ` : `
-                        <div style="
-                            height:145px;
-                            display:grid;
-                            place-items:center;
-                            background:#f8faff;
-                            color:#8992a3;
-                        ">
-                            No Image
-                        </div>
-                    `}
-
-                    <div class="purchased-product-info">
-
-                        <h3>${escapeHTML(product.name)}</h3>
-
-                        <p class="purchased-product-price">
-                            ${formatPrice(product.price)}
-                        </p>
-
-                        <p>
-                            Quantity: ${product.quantity}
-                        </p>
-
-                        <p>
-                            Order: ${escapeHTML(product.orderId)}
-                        </p>
-
-                        <span class="purchased-product-status">
-                            ${escapeHTML(product.status.toUpperCase())}
-                        </span>
-
-                        <br>
-
-                        <a
-                            href="${productLink}"
-                            class="purchased-product-link"
-                        >
-                            View Product →
-                        </a>
-
-                    </div>
-
-                </article>
-            `;
-        }).join("");
-    }
-    // ============================================
-// LOAD CUSTOMER ORDERS FROM DATABASE
-// ============================================
-
-async function loadCustomerOrders() {
-    const token = localStorage.getItem("customerToken");
-
-    if (!token) {
-        console.warn("Customer token not found.");
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            "http://localhost:3000/api/customer/orders",
-            {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(
-                data.message || "Unable to load customer orders."
+            const total = formatPrice(
+                order.total_amount ??
+                order.total ??
+                order.grandTotal ??
+                order.totalAmount ??
+                0
             );
-        }
 
-        orders = Array.isArray(data.orders)
-            ? data.orders
-            : [];
-
-        // Update dashboard statistics.
-        updateOrderStatistics();
-
-        // Display actual database orders.
-        renderRecentOrders();
-
-        // Display purchased products.
-        displayPurchasedProducts();
-
-        console.log(
-            "Customer orders loaded successfully:",
-            orders.length
-        );
-
-    } catch (error) {
-        console.error(
-            "Customer orders loading error:",
-            error.message
-        );
-    }
-}
-
-loadCustomerOrders();
-
-    displayPurchasedProducts();
-
-    // ============================================
-    // 8. CUSTOMER DASHBOARD NOTIFICATIONS
-    // ============================================
-
-    function escapeNotificationHTML(value) {
-        return escapeHTML(value);
-    }
-
-    function loadDashboardNotifications() {
-        const notificationList = document.getElementById(
-            "dashboard-notification-list"
-        );
-
-        const unreadCountElement = document.getElementById(
-            "dashboard-unread-notifications"
-        );
-
-        const badge = document.getElementById(
-            "dashboard-notification-badge"
-        );
-
-        if (!notificationList) return;
-
-        const notifications = getArray("yourshop-notifications");
-
-        const unreadNotifications = notifications.filter(
-            notification => !notification.read
-        );
-
-        if (unreadCountElement) {
-            unreadCountElement.textContent = unreadNotifications.length;
-        }
-
-        if (badge) {
-            badge.textContent = unreadNotifications.length;
-            badge.style.display = unreadNotifications.length
-                ? "inline-block"
-                : "none";
-        }
-
-        const latestNotifications = notifications.slice(0, 3);
-
-        if (latestNotifications.length === 0) {
-            notificationList.innerHTML = `
-                <p class="empty-recent">
-                    You don't have any notifications yet.
-                </p>
-            `;
-
-            return;
-        }
-
-        notificationList.innerHTML = latestNotifications.map(notification => {
-            const title = escapeNotificationHTML(notification.title);
-            const message = escapeNotificationHTML(notification.message);
-
-            const date = notification.createdAt
-                ? formatDate(notification.createdAt)
-                : "Recently";
+            const status = escapeHTML(order.status || "Pending");
 
             return `
-                <div style="
-                    padding:16px;
-                    border:1px solid #edf0f5;
-                    border-radius:9px;
-                    background:${notification.read ? "#ffffff" : "#f0f6ff"};
-                ">
-
-                    <div style="
-                        display:flex;
-                        justify-content:space-between;
-                        gap:10px;
-                        align-items:center;
-                        margin-bottom:7px;
-                    ">
-
-                        <strong style="
-                            color:#102a56;
-                            font-size:13px;
-                        ">
-                            ${title}
-                        </strong>
-
-                        <span style="
-                            color:${notification.read ? "#8992a3" : "#2563eb"};
-                            font-size:10px;
-                            font-weight:600;
-                        ">
-                            ${notification.read ? "Read" : "Unread"}
-                        </span>
-
+                <div class="dashboard-order-item">
+                    <div>
+                        <h4>Order #${escapeHTML(orderId)}</h4>
+                        <p>${formatDate(order.createdAt || order.date)}</p>
                     </div>
 
-                    <p style="
-                        color:#667085;
-                        font-size:12px;
-                        margin-bottom:7px;
-                    ">
-                        ${message}
-                    </p>
+                    <div>
+                        <strong>${total}</strong>
+                        <span class="order-status">
+                            ${status}
+                        </span>
+                    </div>
 
-                    <small style="color:#8992a3;font-size:10px;">
-                        ${escapeNotificationHTML(date)}
-                    </small>
-
+                    <a href="./my-orders.html">View</a>
                 </div>
             `;
         }).join("");
     }
 
-    loadDashboardNotifications();
+    // ======================================
+    // 9. DISPLAY PURCHASED PRODUCTS
+    // ======================================
 
-    console.log("YourShop Customer Dashboard loaded successfully.");
+    function displayPurchasedProducts() {
+        const container = getElement("dashboard-purchased-products");
+
+        if (!container) return;
+
+        const purchasedProducts = [];
+
+        customerOrders.forEach(order => {
+            const items = order.items || order.products || [];
+
+            items.forEach(item => {
+                purchasedProducts.push(item);
+            });
+        });
+
+        if (purchasedProducts.length === 0) {
+            container.innerHTML = `
+                <p class="empty-message">
+                    Your purchased products will appear here.
+                </p>
+            `;
+            return;
+        }
+
+        container.innerHTML = purchasedProducts
+            .slice(0, 6)
+            .map(product => {
+                const name = escapeHTML(
+                    product.name || product.title || "Product"
+                );
+
+                const image = escapeHTML(
+                    product.image || product.imageUrl || ""
+                );
+
+                const price = formatPrice(
+                    product.price || product.unitPrice || 0
+                );
+
+                return `
+                    <div class="dashboard-product-item">
+                        <img
+                            src="${image}"
+                            alt="${name}"
+                            onerror="this.style.display='none'"
+                        >
+
+                        <div>
+                            <h4>${name}</h4>
+                            <p>${price}</p>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+    }
+
+    // ======================================
+    // 10. DISPLAY NOTIFICATIONS
+    // ======================================
+
+    function displayNotifications() {
+        const container = getElement("dashboard-notification-list");
+
+        if (!container) return;
+
+        const unreadNotifications = customerNotifications.filter(
+            notification => !notification.isRead
+        );
+
+        setText(
+            "dashboard-unread-notifications",
+            unreadNotifications.length
+        );
+
+        setText(
+            "dashboard-notification-badge",
+            unreadNotifications.length
+        );
+
+        if (customerNotifications.length === 0) {
+            container.innerHTML = `
+                <p class="empty-message">
+                    You have no notifications.
+                </p>
+            `;
+            return;
+        }
+
+        const latestNotifications = [...customerNotifications]
+            .sort((a, b) => {
+                return new Date(b.createdAt || b.date || 0) -
+                       new Date(a.createdAt || a.date || 0);
+            })
+            .slice(0, 10);
+
+        container.innerHTML = latestNotifications.map(notification => {
+            const message = escapeHTML(
+                notification.message || notification.title || "Notification"
+            );
+
+            const date = formatDate(
+                notification.createdAt || notification.date
+            );
+
+            return `
+                <div class="dashboard-notification-item">
+                    <p>${message}</p>
+                    <small>${date}</small>
+                </div>
+            `;
+        }).join("");
+    }
+
+    // ======================================
+    // 11. INITIALIZE DASHBOARD
+    // ======================================
+
+    displayRecentOrders();
+    displayPurchasedProducts();
+    displayNotifications();
+
+    console.log("YourShop customer dashboard loaded successfully.");
 });

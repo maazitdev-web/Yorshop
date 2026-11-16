@@ -442,76 +442,9 @@
 
     </main>
 
+<script src="./js/admin-login.js"></script>
 
-    <script>
 
-        const API_URL = "http://localhost:3000/api/admin/login";
-
-        const form = document.getElementById("admin-login-form");
-        const message = document.getElementById("login-message");
-        const loginButton = document.getElementById("login-button");
-
-        form.addEventListener("submit", async (event) => {
-
-            event.preventDefault();
-
-            const email = document.getElementById("admin-email").value.trim();
-            const password = document.getElementById("admin-password").value;
-
-            message.textContent = "";
-            message.className = "message";
-
-            loginButton.disabled = true;
-            loginButton.textContent = "Logging in...";
-
-            try {
-
-                const response = await fetch(API_URL, {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        email,
-                        password
-                    })
-
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success || !data.token) {
-                    throw new Error(data.message || "Login failed.");
-                }
-
-                sessionStorage.setItem(
-                    "yourshop-admin-token",
-                    data.token
-                );
-
-                message.textContent = "Login successful! Redirecting...";
-                message.classList.add("success");
-
-                window.location.href = "./admin.html";
-
-            } catch (error) {
-
-                message.textContent = error.message;
-                message.classList.add("error");
-
-            } finally {
-
-                loginButton.disabled = false;
-                loginButton.textContent = "Login to Dashboard";
-
-            }
-
-        });
-
-    </script>
 
 </body>
 </html>

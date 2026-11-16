@@ -1,19 +1,43 @@
 
 /* ==========================================
    YOURSHOP - ADMIN PRODUCT MANAGEMENT
-   MYSQL BACKEND + JWT AUTHENTICATION
-   + ACTIVITY LOG
+   FRONTEND-ONLY VERSION
+   LOCALSTORAGE + ACTIVITY LOG
 ========================================== */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
-    const API_URL = "http://localhost:3000/api/products";
-    const TOKEN_KEY = "yourshop-admin-token";
+    // ======================================
+    // 1. ADMIN AUTHENTICATION
+    // ======================================
+
+    let adminSession = null;
+
+    try {
+        adminSession = JSON.parse(
+            sessionStorage.getItem("yourshop-admin-session") || "null"
+        );
+    } catch (error) {
+        adminSession = null;
+    }
+
+    if (
+        !adminSession ||
+        adminSession.role !== "admin" ||
+        adminSession.email !== "admin@yourshop.com"
+    ) {
+        sessionStorage.removeItem("yourshop-admin-session");
+        window.location.replace("./admin-login.html");
+        return;
+    }
 
     // ======================================
-    // 1. GET HTML ELEMENTS
+    // 2. STORAGE KEYS AND HTML ELEMENTS
     // ======================================
+
+    const PRODUCTS_KEY = "yourshop-admin-products";
+    const DELETED_PRODUCTS_KEY = "yourshop-deleted-product-ids";
 
     const productTable = document.getElementById("admin-products-list");
 
@@ -28,32 +52,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     const addButton = document.getElementById("add-product-button");
 
     let allProducts = [];
+    let editingProductId = null;
 
-    // ======================================
-    // 2. JWT AUTHENTICATION
-    // ======================================
-
-    function getAdminToken() {
-        return sessionStorage.getItem(TOKEN_KEY);
+    if (!productTable) {
+        console.error("Admin product table was not found.");
+        return;
     }
 
-    function getAuthHeaders(additionalHeaders = {}) {
-        const token = getAdminToken();
+    // ======================================
+    // 3. LOCALSTORAGE HELPERS
+    // ======================================
 
-        if (!token) {
-            throw new Error(
-                "Admin login required. Please log in again."
+    function getStorageArray(key) {
+        try {
+            const value = JSON.parse(
+                localStorage.getItem(key) || "[]"
             );
-        }
 
-        return {
-            ...additionalHeaders,
-            Authorization: `Bearer ${token}`
-        };
+            return Array.isArray(value) ? value : [];
+        } catch (error) {
+            console.error("Storage reading error:", key, error);
+            return [];
+        }
+    }
+
+    function saveStorageArray(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch (error) {
+            console.error("Storage saving error:", key, error);
+            alert("Unable to save. Your browser storage may be full.");
+            return false;
+        }
+    }
+
+    function getSavedProducts() {
+        return getStorageArray(PRODUCTS_KEY);
+    }
+
+    function getDeletedProductIds() {
+        return getStorageArray(DELETED_PRODUCTS_KEY).map(String);
     }
 
     // ======================================
-    // 3. ACTIVITY LOGGER
+    // 4. ACTIVITY LOGGER
     // ======================================
 
     function logProductActivity(action, details) {
@@ -62,62 +105,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const saved = window.logAdminActivity(
+        window.logAdminActivity(
             action,
             details,
             "products"
         );
-
-        if (!saved) {
-            console.error("Product activity could not be saved.");
-        }
     }
 
     // ======================================
-    // 4. API REQUEST HELPER
-    // JWT TOKEN INCLUDED
-    // ======================================
-
-    async function apiRequest(url, options = {}) {
-        const headers = getAuthHeaders({
-            ...(options.headers || {})
-        });
-
-        if (options.body && !headers["Content-Type"]) {
-            headers["Content-Type"] = "application/json";
-        }
-
-        const response = await fetch(url, {
-            ...options,
-            headers
-        });
-
-        let result;
-
-        try {
-            result = await response.json();
-        } catch {
-            throw new Error("Invalid response received from backend.");
-        }
-
-        if (response.status === 401 || response.status === 403) {
-            throw new Error(
-                result.message ||
-                "Your admin session has expired. Please log in again."
-            );
-        }
-
-        if (!response.ok || !result.success) {
-            throw new Error(
-                result.message || "Backend request failed."
-            );
-        }
-
-        return result;
-    }
-
-    // ======================================
-    // 5. LOAD PRODUCTS FROM MYSQL
+    // 5. NORMALIZE PRODUCT DATA
     // ======================================
 
     function normalizeProduct(product) {
@@ -126,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (typeof images === "string") {
             try {
                 images = JSON.parse(images);
-            } catch {
+            } catch (error) {
                 images = [];
             }
         }
@@ -137,67 +133,77 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         return {
             ...product,
-            id: Number(product.id),
-            price: Number(product.price),
-            discount: Number(product.discount || 0),
-            rating: Number(product.rating || 0),
-            stock: Number(product.stock || 0),
-            soldCount: Number(product.sold_count || 0),
+            id: product.id,
+            price: Number(product.price) || 0,
+            discount: Number(product.discount) || 0,
+            rating: Number(product.rating) || 0,
+            stock: Number(product.stock) || 0,
+            soldCount: Number(
+                product.soldCount ?? product.sold_count ?? 0
+            ),
             images,
             image: product.image || images[0] || ""
         };
     }
 
-    async function loadProducts() {
-        try {
-            if (productTable) {
-                productTable.innerHTML = `
-                    <tr>
-                        <td colspan="6">Loading products...</td>
-                    </tr>
-                `;
+    // ======================================
+    // 6. GET ALL PRODUCTS
+    // ORIGINAL + ADMIN-MANAGED PRODUCTS
+    // ======================================
+
+    function getAllProducts() {
+        const originalProducts =
+            typeof products !== "undefined" && Array.isArray(products)
+                ? products
+                : [];
+
+        const savedProducts = getSavedProducts();
+        const deletedIds = new Set(getDeletedProductIds());
+
+        const productMap = new Map();
+
+        originalProducts.forEach(product => {
+            if (product && product.id !== undefined) {
+                productMap.set(
+                    String(product.id),
+                    normalizeProduct(product)
+                );
             }
+        });
 
-            const result = await apiRequest(API_URL, {
-                method: "GET"
-            });
-
-            if (!Array.isArray(result.products)) {
-                throw new Error("Invalid product data received.");
+        // Saved records override original products with the same ID.
+        savedProducts.forEach(product => {
+            if (product && product.id !== undefined) {
+                productMap.set(
+                    String(product.id),
+                    normalizeProduct(product)
+                );
             }
+        });
 
-            allProducts = result.products.map(normalizeProduct);
-
-            updateStats();
-            filterProducts();
-
-            console.log(
-                "Admin products loaded from MySQL:",
-                allProducts.length
-            );
-
-        } catch (error) {
-            console.error("Product loading error:", error);
-
-            if (productTable) {
-                productTable.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align:center; padding:20px;">
-                            ${escapeHTML(error.message)}
-                        </td>
-                    </tr>
-                `;
-            }
-
-            alert(
-                "Could not load products.\n\n" +
-                error.message
-            );
-        }
+        return Array.from(productMap.values()).filter(product => {
+            return !deletedIds.has(String(product.id));
+        });
     }
 
     // ======================================
-    // 6. ESCAPE HTML
+    // 7. LOAD PRODUCTS
+    // ======================================
+
+    function loadProducts() {
+        allProducts = getAllProducts();
+
+        updateStats();
+        filterProducts();
+
+        console.log(
+            "Admin products loaded from LocalStorage:",
+            allProducts.length
+        );
+    }
+
+    // ======================================
+    // 8. FORMAT AND ESCAPE HELPERS
     // ======================================
 
     function escapeHTML(value) {
@@ -210,10 +216,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         })[character]);
     }
 
-    // ======================================
-    // 7. FORMAT PRICE
-    // ======================================
-
     function formatPrice(price) {
         return Number(price || 0).toLocaleString("en-US", {
             style: "currency",
@@ -222,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 8. STOCK STATUS
+    // 9. STOCK STATUS
     // ======================================
 
     function getStockStatus(stock) {
@@ -247,7 +249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 9. UPDATE STATISTICS
+    // 10. UPDATE STATISTICS
     // ======================================
 
     function updateStats() {
@@ -273,12 +275,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 10. DISPLAY PRODUCTS
+    // 11. DISPLAY PRODUCTS
     // ======================================
 
     function displayProducts(productList) {
-        if (!productTable) return;
-
         productTable.innerHTML = "";
 
         if (resultsCount) {
@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 11. SEARCH AND FILTER
+    // 12. SEARCH AND FILTER
     // ======================================
 
     function filterProducts() {
@@ -408,12 +408,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const filteredProducts = allProducts.filter(product => {
             const name = (product.name || "").toLowerCase();
+            const productCategory = String(
+                product.category || ""
+            ).toLowerCase();
 
             const matchesName = name.includes(search);
 
             const matchesCategory =
                 category === "all" ||
-                product.category === category;
+                productCategory === category.toLowerCase();
 
             return matchesName && matchesCategory;
         });
@@ -430,7 +433,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 12. CREATE PRODUCT MODAL
+    // 13. CREATE PRODUCT MODAL
     // ======================================
 
     const modal = document.createElement("div");
@@ -534,10 +537,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const modalTitle = document.getElementById("product-modal-title");
     const saveButton = form.querySelector(".save-product-button");
 
-    let editingProductId = null;
-
     // ======================================
-    // 13. OPEN AND CLOSE MODAL
+    // 14. OPEN AND CLOSE MODAL
     // ======================================
 
     function closeModal() {
@@ -549,7 +550,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     function openModal(product = null) {
         form.reset();
 
-        editingProductId = product ? product.id : null;
+        editingProductId = product
+            ? String(product.id)
+            : null;
 
         modalTitle.textContent = product
             ? "Edit Product"
@@ -600,10 +603,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // 14. ADD OR UPDATE PRODUCT IN MYSQL
+    // 15. ADD OR UPDATE PRODUCT
     // ======================================
 
-    form.addEventListener("submit", async event => {
+    form.addEventListener("submit", event => {
         event.preventDefault();
 
         const name =
@@ -650,7 +653,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const existingProduct = isEditing
             ? allProducts.find(product =>
-                Number(product.id) === Number(editingProductId)
+                String(product.id) === editingProductId
             )
             : null;
 
@@ -660,144 +663,177 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const productData = {
-            name,
-            category,
-            price,
-            discount,
-            stock,
-            rating,
-            image,
-            images: isEditing &&
-                    Array.isArray(existingProduct.images) &&
-                    existingProduct.images.length > 0
-                ? [image, ...existingProduct.images.slice(1)]
-                : [image]
-        };
+        const savedProducts = getSavedProducts();
 
-        try {
-            saveButton.disabled = true;
-            saveButton.textContent = "Saving...";
+        let productData;
 
-            if (isEditing) {
-                await apiRequest(
-                    `${API_URL}/${editingProductId}`,
-                    {
-                        method: "PUT",
-                        body: JSON.stringify(productData)
-                    }
-                );
+        if (isEditing) {
+            // Preserve existing product fields and extra images.
+            const existingImages = Array.isArray(existingProduct.images)
+                ? existingProduct.images
+                : [];
 
-                logProductActivity(
-                    "Product updated",
-                    `Administrator updated product: ${name}.`
-                );
+            productData = {
+                ...existingProduct,
+                id: existingProduct.id,
+                name,
+                category,
+                price,
+                discount,
+                stock,
+                rating,
+                image,
+                images: existingImages.length > 1
+                    ? [image, ...existingImages.slice(1)]
+                    : [image]
+            };
 
+            const existingIndex = savedProducts.findIndex(product =>
+                String(product.id) === editingProductId
+            );
+
+            if (existingIndex >= 0) {
+                savedProducts[existingIndex] = productData;
             } else {
-                await apiRequest(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify(productData)
-                });
-
-                logProductActivity(
-                    "Product added",
-                    `Administrator added a new product: ${name}.`
-                );
+                // Save an override for an original products.js product.
+                savedProducts.push(productData);
             }
 
-            await loadProducts();
+        } else {
+            // Generate a unique ID for the new product.
+            const newId = Date.now();
 
-            closeModal();
+            productData = {
+                id: newId,
+                name,
+                category,
+                price,
+                discount,
+                stock,
+                rating,
+                soldCount: 0,
+                image,
+                images: [image],
+                createdAt: new Date().toISOString()
+            };
 
-            alert(
-                isEditing
-                    ? "Product updated successfully in MySQL!"
-                    : "Product added successfully to MySQL!"
-            );
+            savedProducts.push(productData);
+        }
 
-        } catch (error) {
-            console.error("Product save error:", error);
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
 
-            alert(
-                "Could not save product.\n\n" +
-                error.message
-            );
+        const saved = saveStorageArray(
+            PRODUCTS_KEY,
+            savedProducts
+        );
 
-        } finally {
+        if (!saved) {
             saveButton.disabled = false;
             saveButton.textContent = "Save Product";
+            return;
+        }
+
+        logProductActivity(
+            isEditing ? "Product updated" : "Product added",
+            isEditing
+                ? `Administrator updated product: ${name}.`
+                : `Administrator added a new product: ${name}.`
+        );
+
+        loadProducts();
+        closeModal();
+
+        saveButton.disabled = false;
+        saveButton.textContent = "Save Product";
+
+        alert(
+            isEditing
+                ? "Product updated successfully!"
+                : "Product added successfully!"
+        );
+    });
+
+    // ======================================
+    // 16. EDIT AND DELETE PRODUCTS
+    // ======================================
+
+    productTable.addEventListener("click", event => {
+        const button = event.target.closest("button[data-action]");
+
+        if (!button) return;
+
+        const id = String(button.dataset.id);
+
+        const product = allProducts.find(item =>
+            String(item.id) === id
+        );
+
+        if (!product) return;
+
+        // EDIT PRODUCT
+        if (button.dataset.action === "edit") {
+            openModal(product);
+            return;
+        }
+
+        // DELETE PRODUCT
+        if (button.dataset.action === "delete") {
+            const confirmed = window.confirm(
+                `Are you sure you want to delete "${product.name}"?`
+            );
+
+            if (!confirmed) return;
+
+            const savedProducts = getSavedProducts();
+
+            // Remove any saved version or override.
+            const updatedProducts = savedProducts.filter(item =>
+                String(item.id) !== id
+            );
+
+            // Record the ID so original products.js products stay hidden.
+            const deletedIds = getDeletedProductIds();
+
+            if (!deletedIds.includes(id)) {
+                deletedIds.push(id);
+            }
+
+            const productsSaved = saveStorageArray(
+                PRODUCTS_KEY,
+                updatedProducts
+            );
+
+            if (!productsSaved) return;
+
+            const deletedIdsSaved = saveStorageArray(
+                DELETED_PRODUCTS_KEY,
+                deletedIds
+            );
+
+            if (!deletedIdsSaved) {
+                alert(
+                    "The product record was updated, but its deletion list could not be saved. Please check browser storage."
+                );
+                return;
+            }
+
+            logProductActivity(
+                "Product deleted",
+                `Administrator deleted product: ${product.name}.`
+            );
+
+            loadProducts();
+
+            alert("Product deleted successfully!");
         }
     });
 
     // ======================================
-    // 15. EDIT AND DELETE PRODUCTS
+    // 17. INITIALIZE PAGE
     // ======================================
 
-    if (productTable) {
-        productTable.addEventListener("click", async event => {
-            const button = event.target.closest("button[data-action]");
+    loadProducts();
 
-            if (!button) return;
-
-            const id = button.dataset.id;
-
-            const product = allProducts.find(item =>
-                String(item.id) === String(id)
-            );
-
-            if (!product) return;
-
-            // EDIT PRODUCT
-            if (button.dataset.action === "edit") {
-                openModal(product);
-                return;
-            }
-
-            // DELETE PRODUCT
-            if (button.dataset.action === "delete") {
-                const confirmed = confirm(
-                    `Are you sure you want to permanently delete "${product.name}" from MySQL?`
-                );
-
-                if (!confirmed) return;
-
-                button.disabled = true;
-                button.textContent = "Deleting...";
-
-                try {
-                    await apiRequest(`${API_URL}/${id}`, {
-                        method: "DELETE"
-                    });
-
-                    logProductActivity(
-                        "Product deleted",
-                        `Administrator deleted product: ${product.name}.`
-                    );
-
-                    await loadProducts();
-
-                    alert("Product deleted successfully from MySQL!");
-
-                } catch (error) {
-                    console.error("Product deletion error:", error);
-
-                    alert(
-                        "Could not delete product.\n\n" +
-                        error.message
-                    );
-
-                    button.disabled = false;
-                    button.textContent = "Delete";
-                }
-            }
-        });
-    }
-
-    // ======================================
-    // 16. INITIALIZE PAGE
-    // ======================================
-
-    await loadProducts();
-
-    console.log("YourShop Admin Products page initialized.");
+    console.log("YourShop Admin Products initialized successfully.");
 });

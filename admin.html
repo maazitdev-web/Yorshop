@@ -275,11 +275,28 @@
 
 <!-- ADMIN AUTHENTICATION CHECK -->
 <script>
-    const adminToken = sessionStorage.getItem("yourshop-admin-token");
+    (function () {
+        "use strict";
 
-    if (!adminToken) {
-        window.location.replace("./admin-login.html");
-    }
+        let adminSession = null;
+
+        try {
+            adminSession = JSON.parse(
+                sessionStorage.getItem("yourshop-admin-session") || "null"
+            );
+        } catch (error) {
+            adminSession = null;
+        }
+
+        if (
+            !adminSession ||
+            adminSession.role !== "admin" ||
+            adminSession.email !== "admin@yourshop.com"
+        ) {
+            sessionStorage.removeItem("yourshop-admin-session");
+            window.location.replace("./admin-login.html");
+        }
+    })();
 </script>
 
 <!-- ADMIN DASHBOARD SCRIPTS -->

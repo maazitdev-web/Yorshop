@@ -1,6 +1,7 @@
+
 // ============================================
 // YOURSHOP - CUSTOMER MY ORDERS
-// Backend-connected customer order history
+// Frontend LocalStorage Customer Order History
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,13 +16,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let customerOrders = [];
 
+    // ========================================
+    // 2. CUSTOMER SESSION VALIDATION
+    // LOCALSTORAGE VERSION
+    // ========================================
+
+    let customerSession = null;
+
+    try {
+        const savedSession = JSON.parse(
+            localStorage.getItem("yourshop-customer-session") || "null"
+        );
+
+        if (savedSession && (savedSession.id || savedSession.userId)) {
+            customerSession = {
+                ...savedSession,
+                role: "customer",
+                userId: savedSession.id || savedSession.userId
+            };
+        }
+
+    } catch (error) {
+        console.error("Customer session error:", error);
+        customerSession = null;
+    }
+
+    if (!customerSession || !customerSession.userId) {
+        alert("Please log in to view your orders.");
+        window.location.replace("./customer-login.html");
+        return;
+    }
+
+    console.log("My Orders: Customer authenticated", customerSession);
+
     if (!ordersList) {
         console.warn("Customer orders list not found.");
         return;
     }
 
     // ========================================
-    // 2. HELPER FUNCTIONS
+    // 3. HELPER FUNCTIONS
     // ========================================
 
     function escapeHTML(value) {
@@ -83,29 +117,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getOrderTotal(order) {
-        if (order.total_amount !== undefined &&
-            order.total_amount !== null) {
+        if (order.total_amount != null) {
             return Number(order.total_amount) || 0;
         }
 
-        if (order.total !== undefined &&
-            order.total !== null) {
+        if (order.total != null) {
             return Number(order.total) || 0;
         }
 
-        if (order.grandTotal !== undefined &&
-            order.grandTotal !== null) {
+        if (order.grandTotal != null) {
             return Number(order.grandTotal) || 0;
         }
 
-        if (order.totalAmount !== undefined &&
-            order.totalAmount !== null) {
+        if (order.totalAmount != null) {
             return Number(order.totalAmount) || 0;
         }
 
         return getOrderItems(order).reduce((total, item) => {
-            if (item.subtotal !== undefined &&
-                item.subtotal !== null) {
+            if (item.subtotal != null) {
                 return total + (Number(item.subtotal) || 0);
             }
 
@@ -168,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 3. ORDER STATUS TIMELINE
+    // 4. ORDER STATUS TIMELINE
     // ========================================
 
     const orderStatuses = [
@@ -192,9 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return `
             <div class="order-timeline">
-
                 ${orderStatuses.map((step, index) => {
-
                     let className = "";
 
                     if (currentIndex >= 0 && index < currentIndex) {
@@ -208,28 +235,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     return `
                         <div class="timeline-step ${className}">
-
                             <span class="timeline-dot"></span>
-
                             <span class="timeline-label">
                                 ${formatStatus(step)}
                             </span>
-
                         </div>
                     `;
-
                 }).join("")}
-
             </div>
         `;
     }
 
     // ========================================
-    // 4. ORDER STATUS INFORMATION
+    // 5. ORDER STATUS INFORMATION
     // ========================================
 
     function getStatusInformation(status) {
-
         const messages = {
             pending: "Your order is waiting for confirmation.",
             confirmed: "Your order has been confirmed.",
@@ -244,11 +265,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 5. ORDER PRODUCTS HTML
+    // 6. ORDER PRODUCTS HTML
     // ========================================
 
     function getProductsHTML(order) {
-
         const items = getOrderItems(order);
 
         if (items.length === 0) {
@@ -260,7 +280,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return items.map(item => {
-
             const name =
                 item.product_name ||
                 item.name ||
@@ -295,31 +314,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     ` : ""}
 
                     <div class="order-product-info">
-
                         <h4>${escapeHTML(name)}</h4>
 
-                        <p>
-                            Quantity: ${quantity}
-                        </p>
+                        <p>Quantity: ${quantity}</p>
 
-                        <p>
-                            ${formatPrice(price)}
-                        </p>
-
+                        <p>${formatPrice(price)}</p>
                     </div>
 
                 </div>
             `;
-
         }).join("");
     }
 
     // ========================================
-    // 6. ORDER DETAILS MODAL
+    // 7. ORDER DETAILS MODAL
     // ========================================
 
     function showOrderDetails(orderIndex) {
-
         const order = getOrders()[orderIndex];
 
         if (!order) {
@@ -328,7 +339,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const orderId = getOrderId(order);
-
         const status = normalizeStatus(order.status);
 
         const modalHTML = `
@@ -370,7 +380,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         <p>
                             <strong>Status:</strong>
-
                             <span class="order-status status-${escapeHTML(status)}">
                                 ${escapeHTML(formatStatus(status))}
                             </span>
@@ -393,19 +402,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
 
                     <div class="order-details-total">
-
                         <span>Order Total</span>
 
                         <strong>
                             ${formatPrice(getOrderTotal(order))}
                         </strong>
-
                     </div>
 
                     <div class="order-details-actions">
 
                         <a
-                            href="./track-order.html"
+                            href="./track-order.html?orderId=${encodeURIComponent(orderId)}"
                             class="order-btn track-btn"
                         >
                             Track Order
@@ -425,18 +432,14 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
 
-        document.getElementById(
-            "order-details-modal"
-        )?.remove();
+        document.getElementById("order-details-modal")?.remove();
 
         document.body.insertAdjacentHTML(
             "beforeend",
             modalHTML
         );
 
-        const modal = document.getElementById(
-            "order-details-modal"
-        );
+        const modal = document.getElementById("order-details-modal");
 
         function closeModal() {
             modal?.remove();
@@ -453,13 +456,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        modal.querySelector(
-            ".close-order-modal"
-        )?.addEventListener("click", closeModal);
+        modal.querySelector(".close-order-modal")
+            ?.addEventListener("click", closeModal);
 
-        modal.querySelector(
-            ".close-modal-button"
-        )?.addEventListener("click", closeModal);
+        modal.querySelector(".close-modal-button")
+            ?.addEventListener("click", closeModal);
 
         modal.addEventListener("click", event => {
             if (event.target === modal) {
@@ -467,18 +468,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        document.addEventListener(
-            "keydown",
-            handleEscape
-        );
+        document.addEventListener("keydown", handleEscape);
     }
 
     // ========================================
-    // 7. RENDER CUSTOMER ORDERS
+    // 8. RENDER CUSTOMER ORDERS
     // ========================================
 
     function renderOrders() {
-
         const selectedFilter = orderFilter?.value || "all";
 
         const filteredOrders = getOrders()
@@ -487,17 +484,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 index
             }))
             .filter(({ order }) => {
-
                 if (selectedFilter === "all") {
                     return true;
                 }
 
                 return normalizeStatus(order.status) ===
                     selectedFilter;
-
             })
             .sort((a, b) => {
-
                 const dateA =
                     new Date(getOrderDate(a.order)).getTime() || 0;
 
@@ -508,7 +502,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         if (filteredOrders.length === 0) {
-
             ordersList.innerHTML = `
                 <div class="empty-orders">
 
@@ -532,14 +525,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ordersList.innerHTML = filteredOrders.map(
             ({ order, index }) => {
-
                 const orderId = getOrderId(order);
-
                 const status = normalizeStatus(order.status);
-
-                const date = formatDateTime(
-                    getOrderDate(order)
-                );
+                const date = formatDateTime(getOrderDate(order));
 
                 return `
                     <article class="order-card">
@@ -547,13 +535,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="order-card-header">
 
                             <div>
-
                                 <h3>
                                     Order #${escapeHTML(orderId)}
                                 </h3>
 
                                 <p>${escapeHTML(date)}</p>
-
                             </div>
 
                             <span class="order-status status-${escapeHTML(status)}">
@@ -579,13 +565,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="order-bottom">
 
                             <div class="order-total">
-
                                 <span>Total</span>
 
                                 <strong>
                                     ${formatPrice(getOrderTotal(order))}
                                 </strong>
-
                             </div>
 
                             <div class="order-actions">
@@ -598,10 +582,12 @@ document.addEventListener("DOMContentLoaded", () => {
                                     View Details
                                 </button>
 
-<a href="./track-order.html?orderId=${encodeURIComponent(getOrderId(order))}"
-   class="order-btn track-btn">
-    Track Order
-</a>
+                                <a
+                                    href="./track-order.html?orderId=${encodeURIComponent(orderId)}"
+                                    class="order-btn track-btn"
+                                >
+                                    Track Order
+                                </a>
 
                                 <a
                                     href="./index.html"
@@ -616,20 +602,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     </article>
                 `;
-
             }
         ).join("");
     }
 
     // ========================================
-    // 8. VIEW ORDER DETAILS BUTTON
+    // 9. VIEW ORDER DETAILS BUTTON
     // ========================================
 
     ordersList.addEventListener("click", event => {
-
-        const button = event.target.closest(
-            ".view-details-btn"
-        );
+        const button = event.target.closest(".view-details-btn");
 
         if (!button) return;
 
@@ -638,11 +620,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!Number.isInteger(orderIndex)) return;
 
         showOrderDetails(orderIndex);
-
     });
 
     // ========================================
-    // 9. ORDER FILTER
+    // 10. ORDER FILTER
     // ========================================
 
     orderFilter?.addEventListener("change", () => {
@@ -650,11 +631,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================
-    // 10. OPEN ORDER FROM NOTIFICATION
+    // 11. OPEN ORDER FROM NOTIFICATION
     // ========================================
 
     function openOrderFromNotification() {
-
         const params = new URLSearchParams(
             window.location.search
         );
@@ -664,17 +644,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!requestedOrderId) return;
 
         const orderIndex = getOrders().findIndex(order =>
-            String(getOrderId(order)) ===
-            String(requestedOrderId)
+            String(getOrderId(order)) === String(requestedOrderId)
         );
 
         if (orderIndex === -1) {
-
-            console.warn(
-                "Order not found:",
-                requestedOrderId
-            );
-
+            console.warn("Order not found:", requestedOrderId);
             return;
         }
 
@@ -682,79 +656,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 11. LOAD CUSTOMER ORDERS FROM BACKEND
+    // 12. LOAD CUSTOMER ORDERS FROM LOCAL STORAGE
     // ========================================
 
-    async function loadCustomerOrders() {
-
-        const token = localStorage.getItem("customerToken");
-
-        if (!token) {
-
-            ordersList.innerHTML = `
-                <div class="empty-orders">
-
-                    <div class="empty-icon">🔒</div>
-
-                    <h3>Please Login</h3>
-
-                    <p>
-                        Please log in to view your orders.
-                    </p>
-
-                    <a href="./index.html" class="order-btn shop-btn">
-                        Back to Store
-                    </a>
-
-                </div>
-            `;
-
-            return;
-        }
-
-        ordersList.innerHTML = `
-            <div class="empty-orders">
-
-                <div class="empty-icon">📦</div>
-
-                <h3>Loading Your Orders...</h3>
-
-                <p>
-                    Please wait while we retrieve your orders.
-                </p>
-
-            </div>
-        `;
-
+    function loadCustomerOrders() {
         try {
-
-            const response = await fetch(
-                "http://localhost:3000/api/customer/orders",
-                {
-                    method: "GET",
-
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
+            const allOrders = JSON.parse(
+                localStorage.getItem("yourshop-orders") || "[]"
             );
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(
-                    data.message ||
-                    "Unable to load your orders."
-                );
+            if (!Array.isArray(allOrders)) {
+                throw new Error("Saved order data is invalid.");
             }
 
-            customerOrders = Array.isArray(data.orders)
-                ? data.orders
-                : [];
+            customerOrders = allOrders.filter(order =>
+                String(order.customerId) ===
+                String(customerSession.userId)
+            );
 
             renderOrders();
-
             openOrderFromNotification();
 
             console.log(
@@ -763,11 +683,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
         } catch (error) {
-
-            console.error(
-                "My Orders loading error:",
-                error
-            );
+            console.error("My Orders loading error:", error);
 
             ordersList.innerHTML = `
                 <div class="empty-orders">
@@ -786,7 +702,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // 12. INITIALIZE
+    // 13. INITIALIZE
     // ========================================
 
     loadCustomerOrders();

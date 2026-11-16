@@ -30,7 +30,45 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    let wishlist = loadArray(WISHLIST_KEY);
+
+// ============================================
+// CUSTOMER SESSION
+// ============================================
+
+let customerSession = null;
+
+try {
+    const savedSession = JSON.parse(
+        localStorage.getItem("yourshop-customer-session") || "null"
+    );
+
+    if (savedSession && (savedSession.id || savedSession.userId)) {
+        customerSession = {
+            ...savedSession,
+            role: "customer",
+            userId: savedSession.id || savedSession.userId
+        };
+    }
+} catch (error) {
+    console.error("Customer session error:", error);
+    customerSession = null;
+}
+
+if (!customerSession || !customerSession.userId) {
+    alert("Please log in to access your wishlist.");
+    window.location.replace("./customer-login.html");
+    return;
+}
+
+const customerId = String(customerSession.userId);
+
+
+// Load only this customer's wishlist
+let wishlist = loadArray(WISHLIST_KEY)
+    .filter(item =>
+        String(item.customerId) === customerId
+    )
+    .map(item => Number(item.productId));
 
     // ============================================
     // 2. HELPER FUNCTIONS
@@ -55,8 +93,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function saveWishlist() {
-        localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+    try {
+        // Load all customers' wishlist records
+        const allWishlists = loadArray(WISHLIST_KEY);
+
+        // Preserve other customers' products
+        const otherCustomersWishlists = allWishlists.filter(
+            item => String(item.customerId) !== customerId
+        );
+
+        // Create records for the current customer
+        const customerWishlists = wishlist.map(productId => ({
+            customerId: customerId,
+            productId: Number(productId)
+        }));
+
+        // Save everyone's wishlist without mixing accounts
+        const updatedWishlists = [
+            ...otherCustomersWishlists,
+            ...customerWishlists
+        ];
+
+        localStorage.setItem(
+            WISHLIST_KEY,
+            JSON.stringify(updatedWishlists)
+        );
+
+    } catch (error) {
+        console.error("Could not save wishlist:", error);
+        alert("Unable to save your wishlist. Please try again.");
     }
+}
 
     function saveCart(cart) {
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
