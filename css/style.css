@@ -8115,23 +8115,72 @@ body.quick-view-open {
 }
 
 /* The shared mobile menu must remain a dropdown on category pages too. */
-@media (max-width: 760px) {
-    .all-categories-list-page .header-main {
+
+/* Tablet screens */
+@media (min-width: 761px) and (max-width: 1024px) {
+    .header-main {
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
             "logo actions"
-            "navigation navigation"
-            "search search";
+            "search search"
+            "navigation navigation";
+        gap: 14px 20px;
+        padding: 14px 24px;
     }
 
-    .all-categories-list-page .main-navigation .nav-links {
+    .site-header .logo {
+        justify-self: start;
+    }
+
+    .site-header .header-actions {
+        justify-self: end;
+        gap: 14px;
+    }
+
+    .site-header .search-form {
+        max-width: none;
+        width: 100%;
+    }
+
+    .site-header .main-navigation {
+        justify-content: flex-start;
+        padding: 0;
+    }
+
+    .site-header .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .site-header .nav-links {
         display: none;
-        flex-wrap: nowrap;
-        overflow-x: visible;
     }
 
-    .all-categories-list-page .main-navigation .nav-links.active {
+    .site-header .nav-links.active {
         display: flex;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        z-index: 1200;
+        width: 260px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 8px 14px;
+        border-radius: 10px;
+        background: #ffffff;
+        box-shadow: 0 12px 25px rgba(16, 42, 86, 0.14);
+    }
+
+    .site-header .nav-links li {
+        width: 100%;
+        border-bottom: 1px solid #edf1f7;
+    }
+
+    .site-header .nav-links a {
+        padding: 12px 8px;
+        font-size: 13px;
     }
 }
 
@@ -8200,7 +8249,7 @@ body.quick-view-open {
     }
 
     .site-header .nav-links {
-        display: flex;
+        display: none;
     }
 }
 
