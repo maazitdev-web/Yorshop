@@ -266,41 +266,62 @@
             }
         }
 
-        
+    
 /* ============================================
    RECENTLY PURCHASED PRODUCTS
 ============================================ */
 
-.purchased-products-grid {
+#dashboard-purchased-products {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 15px;
-    margin-bottom: 10px;
+    gap: 18px;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 15px;
+    align-items: start;
 }
 
-.purchased-product-card {
+/* Each product card */
+#dashboard-purchased-products > * {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Product card styling */
+#dashboard-purchased-products .purchased-product-card {
     border: 1px solid #edf0f5;
     border-radius: 10px;
-    overflow: hidden;
     background: #fff;
+    overflow: hidden;
 }
 
-.purchased-product-card img {
-    width: 100%;
-    height: 145px;
+/* Product images */
+#dashboard-purchased-products img {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 160px !important;
+    max-height: 160px;
     object-fit: contain;
     padding: 12px;
+    box-sizing: border-box;
     background: #f8faff;
 }
 
+/* Product information */
 .purchased-product-info {
     padding: 12px;
+    min-width: 0;
 }
 
 .purchased-product-info h3 {
     font-size: 12px;
     color: #102a56;
     margin-bottom: 8px;
+    overflow-wrap: anywhere;
 }
 
 .purchased-product-info p {
@@ -333,15 +354,22 @@
     font-weight: 600;
 }
 
-@media (max-width: 650px) {
-    .purchased-products-grid {
+/* Tablet */
+@media (max-width: 900px) {
+    #dashboard-purchased-products {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
-@media (max-width: 420px) {
-    .purchased-products-grid {
+/* Mobile */
+@media (max-width: 500px) {
+    #dashboard-purchased-products {
         grid-template-columns: 1fr;
+    }
+
+    #dashboard-purchased-products img {
+        height: 180px !important;
+        max-height: 180px;
     }
 }
 
@@ -438,7 +466,6 @@
     <a href="./support.html">
         🎧 Customer Support
     </a>
-    <a href="./support.html">Customer Support</a>
 
 <a href="./index.html">
     🏠 Back to Store
@@ -622,23 +649,7 @@
 
 </main>
 
-<script>
-    console.log("TEST: Dashboard HTML loaded");
 
-    console.log(
-        "CUSTOMER SESSION:",
-        JSON.parse(
-            localStorage.getItem("yourshop-customer-session") || "null"
-        )
-    );
-
-    console.log(
-        "REGISTERED CUSTOMERS:",
-        JSON.parse(
-            localStorage.getItem("yourshop-customers") || "[]"
-        )
-    );
-</script>
 
 <script src="./js/currency.js"></script>
 <script src="./js/customer-dashboard.js"></script>

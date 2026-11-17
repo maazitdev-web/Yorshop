@@ -117,7 +117,6 @@ console.log(
         String(customer.id) === String(customerSession.id)
     );
 
-    console.log("MATCHED CUSTOMER:", registeredCustomer);
 
     if (!registeredCustomer) {
         localStorage.removeItem("yourshop-customer-session");
