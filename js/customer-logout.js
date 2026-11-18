@@ -7,15 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!logoutButton) return;
 
     logoutButton.addEventListener("click", () => {
-        const confirmed = window.confirm("Are you sure you want to log out?");
+        const confirmed = window.confirm(
+            "Are you sure you want to log out?"
+        );
 
         if (!confirmed) return;
 
-        // Clear only customer authentication information
-        localStorage.removeItem("customerToken");
-        localStorage.removeItem("customerUser");
+        // Clear only the customer session.
+        sessionStorage.removeItem("yourshop-customer-session");
 
-        // Return to customer login
         window.location.replace("./customer-login.html");
     });
 });

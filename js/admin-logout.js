@@ -7,14 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!logoutButton) return;
 
     logoutButton.addEventListener("click", () => {
-        const confirmed = window.confirm("Are you sure you want to log out of the admin panel?");
+        const confirmed = window.confirm(
+            "Are you sure you want to log out of the admin panel?"
+        );
 
         if (!confirmed) return;
 
-        // Clear only the admin authentication token
-        sessionStorage.removeItem("yourshop-admin-token");
+        // Clear only the admin session.
+        sessionStorage.removeItem("yourshop-admin-session");
 
-        // Return to admin login
         window.location.replace("./admin-login.html");
     });
 });

@@ -1,22 +1,40 @@
 
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
+
     const form = document.getElementById("customer-register-form");
     const message = document.getElementById("register-message");
+
+    if (!form || !message) return;
+
     const submitButton = form.querySelector(".account-submit");
 
-    if (!form) return;
+    const CUSTOMERS_KEY = "yourshop-customers";
 
-    form.addEventListener("submit", async (event) => {
+    function getCustomers() {
+        try {
+            const customers = JSON.parse(
+                localStorage.getItem(CUSTOMERS_KEY)
+            );
+
+            return Array.isArray(customers) ? customers : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    form.addEventListener("submit", (event) => {
         event.preventDefault();
 
         const name = document.getElementById("register-name").value.trim();
-        const email = document.getElementById("register-email").value.trim();
+        const email = document.getElementById("register-email").value.trim().toLowerCase();
         const phone = document.getElementById("register-phone").value.trim();
         const password = document.getElementById("register-password").value;
         const confirmPassword = document.getElementById("confirm-password").value;
         const terms = document.getElementById("accept-terms").checked;
 
         message.style.color = "#dc2626";
+        message.textContent = "";
 
         if (!name || !email || !phone || !password || !confirmPassword) {
             message.textContent = "Please fill in all fields.";
@@ -38,46 +56,57 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        try {
+        if (submitButton) {
             submitButton.disabled = true;
             submitButton.textContent = "Creating Account...";
-            message.style.color = "#2563eb";
-            message.textContent = "Please wait while we create your account...";
+        }
 
-            const response = await fetch("http://localhost:3000/api/customer/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    phone,
-                    password
-                })
-            });
+        try {
+            const customers = getCustomers();
 
-            const data = await response.json();
+            const existingCustomer = customers.some(
+                customer => customer.email.toLowerCase() === email
+            );
 
-            if (!response.ok) {
-                throw new Error(data.message || "Registration failed.");
+            if (existingCustomer) {
+                message.textContent = "An account with this email already exists.";
+                return;
             }
 
+            const newCustomer = {
+                id: Date.now().toString(),
+                name,
+                email,
+                phone,
+                password,
+                createdAt: new Date().toISOString()
+            };
+
+            customers.push(newCustomer);
+
+            localStorage.setItem(
+                CUSTOMERS_KEY,
+                JSON.stringify(customers)
+            );
+
             message.style.color = "#16a34a";
-            message.textContent = "Account created successfully! Redirecting to login...";
+            message.textContent =
+                "Account created successfully! Redirecting to login...";
 
             form.reset();
 
             setTimeout(() => {
                 window.location.href = "./customer-login.html";
-            }, 2000);
+            }, 1500);
 
         } catch (error) {
             message.style.color = "#dc2626";
-            message.textContent = error.message || "Unable to connect to the server.";
+            message.textContent = "Unable to save your account in this browser.";
         } finally {
-            submitButton.disabled = false;
-            submitButton.textContent = "Create Account";
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = "Create Account";
+            }
         }
     });
 });
