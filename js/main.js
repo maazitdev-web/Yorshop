@@ -11,8 +11,10 @@
 // ============================================
 
 document.addEventListener("DOMContentLoaded", () => {
+    
 
     "use strict";
+    
 
     // ============================================
     // 1. SELECT HTML ELEMENTS
@@ -36,6 +38,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const categoryList = document.querySelector(".category-list");
 
+
+// ============================================
+// MOBILE SEARCH OPEN / CLOSE
+// ============================================
+
+const mobileSearchButton = searchForm?.querySelector(".search-button");
+
+if (searchForm && searchInput && mobileSearchButton) {
+
+    mobileSearchButton.addEventListener("click", function (event) {
+
+        if (window.innerWidth > 768) return;
+
+        if (!searchForm.classList.contains("mobile-search-open")) {
+
+            event.preventDefault();
+
+            searchForm.classList.add("mobile-search-open");
+
+            searchInput.focus();
+        }
+
+    });
+
+    document.addEventListener("click", function (event) {
+
+        if (
+            window.innerWidth <= 768 &&
+            !searchForm.contains(event.target)
+        ) {
+            searchForm.classList.remove("mobile-search-open");
+        }
+
+    });
+
+}
+
+
     const minPriceInput = document.getElementById("min-price");
     const maxPriceInput = document.getElementById("max-price");
 
@@ -52,8 +92,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (adminToken) {
         adminLoginLinks.forEach(link => {
             link.style.display = "none";
+     
+        
         });
-    }
+
+}
+        
+    
+
 
     // ============================================
     // 2. LOCAL PRODUCT PAGINATION SETTINGS
@@ -753,42 +799,47 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ============================================
-    // 12. PRODUCT CARD TEMPLATE
-    // ============================================
 
-    function createProductCard(product, options = {}) {
 
-        const id = Number(product.id);
+// ============================================
+// 12. PRODUCT CARD TEMPLATE
+// ============================================
 
-        const wishlisted = getWishlist().includes(id);
-        const compared = getCompareList().includes(id);
+function createProductCard(product, options = {}) {
 
-        const price = getDiscountedPrice(product);
+    const id = Number(product.id);
 
-        const category = String(product.category || "")
-            .replace(/-/g, " ");
+    const wishlisted = getWishlist().includes(id);
+    const compared = getCompareList().includes(id);
 
-        const badge = options.newArrival
+    const price = getDiscountedPrice(product);
 
-            ? '<span class="new-arrival-badge">NEW</span>'
+    const category = String(product.category || "")
+        .replace(/-/g, " ");
 
-            : `<span class="discount-badge">${Number(product.discount) || 0}% OFF</span>`;
+    const stock = Number(product.stock || 0);
+    const outOfStock = stock <= 0;
 
-        const card = document.createElement("div");
+    const badge = options.newArrival
+        ? '<span class="new-arrival-badge">NEW</span>'
+        : `<span class="discount-badge">${Number(product.discount) || 0}% OFF</span>`;
 
-        card.className = "product-card";
-        card.dataset.productId = String(id);
+    const card = document.createElement("div");
 
-        card.innerHTML = `
+    card.className = "product-card";
+    card.dataset.productId = String(id);
 
-            <div class="product-image-container">
+    card.innerHTML = `
 
-                <img
-                    class="product-card-image"
-                    alt="${product.name || "Product"}"
-                    loading="lazy"
-                >
+        <div class="product-image-container">
+
+            <img
+                class="product-card-image"
+                alt="${product.name || "Product"}"
+                loading="lazy"
+            >
+
+            <div class="product-card-top-actions">
 
                 ${badge}
 
@@ -804,45 +855,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
             </div>
 
-            <div class="product-info">
+        </div>
 
-                <span class="product-category">
-                    ${category}
+        <div class="product-info">
+
+            <span class="product-category">
+                ${category}
+            </span>
+
+            <h3>
+                <a
+                    href="./product-detail.html?id=${encodeURIComponent(product.id)}"
+                    class="product-title-link"
+                >
+                    ${product.name || "Unnamed product"}
+                </a>
+            </h3>
+
+            <div class="product-rating">
+                ⭐ ${Number(product.rating || 0).toFixed(1)} / 5
+            </div>
+
+            <div class="product-prices">
+
+                <span class="product-price">
+                    ${formatPrice(price)}
                 </span>
 
-                <h3>
-                    <a
-                        href="./product-detail.html?id=${encodeURIComponent(product.id)}"
-                        class="product-title-link"
-                    >
-                        ${product.name || "Unnamed product"}
-                    </a>
-                </h3>
+                <span class="old-price">
+                    ${formatPrice(product.price)}
+                </span>
 
-                <div class="product-rating">
-                    ⭐ ${Number(product.rating || 0).toFixed(1)} / 5
-                </div>
+            </div>
 
-                <div class="product-prices">
-
-                    <span class="product-price">
-                        ${formatPrice(price)}
-                    </span>
-
-                    <span class="old-price">
-                        ${formatPrice(product.price)}
-                    </span>
-
-                </div>
-
-                <button
-                    type="button"
-                    class="add-to-cart-button"
-                    data-product-id="${id}"
-                    ${Number(product.stock) <= 0 ? "disabled" : ""}
-                >
-                    ${Number(product.stock) <= 0 ? "Out of Stock" : "Add to Cart"}
-                </button>
+            <div class="product-card-actions">
 
                 <button
                     type="button"
@@ -862,16 +908,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>
 
             </div>
-        `;
 
-        const productImage = card.querySelector(
-            ".product-card-image"
-        );
+            <button
+                type="button"
+                class="add-to-cart-button"
+                data-product-id="${id}"
+                ${outOfStock ? "disabled" : ""}
+            >
+                ${outOfStock ? "Out of Stock" : "Add to Cart"}
+            </button>
 
-        attachImageFallback(productImage, product);
+        </div>
+    `;
 
-        return card;
-    }
+    const productImage = card.querySelector(
+        ".product-card-image"
+    );
+
+    attachImageFallback(productImage, product);
+
+    return card;
+}
+
 
     // ============================================
     // 13. DISPLAY PRODUCTS

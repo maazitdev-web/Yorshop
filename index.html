@@ -55,6 +55,41 @@
                 Your<span>Shop</span>
             </span>
         </a>
+        
+            <!-- Search Bar -->
+            <form class="search-form" id="search-form">
+
+                <select id="search-category" aria-label="Choose search category">
+                    <option value="all">All Categories</option>
+                    <option value="smartphones">Smartphones</option>
+                    <option value="headphones">Headphones</option>
+                    <option value="laptops">Laptops</option>
+                    <option value="smart-watches">Smart Watches</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="home-appliances">Home Appliances</option>
+                    <option value="mens-fashion">Men's Fashion</option>
+                    <option value="womens-fashion">Women's Fashion</option>
+                </select>
+
+                <input
+                    type="search"
+                    id="product-search"
+                    placeholder="Search for products..."
+                    aria-label="Search products">
+
+                <button type="submit" class="search-button" aria-label="Search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="10.8" cy="10.8" r="6.8"
+                            fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="m16 16 5 5"
+                            fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+            </form>
 
         <!-- Mobile Menu Button -->
         <button
@@ -66,6 +101,7 @@
             aria-controls="header-content">
             ☰
         </button>
+        
 
         <!-- Shared Header Content -->
         <div class="header-content" id="header-content">
@@ -123,40 +159,6 @@
                 </ul>
             </nav>
 
-            <!-- Search Bar -->
-            <form class="search-form" id="search-form">
-
-                <select id="search-category" aria-label="Choose search category">
-                    <option value="all">All Categories</option>
-                    <option value="smartphones">Smartphones</option>
-                    <option value="headphones">Headphones</option>
-                    <option value="laptops">Laptops</option>
-                    <option value="smart-watches">Smart Watches</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="cameras">Cameras</option>
-                    <option value="home-appliances">Home Appliances</option>
-                    <option value="mens-fashion">Men's Fashion</option>
-                    <option value="womens-fashion">Women's Fashion</option>
-                </select>
-
-                <input
-                    type="search"
-                    id="product-search"
-                    placeholder="Search for products..."
-                    aria-label="Search products">
-
-                <button type="submit" class="search-button" aria-label="Search">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="10.8" cy="10.8" r="6.8"
-                            fill="none" stroke="currentColor" stroke-width="2"/>
-                        <path d="m16 16 5 5"
-                            fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                </button>
-
-            </form>
 
             <!-- Header Actions -->
             <div class="header-actions">
@@ -230,6 +232,8 @@
         aria-label="Close navigation menu"
         hidden>
     </button>
+
+    
 
 </header>
 
@@ -818,6 +822,9 @@
     <script src="./js/recommended-products.js"></script>
 
     <script src="./js/account-menu.js"></script>
+
+
+
 
 
     <!-- FLOATING SUPPORT BUTTON -->
