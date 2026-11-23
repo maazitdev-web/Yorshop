@@ -2440,13 +2440,15 @@ select {
     color: #3977cf;
 }
 
-/* Main Page */
+
+/* Main Product Details Page - Wider Layout */
 
 .product-details-page {
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1700px;
     min-height: 75vh;
     margin: 0 auto;
-    padding: 35px 25px 60px;
+    padding: 35px 40px 60px;
 }
 
 .details-breadcrumb {
@@ -9812,4 +9814,18 @@ body.quick-view-open {
         display: none !important;
     }
 
+}
+
+/* Product Details Page - Responsive Width */
+
+@media (max-width: 768px) {
+    .product-details-page {
+        padding: 25px 20px 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-details-page {
+        padding: 20px 12px 35px;
+    }
 }
