@@ -40,41 +40,166 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoryList = document.querySelector(".category-list");
 
 
-// ============================================
-// MOBILE SEARCH OPEN / CLOSE
-// ============================================
 
-const mobileSearchButton = searchForm?.querySelector(".search-button");
+    // ============================================
+    // 7. MOBILE SLIDE-OUT NAVIGATION
+    // ============================================
 
-if (searchForm && searchInput && mobileSearchButton) {
+    const headerContent = document.getElementById("header-content");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuClose = document.getElementById("menu-close");
 
-    mobileSearchButton.addEventListener("click", function (event) {
+    const categoryExpandButton = document.getElementById(
+        "category-expand-button"
+    );
 
-        if (window.innerWidth > 768) return;
+    const menuCategories = document.getElementById("menu-categories");
 
-        if (!searchForm.classList.contains("mobile-search-open")) {
+    const mobileScreen = window.matchMedia("(max-width: 760px)");
 
-            event.preventDefault();
+    function openMobileMenu() {
 
-            searchForm.classList.add("mobile-search-open");
+        if (!mobileScreen.matches || !headerContent) return;
 
-            searchInput.focus();
+        headerContent.classList.add("open");
+
+        if (menuOverlay) {
+
+            menuOverlay.hidden = false;
+
+            requestAnimationFrame(() => {
+                menuOverlay.classList.add("active");
+            });
         }
 
-    });
+        document.body.classList.add("menu-open");
 
-    document.addEventListener("click", function (event) {
+        if (menuToggle) {
 
-        if (
-            window.innerWidth <= 768 &&
-            !searchForm.contains(event.target)
-        ) {
-            searchForm.classList.remove("mobile-search-open");
+            menuToggle.setAttribute("aria-expanded", "true");
+            menuToggle.setAttribute("aria-label", "Close navigation menu");
+            menuToggle.textContent = "✕";
         }
 
+        headerContent.setAttribute("aria-hidden", "false");
+    }
+
+    function closeMobileMenu() {
+
+        if (!headerContent) return;
+
+        headerContent.classList.remove("open");
+
+        if (menuOverlay) {
+
+            menuOverlay.classList.remove("active");
+
+            setTimeout(() => {
+
+                if (!menuOverlay.classList.contains("active")) {
+                    menuOverlay.hidden = true;
+                }
+
+            }, 300);
+        }
+
+        document.body.classList.remove("menu-open");
+
+        if (menuToggle) {
+
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Open navigation menu");
+            menuToggle.textContent = "☰";
+        }
+
+        headerContent.setAttribute("aria-hidden", "true");
+
+        
+    }
+    // Keep the mobile navigation closed when the page loads.
+closeMobileMenu();
+
+    if (menuToggle && headerContent) {
+
+        menuToggle.addEventListener("click", () => {
+
+            if (!mobileScreen.matches) return;
+
+            const isOpen = headerContent.classList.contains("open");
+
+            if (isOpen) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+    }
+
+    if (menuClose) {
+        menuClose.addEventListener("click", closeMobileMenu);
+    }
+
+    if (menuOverlay) {
+        menuOverlay.addEventListener("click", closeMobileMenu);
+    }
+
+    if (navLinks) {
+
+        navLinks.querySelectorAll("a").forEach(link => {
+
+            link.addEventListener("click", closeMobileMenu);
+
+        });
+    }
+
+    if (searchForm) {
+        searchForm.addEventListener("submit", closeMobileMenu);
+    }
+
+    if (categoryExpandButton && menuCategories) {
+
+        categoryExpandButton.addEventListener("click", () => {
+
+            const isExpanded =
+                categoryExpandButton.getAttribute("aria-expanded") === "true";
+
+            categoryExpandButton.setAttribute(
+                "aria-expanded",
+                String(!isExpanded)
+            );
+
+            menuCategories.hidden = isExpanded;
+        });
+    }
+
+    document.addEventListener("keydown", event => {
+
+        if (event.key === "Escape") {
+            closeMobileMenu();
+        }
     });
 
-}
+    mobileScreen.addEventListener("change", event => {
+
+        if (!event.matches) {
+
+            closeMobileMenu();
+
+            if (menuCategories) {
+                menuCategories.hidden = true;
+            }
+
+            if (categoryExpandButton) {
+
+                categoryExpandButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+            }
+
+            
+        }
+    });
 
 
     const minPriceInput = document.getElementById("min-price");
@@ -366,159 +491,6 @@ if (searchForm && searchInput && mobileSearchButton) {
         imageElement.src = imageSources[0];
     }
 
-    // ============================================
-    // 7. MOBILE SLIDE-OUT NAVIGATION
-    // ============================================
-
-    const headerContent = document.getElementById("header-content");
-    const menuOverlay = document.getElementById("menu-overlay");
-    const menuClose = document.getElementById("menu-close");
-
-    const categoryExpandButton = document.getElementById(
-        "category-expand-button"
-    );
-
-    const menuCategories = document.getElementById("menu-categories");
-
-    const mobileScreen = window.matchMedia("(max-width: 760px)");
-
-    function openMobileMenu() {
-
-        if (!mobileScreen.matches || !headerContent) return;
-
-        headerContent.classList.add("open");
-
-        if (menuOverlay) {
-
-            menuOverlay.hidden = false;
-
-            requestAnimationFrame(() => {
-                menuOverlay.classList.add("active");
-            });
-        }
-
-        document.body.classList.add("menu-open");
-
-        if (menuToggle) {
-
-            menuToggle.setAttribute("aria-expanded", "true");
-            menuToggle.setAttribute("aria-label", "Close navigation menu");
-            menuToggle.textContent = "✕";
-        }
-
-        headerContent.setAttribute("aria-hidden", "false");
-    }
-
-    function closeMobileMenu() {
-
-        if (!headerContent) return;
-
-        headerContent.classList.remove("open");
-
-        if (menuOverlay) {
-
-            menuOverlay.classList.remove("active");
-
-            setTimeout(() => {
-
-                if (!menuOverlay.classList.contains("active")) {
-                    menuOverlay.hidden = true;
-                }
-
-            }, 300);
-        }
-
-        document.body.classList.remove("menu-open");
-
-        if (menuToggle) {
-
-            menuToggle.setAttribute("aria-expanded", "false");
-            menuToggle.setAttribute("aria-label", "Open navigation menu");
-            menuToggle.textContent = "☰";
-        }
-
-        headerContent.setAttribute("aria-hidden", "true");
-    }
-
-    if (menuToggle && headerContent) {
-
-        menuToggle.addEventListener("click", () => {
-
-            if (!mobileScreen.matches) return;
-
-            const isOpen = headerContent.classList.contains("open");
-
-            if (isOpen) {
-                closeMobileMenu();
-            } else {
-                openMobileMenu();
-            }
-        });
-    }
-
-    if (menuClose) {
-        menuClose.addEventListener("click", closeMobileMenu);
-    }
-
-    if (menuOverlay) {
-        menuOverlay.addEventListener("click", closeMobileMenu);
-    }
-
-    if (navLinks) {
-
-        navLinks.querySelectorAll("a").forEach(link => {
-
-            link.addEventListener("click", closeMobileMenu);
-
-        });
-    }
-
-    if (searchForm) {
-        searchForm.addEventListener("submit", closeMobileMenu);
-    }
-
-    if (categoryExpandButton && menuCategories) {
-
-        categoryExpandButton.addEventListener("click", () => {
-
-            const isExpanded =
-                categoryExpandButton.getAttribute("aria-expanded") === "true";
-
-            categoryExpandButton.setAttribute(
-                "aria-expanded",
-                String(!isExpanded)
-            );
-
-            menuCategories.hidden = isExpanded;
-        });
-    }
-
-    document.addEventListener("keydown", event => {
-
-        if (event.key === "Escape") {
-            closeMobileMenu();
-        }
-    });
-
-    mobileScreen.addEventListener("change", event => {
-
-        if (!event.matches) {
-
-            closeMobileMenu();
-
-            if (menuCategories) {
-                menuCategories.hidden = true;
-            }
-
-            if (categoryExpandButton) {
-
-                categoryExpandButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-            }
-        }
-    });
 
     // ============================================
     // 8. HERO SLIDER

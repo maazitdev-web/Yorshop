@@ -9576,3 +9576,240 @@ body.quick-view-open {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================
+   YOURSHOP - COMPACT PRODUCT CARDS
+========================================== */
+
+/* Desktop: 4 cards per row */
+@media (min-width: 1001px) {
+    #shopping #product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+    }
+}
+
+/* Slightly smaller product images */
+.product-card .product-image-container {
+    height: 180px;
+}
+
+/* Reduce product information spacing */
+.product-card .product-info {
+    padding: 11px;
+}
+
+.product-card .product-info h3 {
+    font-size: 13px;
+    min-height: 38px;
+}
+
+/* Smaller action buttons */
+.product-card .product-card-actions {
+    height: 38px;
+    margin-bottom: 9px;
+}
+
+.product-card .product-card-actions button {
+    font-size: 11px;
+}
+
+.product-card .product-info .add-to-cart-button {
+    min-height: 39px;
+    padding: 9px 12px;
+    font-size: 12px;
+}
+
+/* Smaller wishlist button */
+.product-card-top-actions .wishlist-heart {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+}
+
+/* ==========================================
+   YOURSHOP - COMPACT PRODUCT CARDS
+   Applies across product sections
+========================================== */
+
+/* Make product cards more compact everywhere */
+.product-card {
+    border-radius: 10px;
+}
+
+/* Reduce product image height */
+.product-card .product-image-container,
+.product-card .product-image {
+    height: 175px;
+}
+
+/* Reduce spacing inside product information */
+.product-card .product-info {
+    padding: 12px;
+}
+
+/* Product names */
+.product-card .product-info h3 {
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 7px;
+}
+
+/* Ratings */
+.product-card .product-rating {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+/* Prices */
+.product-card .current-price,
+.product-card .product-price {
+    font-size: 15px;
+}
+
+/* Add to cart buttons */
+.product-card .add-to-cart-button {
+    min-height: 38px;
+    padding: 9px 10px;
+    font-size: 12px;
+}
+
+/* Compact action buttons */
+.product-card .product-card-actions {
+    height: 36px;
+    margin-bottom: 8px;
+}
+
+.product-card .product-card-actions button {
+    font-size: 11px;
+}
+
+/* Smaller wishlist button */
+.product-card-top-actions .wishlist-heart {
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+}
+
+/* Desktop: four cards per row in product sections */
+@media (min-width: 1001px) {
+    #shopping #product-grid,
+    .best-sellers-grid,
+    .new-arrivals-grid,
+    #special-offers-grid,
+    .recommended-grid,
+    .recently-viewed-grid,
+    .category-product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+    }
+}
+
+/* Tablet: three cards per row where space allows */
+@media (min-width: 701px) and (max-width: 1000px) {
+    .best-sellers-grid,
+    .new-arrivals-grid,
+    #special-offers-grid,
+    .recommended-grid,
+    .recently-viewed-grid,
+    .category-product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+    }
+}
+
+/* Mobile: keep product sections compact */
+@media (max-width: 700px) {
+    .product-card .product-image-container,
+    .product-card .product-image {
+        height: 150px;
+    }
+
+    .product-card .product-info {
+        padding: 10px;
+    }
+
+    .product-card .product-info h3 {
+        font-size: 12px;
+    }
+
+    .best-sellers-grid,
+    .new-arrivals-grid,
+    #special-offers-grid,
+    .recommended-grid,
+    .recently-viewed-grid,
+    .category-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+}
+
+/* ==========================================
+   YOURSHOP - FINAL MOBILE HEADER FIX
+========================================== */
+
+@media screen and (max-width: 760px) {
+
+    /* Hide search completely on mobile */
+    .site-header .search-form {
+        display: none !important;
+    }
+
+    /* Keep hamburger visible */
+    .site-header .menu-toggle {
+        display: inline-flex !important;
+    }
+
+    /* Mobile navigation drawer - CLOSED by default */
+    .site-header .header-content {
+        display: flex !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+
+        width: 320px !important;
+        max-width: 88vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+
+        flex-direction: column !important;
+
+        background: #ffffff !important;
+        z-index: 1101 !important;
+
+        overflow-y: auto !important;
+
+        transform: translateX(-110%) !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+
+        transition:
+            transform 0.3s ease,
+            visibility 0.3s ease !important;
+    }
+
+    /* Open only when hamburger is clicked */
+    .site-header .header-content.open {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    /* Navigation links inside drawer */
+    .site-header .nav-links {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    /* Dark overlay */
+    .site-header .menu-overlay {
+        display: block;
+    }
+
+    .site-header .menu-overlay[hidden] {
+        display: none !important;
+    }
+
+}
