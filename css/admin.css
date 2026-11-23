@@ -731,3 +731,28 @@ body {
     background: #dc2626;
     color: #ffffff;
 }
+
+/* ========================================
+   MOBILE ADMIN MENU BUTTON FIX
+======================================== */
+
+@media (max-width: 768px) {
+
+    .admin-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .admin-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1001;
+        visibility: visible;
+        opacity: 1;
+    }
+
+}

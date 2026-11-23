@@ -505,12 +505,33 @@ document.addEventListener("DOMContentLoaded", () => {
                             min="0" max="5" step="0.1" value="0">
                     </div>
 
-                    <div class="product-form-group full-width">
-                        <label for="new-product-image">Product Image URL</label>
-                        <input id="new-product-image" type="url"
-                            placeholder="https://example.com/image.jpg"
-                            required>
-                    </div>
+<div class="product-form-group full-width">
+    <label for="new-product-image">Product Image URL</label>
+    <input id="new-product-image" type="url"
+        placeholder="https://example.com/image.jpg"
+        required>
+</div>
+
+<!-- PRODUCT PROMOTION OPTIONS -->
+<div class="product-form-group full-width promotion-group">
+
+    <label class="promotion-heading">Product Promotions</label>
+
+    <div class="promotion-options">
+
+        <label class="promotion-option">
+            <input type="checkbox" id="new-product-arrival">
+            <span>Mark as New Arrival</span>
+        </label>
+
+        <label class="promotion-option">
+            <input type="checkbox" id="new-product-bestseller">
+            <span>Mark as Best Seller</span>
+        </label>
+
+    </div>
+
+</div>
 
                 </div>
 
@@ -536,6 +557,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("admin-product-form");
     const modalTitle = document.getElementById("product-modal-title");
     const saveButton = form.querySelector(".save-product-button");
+    // Product promotion checkboxes
+const newArrivalCheckbox = document.getElementById(
+    "new-product-arrival"
+);
+
+const bestSellerCheckbox = document.getElementById(
+    "new-product-bestseller"
+);
 
     // ======================================
     // 14. OPEN AND CLOSE MODAL
@@ -582,6 +611,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 product.images?.[0] ||
                 "";
         }
+        // Load product promotion settings
+newArrivalCheckbox.checked = product.isNewArrival === true;
+
+bestSellerCheckbox.checked = product.isBestSeller === true;
 
         modal.classList.add("active");
     }
@@ -682,6 +715,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 discount,
                 stock,
                 rating,
+                isNewArrival: newArrivalCheckbox.checked,
+                isBestSeller: bestSellerCheckbox.checked,
                 image,
                 images: existingImages.length > 1
                     ? [image, ...existingImages.slice(1)]
@@ -703,20 +738,23 @@ document.addEventListener("DOMContentLoaded", () => {
             // Generate a unique ID for the new product.
             const newId = Date.now();
 
-            productData = {
-                id: newId,
-                name,
-                category,
-                price,
-                discount,
-                stock,
-                rating,
-                soldCount: 0,
-                image,
-                images: [image],
-                createdAt: new Date().toISOString()
-            };
+productData = {
+    id: newId,
+    name,
+    category,
+    price,
+    discount,
+    stock,
+    rating,
 
+    isNewArrival: newArrivalCheckbox.checked,
+    isBestSeller: bestSellerCheckbox.checked,
+
+    soldCount: 0,
+    image,
+    images: [image],
+    createdAt: new Date().toISOString()
+};
             savedProducts.push(productData);
         }
 

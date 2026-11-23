@@ -1,165 +1,378 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>YourShop | Product Management</title>
 
+    <!-- ADMIN CSS -->
     <link rel="stylesheet" href="./css/admin.css">
     <link rel="stylesheet" href="./css/admin-products.css">
 
+    <!-- GOOGLE FONT -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+
 </head>
 
 <body>
 
-    <!-- SIDEBAR -->
-    <aside class="admin-sidebar">
 
-        <div class="admin-logo">
-            <h2>Your<span>Shop</span></h2>
-            <p>Admin Panel</p>
-        </div>
+<!-- ADMIN SIDEBAR -->
+<aside class="admin-sidebar">
 
-        <nav class="admin-nav">
-            <a href="./admin.html">📊 Dashboard</a>
-            <a href="./admin-products.html" class="active">📦 Products</a>
-            <a href="./admin-orders.html">🛒 Orders</a>
-            <a href="./admin-customers.html">👥 Customers</a>
-            <a href="./admin-analytics.html">📈 Analytics</a>
-            <a href="#settings">⚙️ Settings</a>
-        </nav>
+    <div class="admin-logo">
+        <h2>Your<span>Shop</span></h2>
+        <p>Admin Panel</p>
+    </div>
 
-        <a href="./index.html" class="back-to-store">
-            ← Back to Store
+    <nav class="admin-nav">
+
+        <p class="admin-nav-label">MAIN MENU</p>
+
+        <a href="./admin.html">
+            📊 Dashboard
         </a>
 
-    </aside>
+        <p class="admin-nav-label">STORE MANAGEMENT</p>
 
-    <!-- MAIN CONTENT -->
+        <a href="./admin-products.html" class="active">
+            📦 Products
+        </a>
+
+        <a href="./admin-orders.html">
+            🛒 Orders
+        </a>
+
+        <a href="./admin-customers.html">
+            👥 Customers
+        </a>
+
+        <a href="./admin-coupons.html">
+            🎟️ Coupons
+        </a>
+
+        <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+
+        <a href="./admin-support.html">
+            🎧 Support Tickets
+        </a>
+
+        <a href="./admin-product-questions.html">
+            ❓ Product Questions
+        </a>
+
+        <a href="./admin-reviews.html">
+            ⭐ Product Reviews
+        </a>
+
+        <p class="admin-nav-label">REPORTS & SETTINGS</p>
+
+        <a href="./admin-analytics.html">
+            📈 Analytics
+        </a>
+
+        <a href="./advanced-sales-reports.html">
+            📊 Advanced Sales Reports
+        </a>
+
+        <a href="./admin-notifications.html">
+            🔔 Notifications
+        </a>
+
+        <a href="./admin-activity.html">
+            📋 Activity Log
+        </a>
+
+        <a href="./admin-settings.html">
+            ⚙️ Settings
+        </a>
+
+        <p class="admin-nav-label">STORE MANAGEMENT</p>
+
+        <a href="./inventory-management.html">
+            📋 Inventory
+        </a>
+
+        <a href="./shipping-management.html">
+            🚚 Shipping
+        </a>
+
+    </nav>
+
+    <a href="./index.html" class="back-to-store">
+        ← Back to Store
+    </a>
+
+    <button
+        type="button"
+        id="admin-logout-button"
+        class="admin-logout-button"
+    >
+        🚪 Admin Logout
+    </button>
+
+</aside>
+
+
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
+
     <main class="admin-main">
 
-        <!-- HEADER -->
+
+        <!-- ========================================
+             ADMIN HEADER
+        ======================================== -->
+
         <header class="admin-header">
 
-            <div>
+            <!-- MOBILE MENU BUTTON -->
+
+            <button
+                type="button"
+                class="admin-menu-toggle"
+                id="admin-menu-toggle"
+                aria-label="Toggle admin menu"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+
+            <!-- PAGE TITLE -->
+
+            <div class="admin-header-title">
+
                 <h1>Product Management</h1>
+
                 <p>Manage your YourShop products</p>
+
             </div>
 
-            <div class="admin-profile">
-                <span>Administrator</span>
-                <div class="admin-avatar">A</div>
+
+            <!-- HEADER ACTIONS -->
+
+            <div class="admin-header-actions">
+
+                <a
+                    href="./admin-notifications.html"
+                    class="admin-notification-link"
+                    title="Admin Notifications"
+                    aria-label="Admin Notifications"
+                >
+                    🔔
+
+                    <span id="admin-notification-count">
+                        0
+                    </span>
+
+                </a>
+
+
+                <div class="admin-profile">
+
+                    <span>Administrator</span>
+
+                    <div class="admin-avatar">
+                        A
+                    </div>
+
+                </div>
+
             </div>
 
         </header>
 
-        <!-- PRODUCT MANAGEMENT -->
+
+        <!-- ========================================
+             PRODUCT MANAGEMENT
+        ======================================== -->
+
         <section class="product-management">
 
+
             <!-- PAGE HEADING -->
+
             <div class="product-page-heading">
 
                 <div>
+
                     <h2>All Products</h2>
-                    <p>View, add, edit and manage your products.</p>
+
+                    <p>
+                        View, add, edit and manage your products.
+                    </p>
+
                 </div>
+
 
                 <button
                     type="button"
                     id="add-product-button"
-                    class="add-product-button">
+                    class="add-product-button"
+                >
                     + Add New Product
                 </button>
 
             </div>
 
-            <!-- STATISTICS -->
+
+            <!-- ========================================
+                 PRODUCT STATISTICS
+            ======================================== -->
+
             <div class="product-stats">
 
                 <div class="product-stat-card">
+
                     <span>Total Products</span>
+
                     <h3 id="product-total-count">0</h3>
+
                 </div>
 
+
                 <div class="product-stat-card">
+
                     <span>In Stock</span>
+
                     <h3 id="product-in-stock">0</h3>
+
                 </div>
 
+
                 <div class="product-stat-card">
+
                     <span>Low Stock</span>
+
                     <h3 id="product-low-stock">0</h3>
+
                 </div>
 
+
                 <div class="product-stat-card">
+
                     <span>Out of Stock</span>
+
                     <h3 id="product-out-stock">0</h3>
+
                 </div>
 
             </div>
 
-            <!-- SEARCH AND FILTER -->
+
+            <!-- ========================================
+                 SEARCH AND FILTER
+            ======================================== -->
+
             <div class="product-toolbar">
 
                 <input
                     type="search"
                     id="product-search"
                     placeholder="Search products by name..."
-                    aria-label="Search products">
+                    aria-label="Search products"
+                >
+
 
                 <select
                     id="product-category-filter"
-                    aria-label="Filter by category">
+                    aria-label="Filter by category"
+                >
 
                     <option value="all">All Categories</option>
+
                     <option value="smartphones">Smartphones</option>
+
                     <option value="headphones">Headphones</option>
+
                     <option value="laptops">Laptops</option>
+
                     <option value="smart-watches">Smart Watches</option>
+
                     <option value="accessories">Accessories</option>
+
                     <option value="gaming">Gaming</option>
+
                     <option value="cameras">Cameras</option>
+
                     <option value="home-appliances">Home Appliances</option>
+
                     <option value="men-fashion">Men's Fashion</option>
+
                     <option value="women-fashion">Women's Fashion</option>
 
                 </select>
 
             </div>
 
-            <!-- PRODUCT TABLE -->
+
+            <!-- ========================================
+                 PRODUCT INVENTORY TABLE
+            ======================================== -->
+
             <div class="admin-panel">
 
                 <div class="panel-header">
+
                     <h2>Product Inventory</h2>
-                    <span id="product-results-count">0 products</span>
+
+                    <span id="product-results-count">
+                        0 products
+                    </span>
+
                 </div>
+
 
                 <div class="table-container">
 
                     <table>
 
                         <thead>
+
                             <tr>
+
                                 <th>Product</th>
+
                                 <th>Category</th>
+
                                 <th>Price</th>
+
                                 <th>Discount</th>
+
                                 <th>Stock</th>
+
                                 <th>Actions</th>
+
                             </tr>
+
                         </thead>
 
+
                         <tbody id="admin-products-list">
+
                             <tr>
-                                <td colspan="6" class="no-admin-products">
+
+                                <td
+                                    colspan="6"
+                                    class="no-admin-products"
+                                >
                                     Loading products...
                                 </td>
+
                             </tr>
+
                         </tbody>
 
                     </table>
@@ -172,9 +385,64 @@
 
     </main>
 
-<script src="./js/admin-sidebar.js"></script>
-<script src="./js/admin-activity.js"></script>
-<script src="./js/admin-products.js"></script>
+
+    <!-- ========================================
+         ADMIN AUTHENTICATION CHECK
+    ======================================== -->
+
+    <script>
+
+        (function () {
+
+            "use strict";
+
+            let adminSession = null;
+
+            try {
+
+                adminSession = JSON.parse(
+                    sessionStorage.getItem("yourshop-admin-session") || "null"
+                );
+
+            } catch (error) {
+
+                adminSession = null;
+
+            }
+
+            if (
+                !adminSession ||
+                adminSession.role !== "admin" ||
+                adminSession.email !== "admin@yourshop.com"
+            ) {
+
+                sessionStorage.removeItem("yourshop-admin-session");
+
+                window.location.replace("./admin-login.html");
+
+            }
+
+        })();
+
+    </script>
+
+
+    <!-- ========================================
+         ADMIN JAVASCRIPT
+    ======================================== -->
+
+    <script src="./js/products.js"></script>
+
+    <script src="./js/admin-sidebar.js"></script>
+
+    <script src="./js/admin-activity.js"></script>
+
+    <script src="./js/admin-notifications.js"></script>
+
+    <script src="./js/admin-products.js"></script>
+
+    <script src="./js/admin-logout.js"></script>
 
 </body>
+
 </html>

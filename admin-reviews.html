@@ -7,20 +7,141 @@
 
     <title>Manage Reviews | YourShop Admin</title>
 
-    <link rel="stylesheet" href="./css/admin-reviews.css">
+<link rel="stylesheet" href="./css/admin.css">
+<link rel="stylesheet" href="./css/admin-reviews.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
+    <div class="admin-layout">
 
-    <header class="reviews-admin-header">
-        <h1>YourShop Admin</h1>
-        <a href="./admin.html">Back to Dashboard</a>
-    </header>
 
-    <main class="reviews-admin-container">
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar">
+
+    <div class="admin-logo">
+        <h2>Your<span>Shop</span></h2>
+        <p>Admin Panel</p>
+    </div>
+
+    <nav class="admin-nav">
+
+        <p class="admin-nav-label">MAIN MENU</p>
+
+        <a href="./admin.html">
+            📊 Dashboard
+        </a>
+
+        <p class="admin-nav-label">STORE MANAGEMENT</p>
+
+        <a href="./admin-products.html">
+            📦 Products
+        </a>
+
+        <a href="./admin-orders.html">
+            🛒 Orders
+        </a>
+
+        <a href="./admin-customers.html">
+            👥 Customers
+        </a>
+
+        <a href="./admin-coupons.html">
+            🎟️ Coupons
+        </a>
+
+        <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+
+        <a href="./admin-support.html">
+            🎧 Support Tickets
+        </a>
+
+        <a href="./admin-product-questions.html">
+            ❓ Product Questions
+        </a>
+
+        <a href="./admin-reviews.html" class="active">
+            ⭐ Product Reviews
+        </a>
+
+        <p class="admin-nav-label">REPORTS & SETTINGS</p>
+
+        <a href="./admin-analytics.html">
+            📈 Analytics
+        </a>
+
+        <a href="./advanced-sales-reports.html">
+            📊 Advanced Sales Reports
+        </a>
+
+        <a href="./admin-notifications.html">
+            🔔 Notifications
+        </a>
+
+        <a href="./admin-activity.html">
+            📋 Activity Log
+        </a>
+
+        <a href="./admin-settings.html">
+            ⚙️ Settings
+        </a>
+
+        <p class="admin-nav-label">STORE MANAGEMENT</p>
+
+        <a href="./inventory-management.html">
+            📋 Inventory
+        </a>
+
+        <a href="./shipping-management.html">
+            🚚 Shipping
+        </a>
+
+    </nav>
+
+    <a href="./index.html" class="back-to-store">
+        ← Back to Store
+    </a>
+
+    <button
+        type="button"
+        id="admin-logout-button"
+        class="admin-logout-button"
+    >
+        🚪 Admin Logout
+    </button>
+
+</aside>
+
+
+
+<main class="admin-main">
+
+<header class="admin-header">
+
+    <button
+        type="button"
+        class="admin-menu-toggle"
+        id="admin-menu-toggle"
+        aria-label="Toggle admin menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+    <div>
+        <h1>Product Reviews</h1>
+        <p>Manage and moderate customer reviews.</p>
+    </div>
+
+    <div class="admin-profile">
+        <span>Administrator</span>
+        <div class="admin-avatar">A</div>
+    </div>
+
+</header>
 
         <div class="reviews-admin-heading">
             <div>
@@ -92,9 +213,10 @@
         </section>
 
     </main>
-
-    <script src="./js/products.js"></script>
-    <script src="./js/admin-reviews.js"></script>
+</div>
+   <script src="./js/products.js"></script>
+<script src="./js/admin-sidebar.js"></script>
+<script src="./js/admin-reviews.js"></script>
 
 </body>
 </html>

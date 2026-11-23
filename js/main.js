@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const productGrid = document.getElementById("product-grid");
     const bestSellersGrid = document.getElementById("best-sellers-grid");
     const newArrivalsGrid = document.getElementById("new-arrivals-grid");
+    const specialOffersGrid = document.getElementById("special-offers-grid");
 
     const sortSelect = document.getElementById("sort-products");
 
@@ -929,7 +930,39 @@ function createProductCard(product, options = {}) {
 
     return card;
 }
+// ============================================
+// GET ALL UPDATED STORE PRODUCTS
+// ============================================
 
+function getAllStoreProducts() {
+
+    const savedProducts = getStoredArray(
+        "yourshop-admin-products"
+    );
+
+    const deletedIds = getStoredArray(
+        "yourshop-deleted-product-ids"
+    ).map(String);
+
+    const productMap = new Map();
+
+    // Original products
+    products.forEach(product => {
+        productMap.set(String(product.id), product);
+    });
+
+    // Admin updates and new products
+    savedProducts.forEach(product => {
+        if (product && product.id !== undefined) {
+            productMap.set(String(product.id), product);
+        }
+    });
+
+    // Exclude deleted products
+    return Array.from(productMap.values()).filter(product =>
+        !deletedIds.includes(String(product.id))
+    );
+}
 
     // ============================================
     // 13. DISPLAY PRODUCTS
@@ -978,47 +1011,45 @@ function createProductCard(product, options = {}) {
         productGrid.appendChild(fragment);
     }
 
-    function renderBestSellers() {
+  
+function renderBestSellers() {
 
-        if (!bestSellersGrid) return;
+    if (!bestSellersGrid) return;
 
-        const ids = [1, 3, 5, 7, 11, 13];
+    const list = getAllStoreProducts().filter(product =>
+        product.isBestSeller === true
+    );
 
-        const list = products.filter(product =>
-            ids.includes(Number(product.id))
+    bestSellersGrid.innerHTML = "";
+
+    list.forEach(product => {
+
+        bestSellersGrid.appendChild(
+            createProductCard(product)
         );
+    });
+}
 
-        bestSellersGrid.innerHTML = "";
 
-        list.forEach(product => {
+function renderNewArrivals() {
 
-            bestSellersGrid.appendChild(
-                createProductCard(product)
-            );
-        });
-    }
+    if (!newArrivalsGrid) return;
 
-    function renderNewArrivals() {
+    const list = getAllStoreProducts().filter(product =>
+        product.isNewArrival === true
+    );
 
-        if (!newArrivalsGrid) return;
+    newArrivalsGrid.innerHTML = "";
 
-        const ids = [2, 4, 6, 8, 10, 12];
+    list.forEach(product => {
 
-        const list = products.filter(product =>
-            ids.includes(Number(product.id))
+        newArrivalsGrid.appendChild(
+            createProductCard(product, {
+                newArrival: true
+            })
         );
-
-        newArrivalsGrid.innerHTML = "";
-
-        list.forEach(product => {
-
-            newArrivalsGrid.appendChild(
-                createProductCard(product, {
-                    newArrival: true
-                })
-            );
-        });
-    }
+    });
+}
 
     // ============================================
     // 14. PRODUCT PAGINATION
@@ -1113,7 +1144,7 @@ function createProductCard(product, options = {}) {
             ? Number(maxPriceInput.value)
             : null;
 
-        let filteredProducts = [...products];
+       let filteredProducts = getAllStoreProducts();
 
         if (query) {
 
@@ -1866,6 +1897,26 @@ function createProductCard(product, options = {}) {
     renderBestSellers();
 
     renderNewArrivals();
+    renderSpecialOffers();
+
+function renderSpecialOffers() {
+
+    if (!specialOffersGrid) return;
+
+const list = getAllStoreProducts().filter(product =>
+    Number(product.discount) >= 10
+);
+
+    specialOffersGrid.innerHTML = "";
+
+    list.forEach(product => {
+
+        specialOffersGrid.appendChild(
+            createProductCard(product)
+        );
+    });
+}
+
 
     updateCartCount();
 

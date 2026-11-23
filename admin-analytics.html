@@ -19,6 +19,7 @@
 
     <!-- SIDEBAR -->
 
+
 <!-- SIDEBAR -->
 <aside class="admin-sidebar">
 
@@ -28,17 +29,90 @@
     </div>
 
     <nav class="admin-nav">
-        <a href="./admin.html">📊 Dashboard</a>
-        <a href="./admin-products.html">📦 Products</a>
-        <a href="./admin-orders.html">🛒 Orders</a>
-        <a href="./admin-customers.html">👥 Customers</a>
-        <a href="./admin-analytics.html" class="active">📈 Analytics</a>
-        <a href="./admin-settings.html">⚙️ Settings</a>
+
+        <p class="admin-nav-label">MAIN MENU</p>
+
+        <a href="./admin.html">
+            📊 Dashboard
+        </a>
+
+        <p class="admin-nav-label">STORE MANAGEMENT</p>
+
+        <a href="./admin-products.html">
+            📦 Products
+        </a>
+
+        <a href="./admin-orders.html">
+            🛒 Orders
+        </a>
+
+        <a href="./admin-customers.html">
+            👥 Customers
+        </a>
+
+        <a href="./admin-coupons.html">
+            🎟️ Coupons
+        </a>
+
+        <p class="admin-nav-label">CUSTOMER EXPERIENCE</p>
+
+        <a href="./admin-support.html">
+            🎧 Support Tickets
+        </a>
+
+        <a href="./admin-product-questions.html">
+            ❓ Product Questions
+        </a>
+
+        <a href="./admin-reviews.html">
+            ⭐ Product Reviews
+        </a>
+
+        <p class="admin-nav-label">REPORTS & SETTINGS</p>
+
+        <a href="./admin-analytics.html" class="active">
+            📈 Analytics
+        </a>
+
+        <a href="./advanced-sales-reports.html">
+            📊 Advanced Sales Reports
+        </a>
+
+        <a href="./admin-notifications.html">
+            🔔 Notifications
+        </a>
+
+        <a href="./admin-activity.html">
+            📋 Activity Log
+        </a>
+
+        <a href="./admin-settings.html">
+            ⚙️ Settings
+        </a>
+
+        <p class="admin-nav-label">STORE MANAGEMENT</p>
+
+        <a href="./inventory-management.html">
+            📋 Inventory
+        </a>
+
+        <a href="./shipping-management.html">
+            🚚 Shipping
+        </a>
+
     </nav>
 
     <a href="./index.html" class="back-to-store">
         ← Back to Store
     </a>
+
+    <button
+        type="button"
+        id="admin-logout-button"
+        class="admin-logout-button"
+    >
+        🚪 Admin Logout
+    </button>
 
 </aside>
 
@@ -47,19 +121,31 @@
 
     <main class="admin-main">
 
-        <header class="admin-header">
 
-            <div>
-                <h1>Analytics</h1>
-                <p>Track your store performance and sales.</p>
-            </div>
+<header class="admin-header">
 
-            <div class="admin-profile">
-                <div class="admin-avatar">A</div>
-                <span>Administrator</span>
-            </div>
+    <button
+        type="button"
+        class="admin-menu-toggle"
+        id="admin-menu-toggle"
+        aria-label="Toggle admin menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
 
-        </header>
+    <div>
+        <h1>Analytics</h1>
+        <p>Track your store performance and sales.</p>
+    </div>
+
+    <div class="admin-profile">
+        <div class="admin-avatar">A</div>
+        <span>Administrator</span>
+    </div>
+
+</header>
+
 
         <section class="analytics-management">
 
@@ -186,9 +272,13 @@
     </main>
 
     <!-- CHART.JS -->
+
+<!-- CHART.JS -->
 <script src="./js/products.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./js/admin-sidebar.js"></script>
 <script src="./js/admin-analytics.js"></script>
+
 
 
 </body>

@@ -469,3 +469,42 @@
         padding: 15px;
     }
 }
+
+/* Product Promotion Layout */
+
+.promotion-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.promotion-heading {
+    margin-bottom: 2px;
+}
+
+.promotion-options {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.promotion-option {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 9px;
+    width: auto !important;
+    margin: 0 !important;
+    cursor: pointer;
+    font-size: 14px;
+    color: #334155;
+}
+
+.promotion-option input[type="checkbox"] {
+    width: 17px !important;
+    height: 17px;
+    margin: 0;
+    accent-color: #2563eb;
+    cursor: pointer;
+}

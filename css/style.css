@@ -9399,3 +9399,180 @@ body.quick-view-open {
     }
 
 }
+/* MOBILE: BALANCED SIDE SPACING */
+
+@media (max-width: 600px) {
+
+    body #shopping {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        box-sizing: border-box;
+    }
+
+}
+/* ==========================================
+   SLIGHTLY WIDER WEBSITE CONTENT
+========================================== */
+
+#shopping,
+.best-sellers-section,
+.new-arrivals-section,
+.recommended-section,
+.recently-viewed-section,
+.special-offers-section {
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* ==========================================
+   PROFESSIONAL MOBILE MENU
+========================================== */
+
+@media (max-width: 760px) {
+
+    /* Main drawer */
+    .site-header .header-content {
+        width: 320px;
+        max-width: 88vw;
+        padding: 18px;
+        gap: 14px;
+    }
+
+    /* Menu heading */
+    .site-header .mobile-menu-heading {
+        padding-bottom: 12px;
+    }
+
+    .mobile-menu-title {
+        font-size: 17px;
+    }
+
+    /* Navigation links */
+    .site-header .nav-links {
+        padding: 4px 10px;
+    }
+
+    .site-header .nav-links > li > a,
+    .site-header .category-expand-button {
+        min-height: 42px;
+        padding: 9px 12px;
+        font-size: 13px;
+    }
+
+    /* Account and shopping section */
+    .site-header .header-actions {
+        gap: 4px;
+        padding-top: 10px;
+    }
+
+    .site-header .header-action,
+    .site-header .compare-header-link {
+        min-height: 40px;
+        padding: 8px 12px;
+        font-size: 13px;
+        gap: 10px;
+    }
+
+    /* Icons */
+    .site-header .action-icon {
+        font-size: 16px;
+    }
+
+}
+
+/* ==========================================
+   ORGANIZED MOBILE ACCOUNT MENU
+========================================== */
+
+@media (max-width: 760px) {
+
+    .site-header .header-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .site-header .account-dropdown {
+        width: 100%;
+    }
+
+    .site-header .header-action,
+    .site-header .compare-header-link {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start !important;
+        gap: 14px;
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 14px;
+        box-sizing: border-box;
+        border: 1px solid #e5ebf4;
+        border-radius: 9px;
+        background: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .site-header .header-action:hover,
+    .site-header .compare-header-link:hover {
+        background: #f0f6ff;
+        border-color: #cbdcf5;
+    }
+
+}
+
+/* Admin Product Promotion Checkboxes */
+.form-group:has(#new-product-arrival),
+.form-group:has(#new-product-bestseller) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group:has(#new-product-arrival) label,
+.form-group:has(#new-product-bestseller) label {
+    margin: 0;
+}
+
+.form-group:has(#new-product-arrival) input,
+.form-group:has(#new-product-bestseller) input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+/* =========================================
+   SPECIAL OFFERS PRODUCT GRID
+========================================= */
+
+#special-offers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin: 30px 24px;
+}
+
+@media (max-width: 1000px) {
+    #special-offers-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    #special-offers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin: 20px 12px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 450px) {
+    #special-offers-grid {
+        grid-template-columns: 1fr;
+    }
+}
