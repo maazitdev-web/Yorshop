@@ -9829,3 +9829,26 @@ body.quick-view-open {
         padding: 20px 12px 35px;
     }
 }
+
+
+/* Admin Dashboard Header Link */
+.admin-dashboard-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    background: #102a56;
+    color: #ffffff;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.25s ease;
+}
+
+.admin-dashboard-link:hover {
+    background: #1d4b91;
+    color: #ffffff;
+}

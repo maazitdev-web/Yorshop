@@ -208,23 +208,64 @@ closeMobileMenu();
     const applyPriceButton = document.getElementById("apply-price-filter");
     const resetPriceButton = document.getElementById("reset-price-filter");
 
-    // Hide Admin Login link when administrator is logged in.
-    const adminToken = sessionStorage.getItem("yourshop-admin-token");
 
-    const adminLoginLinks = document.querySelectorAll(
-        'a[href="./admin-login.html"]'
-    );
+    // ============================================
+    // ADMIN DASHBOARD LINK
+    // Show only when admin is logged in
+    // ============================================
 
-    if (adminToken) {
-        adminLoginLinks.forEach(link => {
-            link.style.display = "none";
-     
-        
-        });
+    function updateAdminDashboardLink() {
 
-}
-        
-    
+        const adminSession = sessionStorage.getItem("yourshop-admin-session");
+
+        const headerActions = document.querySelector(".header-actions");
+
+        if (!headerActions) return;
+
+        let isAdminLoggedIn = false;
+
+        if (adminSession) {
+            try {
+                const session = JSON.parse(adminSession);
+                isAdminLoggedIn = session.role === "admin";
+            } catch (error) {
+                sessionStorage.removeItem("yourshop-admin-session");
+            }
+        }
+
+        let dashboardLink = document.getElementById("admin-dashboard-link");
+
+        if (isAdminLoggedIn) {
+
+            if (!dashboardLink) {
+
+                dashboardLink = document.createElement("a");
+
+                dashboardLink.href = "./admin.html";
+                dashboardLink.id = "admin-dashboard-link";
+                dashboardLink.className = "admin-dashboard-link";
+
+                dashboardLink.innerHTML = `
+                    <span>⚙</span>
+                    <span>Admin Dashboard</span>
+                `;
+
+                headerActions.appendChild(dashboardLink);
+            }
+
+        } else {
+
+            if (dashboardLink) {
+                dashboardLink.remove();
+            }
+        }
+    }
+
+    // Check when storefront loads
+    updateAdminDashboardLink();
+
+    // Check when returning to the storefront
+    window.addEventListener("pageshow", updateAdminDashboardLink);
 
 
     // ============================================
