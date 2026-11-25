@@ -1,65 +1,112 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My Profile | YourShop</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="./css/style.css">
 
     <style>
+        /* ======================================
+           GLOBAL PROFILE PAGE
+        ====================================== */
+
+        .profile-page,
+        .profile-page * {
+            box-sizing: border-box;
+        }
+
         .profile-page {
             min-height: 85vh;
+            width: 100%;
             padding: 45px 5%;
             background: #f4f7fc;
             font-family: 'Poppins', sans-serif;
+            overflow-x: clip;
         }
 
+        .profile-container {
+            width: 100%;
+            max-width: 1250px;
+            margin: auto;
+            min-width: 0;
+        }
+
+        /* ======================================
+           PAGE HEADING
+        ====================================== */
+
         .profile-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
             margin-bottom: 28px;
         }
 
         .profile-heading h1 {
             color: #102a56;
             font-size: 28px;
+            margin: 0 0 6px;
         }
 
         .profile-heading p {
-            color: #777;
-            font-size: 14px;
+            color: #778196;
+            font-size: 13px;
+            margin: 0;
         }
+
+        .profile-menu-toggle {
+            display: none;
+        }
+
+        /* ======================================
+           PROFILE LAYOUT
+        ====================================== */
 
         .profile-layout {
             display: grid;
-            grid-template-columns: 260px 1fr;
+            grid-template-columns: 260px minmax(0, 1fr);
             gap: 25px;
-            max-width: 1200px;
-            margin: auto;
+            width: 100%;
+            min-width: 0;
         }
 
         .profile-sidebar,
         .profile-content {
-            background: white;
+            min-width: 0;
+            background: #ffffff;
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 5px 25px rgba(16, 42, 86, 0.05);
         }
 
+        /* ======================================
+           SIDEBAR USER
+        ====================================== */
+
         .profile-user {
             text-align: center;
             padding-bottom: 22px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #edf0f5;
         }
 
         .profile-avatar {
             width: 85px;
             height: 85px;
             border-radius: 50%;
-            background: #e8f0ff;
+            background: #eaf1ff;
             color: #2563eb;
             display: grid;
             place-items: center;
@@ -70,26 +117,52 @@
         .profile-user h3 {
             color: #102a56;
             font-size: 16px;
-        }
-
-        .profile-user p {
-            color: #888;
-            font-size: 12px;
+            margin: 0 0 5px;
             overflow-wrap: anywhere;
         }
 
+        .profile-user p {
+            color: #8992a3;
+            font-size: 12px;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        /* ======================================
+           PROFILE NAVIGATION
+        ====================================== */
+
         .profile-nav {
-            margin-top: 20px;
-            display: grid;
-            gap: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 22px;
+        }
+
+        .profile-nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 17px;
+        }
+
+        .profile-nav-group h4 {
+            margin: 0 0 7px;
+            padding: 0 12px;
+            color: #8992a3;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .profile-nav a {
-            padding: 12px;
+            display: block;
+            width: 100%;
+            padding: 11px 12px;
             border-radius: 7px;
             color: #526078;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             transition: .2s;
         }
 
@@ -100,22 +173,59 @@
             font-weight: 600;
         }
 
+        /* ======================================
+           LOGOUT BUTTON
+        ====================================== */
+
+        .profile-logout {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #fee2e2;
+            border-radius: 7px;
+            background: #fff5f5;
+            color: #dc2626;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .profile-logout:hover {
+            background: #fee2e2;
+        }
+
+        /* ======================================
+           PROFILE CONTENT
+        ====================================== */
+
         .profile-content h2 {
             color: #102a56;
             font-size: 20px;
-            margin-bottom: 7px;
+            margin: 0 0 7px;
         }
 
         .profile-description {
-            color: #888;
-            font-size: 13px;
-            margin-bottom: 25px;
+            color: #8992a3;
+            font-size: 12px;
+            margin: 0 0 25px;
+            line-height: 1.7;
         }
+
+        /* ======================================
+           PROFILE FORM
+        ====================================== */
 
         .profile-form {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .profile-field {
+            min-width: 0;
         }
 
         .profile-field label {
@@ -123,28 +233,48 @@
             color: #526078;
             font-size: 12px;
             font-weight: 600;
-            margin-bottom: 7px;
+            margin-bottom: 8px;
         }
 
         .profile-field input {
+            display: block;
             width: 100%;
-            padding: 12px;
+            min-width: 0;
+            padding: 13px 14px;
             border: 1px solid #dce3ed;
-            border-radius: 7px;
+            border-radius: 8px;
             outline: none;
             font-family: inherit;
-            box-sizing: border-box;
-            background: #fff;
+            font-size: 13px;
+            color: #102a56;
+            background: #ffffff;
+            transition: .2s;
         }
 
         .profile-field input:focus {
             border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
         }
+
+        .profile-field input:disabled {
+            background: #f8faff;
+            color: #778196;
+            cursor: not-allowed;
+        }
+
+        .profile-field input::placeholder {
+            color: #a1a9b7;
+        }
+
+        /* ======================================
+           FORM ACTIONS
+        ====================================== */
 
         .profile-actions {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-top: 25px;
+            margin-top: 28px;
         }
 
         .profile-btn {
@@ -152,13 +282,19 @@
             padding: 12px 22px;
             border-radius: 7px;
             font-family: inherit;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
+            transition: .2s;
         }
 
         .edit-btn {
             background: #2563eb;
-            color: white;
+            color: #ffffff;
+        }
+
+        .edit-btn:hover {
+            background: #102a56;
         }
 
         .cancel-btn {
@@ -166,18 +302,204 @@
             color: #526078;
         }
 
-        .profile-message {
-            margin-top: 15px;
-            font-size: 13px;
+        .cancel-btn:hover {
+            background: #e1e7f0;
         }
 
-        @media (max-width: 750px) {
+        .profile-btn:focus-visible,
+        .profile-menu-toggle:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, .25);
+            outline-offset: 2px;
+        }
+
+        .profile-message {
+            margin-top: 15px;
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        /* ======================================
+           MOBILE MENU OVERLAY
+        ====================================== */
+
+        .profile-menu-overlay {
+            display: none;
+        }
+
+        /* ======================================
+           TABLET
+        ====================================== */
+
+        @media (max-width: 1000px) {
+
+            .profile-page {
+                padding: 35px 3%;
+            }
+
             .profile-layout {
-                grid-template-columns: 1fr;
+                grid-template-columns: 220px minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .profile-sidebar,
+            .profile-content {
+                padding: 20px;
+            }
+        }
+
+        /* ======================================
+           MOBILE RIGHT-SIDE DRAWER
+        ====================================== */
+
+        @media (max-width: 750px) {
+
+            .profile-page {
+                padding: 25px 15px;
+            }
+
+            .profile-heading {
+                margin-bottom: 22px;
+            }
+
+            .profile-heading h1 {
+                font-size: 23px;
+            }
+
+            .profile-heading p {
+                font-size: 11px;
+                line-height: 1.7;
+            }
+
+            .profile-menu-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                flex-shrink: 0;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 7px;
+                background: #102a56;
+                color: #ffffff;
+                font-family: inherit;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .profile-layout {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .profile-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: auto;
+                bottom: 0;
+
+                width: min(320px, 88vw);
+                height: 100vh;
+                height: 100dvh;
+
+                margin: 0;
+                padding: 25px 20px;
+
+                overflow-y: auto;
+                overscroll-behavior: contain;
+
+                border-radius: 12px 0 0 12px;
+
+                z-index: 1001;
+
+                transform: translateX(105%);
+                visibility: hidden;
+
+                transition:
+                    transform .3s ease,
+                    visibility .3s ease;
+            }
+
+            .profile-sidebar.active {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .profile-menu-overlay:not([hidden]) {
+                display: block;
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                border: none;
+                background: rgba(10, 25, 50, .55);
+                z-index: 1000;
+                cursor: pointer;
+            }
+
+            body.profile-menu-open {
+                overflow: hidden;
+            }
+
+            .profile-content {
+                padding: 22px;
+            }
+        }
+
+        /* ======================================
+           SMALL MOBILE
+        ====================================== */
+
+        @media (max-width: 500px) {
+
+            .profile-page {
+                padding: 20px 12px;
+            }
+
+            .profile-heading h1 {
+                font-size: 20px;
+            }
+
+            .profile-menu-toggle {
+                padding: 9px 12px;
+                font-size: 11px;
+            }
+
+            .profile-content {
+                padding: 17px;
             }
 
             .profile-form {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 16px;
+            }
+
+            .profile-content h2 {
+                font-size: 18px;
+            }
+
+            .profile-description {
+                font-size: 11px;
+                margin-bottom: 20px;
+            }
+
+            .profile-field input {
+                padding: 12px;
+                font-size: 12px;
+            }
+
+            .profile-actions {
+                display: grid;
                 grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .profile-btn {
+                width: 100%;
+                padding: 13px;
             }
         }
     </style>
@@ -185,94 +507,355 @@
 
 <body>
 
-<main class="profile-page">
+    <main class="profile-page">
 
-    <div class="profile-heading">
-        <h1>My Account</h1>
-        <p>Manage your personal information and account details.</p>
-    </div>
+        <div class="profile-container">
 
-    <div class="profile-layout">
+            <!-- PAGE HEADING -->
 
-        <aside class="profile-sidebar">
+            <div class="profile-heading">
 
-            <div class="profile-user">
-                <div class="profile-avatar">👤</div>
-                <h3>Customer Name</h3>
-                <p>customer@example.com</p>
+                <div>
+                    <h1>My Account</h1>
+                    <p>Manage your personal information and account details.</p>
+                </div>
+
+                <button
+                    type="button"
+                    class="profile-menu-toggle"
+                    id="profile-menu-toggle"
+                    aria-label="Open profile menu"
+                    aria-expanded="false">
+
+                    ☰ <span>Menu</span>
+
+                </button>
+
             </div>
 
-<nav class="profile-nav">
-    <a href="./customer-profile.html" class="active">👤 My Profile</a>
-    <a href="./my-orders.html">📦 My Orders</a>
-    <a href="./saved-addresses.html">📍 Saved Addresses</a>
-    <a href="./wishlist.html">❤️ My Wishlist</a>
-    <a href="./change-password.html">🔐 Change Password</a>
-    <a href="./index.html">🏠 Back to Store</a>
-</nav>
+            <!-- PROFILE LAYOUT -->
 
-        </aside>
+            <div class="profile-layout">
 
-        <section class="profile-content">
+                <!-- SIDEBAR -->
 
-            <h2>Personal Information</h2>
+                <aside class="profile-sidebar">
 
-            <p class="profile-description">
-                View and edit your personal details.
-            </p>
+                    <div class="profile-user">
 
-            <form id="profile-form">
+                        <div class="profile-avatar">👤</div>
 
-                <div class="profile-form">
+                        <h3 id="profile-sidebar-name">
+                            Customer Name
+                        </h3>
 
-                    <div class="profile-field">
-                        <label for="profile-name">Full Name</label>
-                        <input type="text" id="profile-name"
-                               value="Customer Name" disabled required>
+                        <p id="profile-sidebar-email">
+                            customer@example.com
+                        </p>
+
                     </div>
 
-                    <div class="profile-field">
-                        <label for="profile-email">Email Address</label>
-                        <input type="email" id="profile-email"
-                               value="customer@example.com" disabled required>
-                    </div>
+                    <!-- NAVIGATION -->
 
-                    <div class="profile-field">
-                        <label for="profile-phone">Phone Number</label>
-                        <input type="tel" id="profile-phone"
-                               placeholder="Enter phone number" disabled>
-                    </div>
+                    <nav class="profile-nav">
 
-                    <div class="profile-field">
-                        <label for="profile-country">Country</label>
-                        <input type="text" id="profile-country"
-                               placeholder="Enter your country" disabled>
-                    </div>
+                        <div class="profile-nav-group">
 
-                </div>
+                            <h4>MY ACCOUNT</h4>
 
-                <div class="profile-actions">
-                    <button type="button" class="profile-btn edit-btn"
-                            id="edit-profile">Edit Profile</button>
+                            <a href="./customer-dashboard.html">
+                                📊 Dashboard
+                            </a>
 
-                    <button type="button" class="profile-btn cancel-btn"
-                            id="cancel-profile" hidden>Cancel</button>
+                            <a href="./customer-profile.html" class="active">
+                                👤 My Profile
+                            </a>
 
-                    <button type="submit" class="profile-btn edit-btn"
-                            id="save-profile" hidden>Save Changes</button>
-                </div>
+                            <a href="./saved-addresses.html">
+                                📍 Saved Addresses
+                            </a>
 
-                <p class="profile-message" id="profile-message"></p>
+                        </div>
 
-            </form>
+                        <div class="profile-nav-group">
 
-        </section>
+                            <h4>MY SHOPPING</h4>
 
-    </div>
+                            <a href="./my-orders.html">
+                                📦 My Orders
+                            </a>
 
-</main>
+                            <a href="./wishlist.html">
+                                ❤️ My Wishlist
+                            </a>
 
-<script src="./js/customer-profile.js"></script>
+                        </div>
+
+                        <div class="profile-nav-group">
+
+                            <h4>HELP & SUPPORT</h4>
+
+                            <a href="./change-password.html">
+                                🔐 Change Password
+                            </a>
+
+                            <a href="./index.html">
+                                🏠 Back to Store
+                            </a>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="profile-logout"
+                            id="profile-logout">
+
+                            ↪ Logout
+
+                        </button>
+
+                    </nav>
+
+                </aside>
+
+                <!-- PROFILE CONTENT -->
+
+                <section class="profile-content">
+
+                    <h2>Personal Information</h2>
+
+                    <p class="profile-description">
+                        View and edit your personal details.
+                        Keep your information up to date.
+                    </p>
+
+                    <form id="profile-form">
+
+                        <div class="profile-form">
+
+                            <div class="profile-field">
+
+                                <label for="profile-name">
+                                    Full Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="profile-name"
+                                    value="Customer Name"
+                                    placeholder="Enter your full name"
+                                    disabled
+                                    required>
+
+                            </div>
+
+                            <div class="profile-field">
+
+                                <label for="profile-email">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="profile-email"
+                                    value="customer@example.com"
+                                    placeholder="Enter your email"
+                                    disabled
+                                    required>
+
+                            </div>
+
+                            <div class="profile-field">
+
+                                <label for="profile-phone">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="profile-phone"
+                                    placeholder="Enter phone number"
+                                    disabled>
+
+                            </div>
+
+                            <div class="profile-field">
+
+                                <label for="profile-country">
+                                    Country
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="profile-country"
+                                    placeholder="Enter your country"
+                                    disabled>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ACTION BUTTONS -->
+
+                        <div class="profile-actions">
+
+                            <button
+                                type="button"
+                                class="profile-btn edit-btn"
+                                id="edit-profile">
+
+                                ✏️ Edit Profile
+
+                            </button>
+
+                            <button
+                                type="button"
+                                class="profile-btn cancel-btn"
+                                id="cancel-profile"
+                                hidden>
+
+                                Cancel
+
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="profile-btn edit-btn"
+                                id="save-profile"
+                                hidden>
+
+                                Save Changes
+
+                            </button>
+
+                        </div>
+
+                        <p
+                            class="profile-message"
+                            id="profile-message"
+                            aria-live="polite">
+                        </p>
+
+                    </form>
+
+                </section>
+
+            </div>
+
+            <!-- MOBILE MENU OVERLAY -->
+
+            <button
+                type="button"
+                class="profile-menu-overlay"
+                id="profile-menu-overlay"
+                aria-label="Close profile menu"
+                hidden>
+            </button>
+
+        </div>
+
+    </main>
+
+    <!-- EXISTING PROFILE FUNCTIONALITY -->
+
+    <script src="./js/customer-profile.js"></script>
+
+    <!-- MENU FUNCTIONALITY -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const menuToggle = document.getElementById("profile-menu-toggle");
+            const menuOverlay = document.getElementById("profile-menu-overlay");
+            const sidebar = document.querySelector(".profile-sidebar");
+            const logoutButton = document.getElementById("profile-logout");
+
+            /* ======================================
+               OPEN AND CLOSE RIGHT MENU
+            ====================================== */
+
+            if (menuToggle && menuOverlay && sidebar) {
+
+                function openMenu() {
+
+                    sidebar.classList.add("active");
+                    menuOverlay.hidden = false;
+
+                    document.body.classList.add("profile-menu-open");
+
+                    menuToggle.setAttribute("aria-expanded", "true");
+                    menuToggle.setAttribute("aria-label", "Close profile menu");
+                }
+
+                function closeMenu() {
+
+                    sidebar.classList.remove("active");
+                    menuOverlay.hidden = true;
+
+                    document.body.classList.remove("profile-menu-open");
+
+                    menuToggle.setAttribute("aria-expanded", "false");
+                    menuToggle.setAttribute("aria-label", "Open profile menu");
+                }
+
+                menuToggle.addEventListener("click", () => {
+
+                    if (sidebar.classList.contains("active")) {
+                        closeMenu();
+                    } else {
+                        openMenu();
+                    }
+
+                });
+
+                menuOverlay.addEventListener("click", closeMenu);
+
+                sidebar.querySelectorAll("a").forEach(link => {
+                    link.addEventListener("click", closeMenu);
+                });
+
+                document.addEventListener("keydown", event => {
+
+                    if (event.key === "Escape") {
+                        closeMenu();
+                    }
+
+                });
+
+                window.addEventListener("resize", () => {
+
+                    if (window.innerWidth > 750) {
+                        closeMenu();
+                    }
+
+                });
+
+            }
+
+            /* ======================================
+               CUSTOMER LOGOUT
+            ====================================== */
+
+            if (logoutButton) {
+
+                logoutButton.addEventListener("click", () => {
+
+                    const confirmed = confirm(
+                        "Are you sure you want to log out?"
+                    );
+
+                    if (!confirmed) return;
+
+                    localStorage.removeItem("yourshop-customer-session");
+
+                    window.location.href = "./customer-login.html";
+
+                });
+
+            }
+
+        });
+    </script>
 
 </body>
 </html>

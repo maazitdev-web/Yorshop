@@ -13,40 +13,619 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        /* ======================================
+           GENERAL
+        ====================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f7fc;
+            font-family: 'Poppins', sans-serif;
+            color: #102a56;
+        }
+
+        .notifications-page {
+            min-height: 100vh;
+            padding: 35px 4%;
+        }
+
+        .notifications-container {
+            max-width: 1300px;
+            margin: auto;
+        }
+
+        .notifications-layout {
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        .notifications-main {
+            min-width: 0;
+        }
+
+
+        /* ======================================
+           ACCOUNT SIDEBAR
+        ====================================== */
+
+        .notification-sidebar {
+            background: #ffffff;
+            padding: 23px 18px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(16, 42, 86, .05);
+        }
+
+        .notification-user {
+            text-align: center;
+            padding-bottom: 22px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .notification-avatar {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 12px;
+            display: grid;
+            place-items: center;
+            background: #eaf1ff;
+            border-radius: 50%;
+            font-size: 29px;
+        }
+
+        .notification-user h3 {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .notification-user p {
+            color: #8992a3;
+            font-size: 11px;
+        }
+
+        .notification-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .notification-nav-label {
+            color: #9aa4b5;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 17px 0 5px;
+            padding-left: 11px;
+        }
+
+        .notification-nav-label:first-child {
+            margin-top: 0;
+        }
+
+        .notification-nav a {
+            display: flex;
+            align-items: center;
+            padding: 11px;
+            color: #526078;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .notification-nav a:hover,
+        .notification-nav a.active {
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .customer-logout-button {
+            width: 100%;
+            padding: 11px;
+            margin-top: 15px;
+            text-align: left;
+            border: 1px solid #fee2e2;
+            border-radius: 7px;
+            background: #fff5f5;
+            color: #dc2626;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .customer-logout-button:hover {
+            background: #fee2e2;
+        }
+
+
+        /* ======================================
+           PAGE HEADING
+        ====================================== */
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-label {
+            display: inline-block;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading h1 {
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .page-heading p {
+            color: #778196;
+            font-size: 13px;
+        }
+
+        .notification-menu-toggle {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 7px;
+            background: #102a56;
+            color: white;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+
+        /* ======================================
+           COMPARE CONTENT
+        ====================================== */
+
+        .compare-page {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+        }
+
+        .compare-container {
+            width: 100%;
+            max-width: none;
+        }
+
+        .compare-container h1 {
+            display: none;
+        }
+
+        .compare-description {
+            display: none;
+        }
+
+
+        /* ======================================
+           MOBILE SIDEBAR OVERLAY
+        ====================================== */
+
+        .notification-menu-overlay {
+            display: none;
+        }
+
+
+        /* ======================================
+           RESPONSIVE DESIGN
+        ====================================== */
+
+        @media (max-width: 900px) {
+
+            .notifications-layout {
+                grid-template-columns: 220px minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .notification-sidebar {
+                padding: 20px 13px;
+            }
+
+        }
+
+        @media (max-width: 750px) {
+
+            .notifications-page {
+                padding: 25px 15px;
+            }
+
+            .notifications-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .notification-menu-toggle {
+                display: inline-flex;
+            }
+
+            .notification-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+
+                width: min(300px, 85vw);
+                height: 100vh;
+                height: 100dvh;
+
+                overflow-y: auto;
+                padding: 25px 20px;
+
+                border-radius: 12px 0 0 12px;
+
+                z-index: 1001;
+
+                transform: translateX(105%);
+                visibility: hidden;
+
+                transition: transform .3s ease,
+                            visibility .3s ease;
+            }
+
+            .notification-sidebar.active {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .notification-menu-overlay:not([hidden]) {
+                display: block;
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+                background: rgba(10, 25, 50, .55);
+                z-index: 1000;
+                cursor: pointer;
+            }
+
+            body.notification-menu-open {
+                overflow: hidden;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .page-heading {
+                align-items: flex-start;
+            }
+
+            .page-heading h1 {
+                font-size: 23px;
+            }
+
+            .page-heading p {
+                font-size: 11px;
+                line-height: 1.6;
+            }
+
+        }
+
+    </style>
 </head>
 
 <body>
 
-    <main class="compare-page">
+    <main class="notifications-page">
 
-        <div class="compare-container">
+        <div class="notifications-container">
 
-            <h1>Compare Products</h1>
+            <div class="notifications-layout">
 
-            <p class="compare-description">
-                Compare product prices, ratings, categories and availability.
-            </p>
+                <!-- =================================
+                     ACCOUNT SIDEBAR
+                ================================== -->
 
-            <div id="compare-message" class="compare-message">
-                Select products from the homepage to compare them.
+                <aside class="notification-sidebar">
+
+                    <div class="notification-user">
+
+                        <div class="notification-avatar">👤</div>
+
+                        <h3>YourShop Account</h3>
+
+                        <p>Manage your shopping</p>
+
+                    </div>
+
+                    <nav class="notification-nav">
+
+                        <p class="notification-nav-label">
+                            MY ACCOUNT
+                        </p>
+
+                        <a href="./customer-dashboard.html">
+                            📊 Dashboard
+                        </a>
+
+                        <a href="./customer-profile.html">
+                            👤 My Profile
+                        </a>
+
+                        <a href="./notifications.html">
+                            🔔 Notifications
+                        </a>
+
+                        <a href="./saved-addresses.html">
+                            📍 Saved Addresses
+                        </a>
+
+
+                        <p class="notification-nav-label">
+                            MY SHOPPING
+                        </p>
+
+                        <a href="./my-orders.html">
+                            📦 My Orders
+                        </a>
+
+                        <a href="./track-order.html">
+                            🚚 Track Order
+                        </a>
+
+                        <a href="./wishlist.html">
+                            ❤️ My Wishlist
+                        </a>
+
+                        <a href="./compare.html" class="active">
+                            ⚖️ Compare Products
+                        </a>
+
+
+                        <p class="notification-nav-label">
+                            HELP & SUPPORT
+                        </p>
+
+                        <a href="./support.html">
+                            🎧 Customer Support
+                        </a>
+
+                        <a href="./index.html">
+                            🏠 Back to Store
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="customer-logout-button"
+                            class="customer-logout-button">
+
+                            🚪 Logout
+
+                        </button>
+
+                    </nav>
+
+                </aside>
+
+
+                <!-- =================================
+                     MAIN COMPARE CONTENT
+                ================================== -->
+
+                <div class="notifications-main">
+
+                    <header class="page-heading">
+
+                        <div>
+
+                            <span class="page-label">
+                                YOURSHOP ACCOUNT
+                            </span>
+
+                            <h1>Compare Products</h1>
+
+                            <p>
+                                Compare product prices, ratings,
+                                categories and availability.
+                            </p>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="notification-menu-toggle"
+                            id="notification-menu-toggle"
+                            aria-label="Open account menu"
+                            aria-expanded="false">
+
+                            ☰ <span>Menu</span>
+
+                        </button>
+
+                    </header>
+
+
+                    <!-- =================================
+                         COMPARE PRODUCTS
+                    ================================== -->
+
+                    <div class="compare-page">
+
+                        <div class="compare-container">
+
+                            <!-- KEEP ORIGINAL ID -->
+
+                            <div
+                                id="compare-message"
+                                class="compare-message">
+
+                                Select products from the homepage
+                                to compare them.
+
+                            </div>
+
+                            <!-- KEEP ORIGINAL ID -->
+
+                            <div
+                                id="compare-grid"
+                                class="compare-grid">
+                            </div>
+
+                            <a
+                                href="./index.html"
+                                class="continue-shopping">
+
+                                Continue Shopping
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div id="compare-grid" class="compare-grid"></div>
 
-            <a href="./index.html" class="continue-shopping">
-                Continue Shopping
-            </a>
+            <!-- MOBILE SIDEBAR OVERLAY -->
+
+            <button
+                type="button"
+                class="notification-menu-overlay"
+                id="notification-menu-overlay"
+                aria-label="Close account menu"
+                hidden>
+            </button>
 
         </div>
 
     </main>
-<script src="./js/products.js"></script>
-<script src="./js/compare.js"></script>
+
+
+    <!-- =================================
+         MOBILE SIDEBAR JAVASCRIPT
+    ================================== -->
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const toggle = document.getElementById(
+                "notification-menu-toggle"
+            );
+
+            const sidebar = document.querySelector(
+                ".notification-sidebar"
+            );
+
+            const overlay = document.getElementById(
+                "notification-menu-overlay"
+            );
+
+            if (!toggle || !sidebar || !overlay) return;
+
+
+            function openMenu() {
+
+                sidebar.classList.add("active");
+
+                overlay.hidden = false;
+
+                document.body.classList.add(
+                    "notification-menu-open"
+                );
+
+                toggle.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+            }
+
+
+            function closeMenu() {
+
+                sidebar.classList.remove("active");
+
+                overlay.hidden = true;
+
+                document.body.classList.remove(
+                    "notification-menu-open"
+                );
+
+                toggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+            }
+
+
+            toggle.addEventListener("click", () => {
+
+                if (sidebar.classList.contains("active")) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+
+            });
+
+
+            overlay.addEventListener("click", closeMenu);
+
+
+            document.addEventListener("keydown", event => {
+
+                if (event.key === "Escape") {
+                    closeMenu();
+                }
+
+            });
+
+
+            window.addEventListener("resize", () => {
+
+                if (window.innerWidth > 750) {
+                    closeMenu();
+                }
+
+            });
+
+        });
+
+    </script>
+
+
+    <!-- =================================
+         CUSTOMER LOGOUT
+    ================================== -->
+
+    <script src="./js/customer-logout.js"></script>
+
+    <!-- =================================
+         EXISTING COMPARE FUNCTIONALITY
+    ================================== -->
+
+    <script src="./js/products.js"></script>
+    <script src="./js/compare.js"></script>
 
 </body>
-
 </html>

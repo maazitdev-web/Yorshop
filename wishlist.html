@@ -1,121 +1,624 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My Wishlist | YourShop</title>
 
     <link rel="stylesheet" href="./css/style.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* =================================
+           ACCOUNT LAYOUT
+        ================================= */
+
+        .wishlist-account-layout {
+            width: 92%;
+            max-width: 1300px;
+            margin: 35px auto 55px;
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        .wishlist-main-content {
+            min-width: 0;
+        }
+
+        /* =================================
+           ACCOUNT SIDEBAR
+        ================================= */
+
+        .notification-sidebar {
+            background: #ffffff;
+            padding: 23px 18px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(16, 42, 86, .05);
+            min-width: 0;
+        }
+
+        .notification-user {
+            text-align: center;
+            padding-bottom: 22px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .notification-avatar {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 12px;
+            display: grid;
+            place-items: center;
+            background: #eaf1ff;
+            border-radius: 50%;
+            font-size: 29px;
+        }
+
+        .notification-user h3 {
+            font-size: 14px;
+            color: #102a56;
+            margin-bottom: 5px;
+        }
+
+        .notification-user p {
+            color: #8992a3;
+            font-size: 11px;
+        }
+
+        .notification-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .notification-nav-label {
+            color: #9aa4b5;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 17px 0 5px;
+            padding-left: 11px;
+        }
+
+        .notification-nav-label:first-child {
+            margin-top: 0;
+        }
+
+        .notification-nav a {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 11px;
+            color: #526078;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .notification-nav a:hover,
+        .notification-nav a.active {
+            background: #eaf1ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .customer-logout-button {
+            width: 100%;
+            padding: 11px;
+            margin-top: 15px;
+            text-align: left;
+            border: 1px solid #fee2e2;
+            border-radius: 7px;
+            background: #fff5f5;
+            color: #dc2626;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .customer-logout-button:hover {
+            background: #fee2e2;
+        }
+
+        /* =================================
+           PAGE HEADING
+        ================================= */
+
+        .wishlist-account-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .wishlist-account-heading .section-label {
+            display: inline-block;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .wishlist-account-heading h1 {
+            color: #102a56;
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .wishlist-account-heading p {
+            color: #778196;
+            font-size: 13px;
+        }
+
+        /* =================================
+           MENU BUTTON
+        ================================= */
+
+        .notification-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 7px;
+            background: #102a56;
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        /* =================================
+           WISHLIST CONTENT
+        ================================= */
+
+        .wishlist-main-content .wishlist-page {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wishlist-main-content .wishlist-heading {
+            display: none;
+        }
+
+        /* =================================
+           MOBILE OVERLAY
+        ================================= */
+
+        .notification-menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: rgba(10, 25, 50, .55);
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        /* =================================
+           RESPONSIVE DESIGN
+        ================================= */
+
+        @media (max-width: 900px) {
+            .wishlist-account-layout {
+                grid-template-columns: 220px minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .notification-sidebar {
+                padding: 20px 13px;
+            }
+        }
+
+        @media (max-width: 750px) {
+
+            .wishlist-account-layout {
+                display: block;
+                width: 92%;
+                margin: 25px auto 45px;
+            }
+
+            .notification-menu-toggle {
+                display: inline-flex;
+            }
+
+            /* Slide-out menu from RIGHT */
+
+            .notification-sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                right: 0 !important;
+                left: auto !important;
+                bottom: 0 !important;
+
+                width: min(300px, 85vw);
+                max-width: 300px;
+                height: 100vh;
+                height: 100dvh;
+
+                overflow-y: auto;
+                padding: 25px 20px;
+
+                border-radius: 12px 0 0 12px;
+
+                z-index: 1001;
+
+                transform: translateX(105%);
+                visibility: hidden;
+
+                transition:
+                    transform .3s ease,
+                    visibility .3s ease;
+            }
+
+            .notification-sidebar.active {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .notification-menu-overlay:not([hidden]) {
+                display: block;
+            }
+
+            body.notification-menu-open {
+                overflow: hidden;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .wishlist-account-heading {
+                align-items: flex-start;
+            }
+
+            .wishlist-account-heading h1 {
+                font-size: 23px;
+            }
+
+            .wishlist-account-heading p {
+                font-size: 11px;
+                line-height: 1.6;
+            }
+        }
+
+        
+
+    </style>
 </head>
 
 <body>
 
-<header class="site-header">
-    <div class="announcement-bar">
-        <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
-    </div>
+    <!-- =================================
+         STORE HEADER
+    ================================= -->
 
-    <div class="header-main">
-        <a href="./index.html" class="logo">
-            <span class="logo-icon">
-                <svg viewBox="0 0 48 48" aria-hidden="true">
-                    <path d="M8 15h32l-3 25H11L8 15Z"
-                          fill="none" stroke="currentColor"
-                          stroke-width="3" stroke-linejoin="round"/>
-                    <path d="M17 17V12a7 7 0 0 1 14 0v5"
-                          fill="none" stroke="currentColor"
-                          stroke-width="3" stroke-linecap="round"/>
-                    <path d="m19 28 4 4 7-8"
-                          fill="none" stroke="currentColor"
-                          stroke-width="3" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                </svg>
-            </span>
-            <span class="logo-text">Your<span>Shop</span></span>
-        </a>
+    <header class="site-header">
 
-        <div class="header-actions">
-            <a href="./wishlist.html" class="header-action wishlist-action">
-                <span class="action-icon">♡</span>
-                <span>Wishlist</span>
-                <span class="wishlist-count" id="wishlist-count">0</span>
+        <div class="announcement-bar">
+            <p>Free Shipping | Exclusive Discounts | Special Offers Every Day</p>
+        </div>
+
+        <div class="header-main">
+
+            <a href="./index.html" class="logo">
+
+                <span class="logo-icon">
+                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M8 15h32l-3 25H11L8 15Z"
+                              fill="none" stroke="currentColor"
+                              stroke-width="3" stroke-linejoin="round"/>
+
+                        <path d="M17 17V12a7 7 0 0 1 14 0v5"
+                              fill="none" stroke="currentColor"
+                              stroke-width="3" stroke-linecap="round"/>
+
+                        <path d="m19 28 4 4 7-8"
+                              fill="none" stroke="currentColor"
+                              stroke-width="3" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </span>
+
+                <span class="logo-text">Your<span>Shop</span></span>
+
             </a>
 
-            <a href="./cart.html" class="header-action cart-action">
-                <span class="action-icon">🛒</span>
-                <span>Cart</span>
-                <span class="cart-count" id="cart-count">0</span>
-            </a>
-        </div>
-    </div>
+            <div class="header-actions">
 
-    <nav class="main-navigation" aria-label="Main navigation">
-        <ul class="nav-links">
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./categories.html">All Categories</a></li>
-            <li><a href="./index.html#best-sellers">Best Sellers</a></li>
-            <li><a href="./index.html#new-arrivals">New Arrivals</a></li>
-            <li><a href="./contact.html">Contact</a></li>
-            <li><a href="./orders.html">My Orders</a></li>
-        </ul>
-    </nav>
-</header>
+                <a href="./wishlist.html" class="header-action wishlist-action">
+                    <span class="action-icon">♡</span>
+                    <span>Wishlist</span>
+                    <span class="wishlist-count" id="wishlist-count">0</span>
+                </a>
 
-<main class="wishlist-page">
-    <div class="wishlist-heading">
-        <span class="section-label">YOUR FAVORITES</span>
-        <h1>My Wishlist</h1>
-        <p>Keep all your favorite products in one place.</p>
-    </div>
+                <a href="./cart.html" class="header-action cart-action">
+                    <span class="action-icon">🛒</span>
+                    <span>Cart</span>
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
 
-    <div id="wishlist-grid" class="wishlist-grid"></div>
+            </div>
 
-    <div id="wishlist-empty" class="wishlist-empty" hidden>
-        <div class="empty-heart">♡</div>
-        <h2>Your wishlist is empty</h2>
-        <p>You haven't saved any products yet.</p>
-        <a href="./index.html#products-section" class="wishlist-shop-button">
-            Explore Products
-        </a>
-    </div>
-</main>
-
-<footer id="footer" class="site-footer">
-    <div class="contact-footer-content">
-        <div>
-            <h3>YourShop</h3>
-            <p>Your destination for quality products and great deals.</p>
         </div>
 
-        <div>
-            <h3>Quick Links</h3>
-            <a href="./index.html">Home</a>
-            <a href="./about.html">About Us</a>
-            <a href="./contact.html">Contact Us</a>
-        </div>
+        <nav class="main-navigation" aria-label="Main navigation">
 
-        <div>
-            <h3>Customer Service</h3>
-            <a href="./faq.html">FAQs</a>
-            <a href="./shipping.html">Shipping</a>
-            <a href="./returns.html">Returns</a>
-            <a href="./privacy.html">Privacy Policy</a>
-            <a href="./terms.html">Terms & Conditions</a>
-        </div>
+            <ul class="nav-links">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./categories.html">All Categories</a></li>
+                <li><a href="./index.html#best-sellers">Best Sellers</a></li>
+                <li><a href="./index.html#new-arrivals">New Arrivals</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+                <li><a href="./orders.html">My Orders</a></li>
+            </ul>
+
+        </nav>
+
+    </header>
+
+    <!-- =================================
+         ACCOUNT LAYOUT
+    ================================= -->
+
+    <div class="wishlist-account-layout">
+
+        <!-- ACCOUNT SIDEBAR -->
+
+        <aside class="notification-sidebar" id="notification-sidebar">
+
+            <div class="notification-user">
+
+                <div class="notification-avatar">👤</div>
+
+                <h3>YourShop Account</h3>
+
+                <p>Manage your shopping</p>
+
+            </div>
+
+            <nav class="notification-nav">
+
+                <p class="notification-nav-label">MY ACCOUNT</p>
+
+                <a href="./customer-dashboard.html">📊 Dashboard</a>
+                <a href="./customer-profile.html">👤 My Profile</a>
+                <a href="./notifications.html">🔔 Notifications</a>
+                <a href="./saved-addresses.html">📍 Saved Addresses</a>
+
+                <p class="notification-nav-label">MY SHOPPING</p>
+
+                <a href="./my-orders.html">📦 My Orders</a>
+                <a href="./track-order.html">🚚 Track Order</a>
+                <a href="./wishlist.html" class="active">❤️ My Wishlist</a>
+                <a href="./compare.html">⚖️ Compare Products</a>
+
+                <p class="notification-nav-label">HELP & SUPPORT</p>
+
+                <a href="./support.html">🎧 Customer Support</a>
+                <a href="./index.html">🏠 Back to Store</a>
+
+                <button
+                    type="button"
+                    id="customer-logout-button"
+                    class="customer-logout-button">
+                    🚪 Logout
+                </button>
+
+            </nav>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+
+        <main class="wishlist-main-content">
+
+            <header class="wishlist-account-heading">
+
+                <div>
+                    <span class="section-label">YOURSHOP ACCOUNT</span>
+
+                    <h1>My Wishlist</h1>
+
+                    <p>Keep all your favorite products in one place.</p>
+                </div>
+
+                <button
+                    type="button"
+                    class="notification-menu-toggle"
+                    id="notification-menu-toggle"
+                    aria-label="Open account menu"
+                    aria-expanded="false">
+
+                    ☰ <span>Menu</span>
+
+                </button>
+
+            </header>
+
+            <!-- WISHLIST PRODUCTS -->
+
+            <div class="wishlist-page">
+
+                <div class="wishlist-heading">
+                    <span class="section-label">YOUR FAVORITES</span>
+                    <h1>My Wishlist</h1>
+                    <p>Keep all your favorite products in one place.</p>
+                </div>
+
+                <div id="wishlist-grid" class="wishlist-grid"></div>
+
+                <div id="wishlist-empty" class="wishlist-empty" hidden>
+
+                    <div class="empty-heart">♡</div>
+
+                    <h2>Your wishlist is empty</h2>
+
+                    <p>You haven't saved any products yet.</p>
+
+                    <a href="./index.html#products-section"
+                       class="wishlist-shop-button">
+                        Explore Products
+                    </a>
+
+                </div>
+
+            </div>
+
+        </main>
+
     </div>
 
-    <div class="contact-footer-bottom">
-        <p>&copy; 2026 YourShop. All rights reserved.</p>
-    </div>
-</footer>
+    <!-- =================================
+         MOBILE MENU OVERLAY
+    ================================= -->
 
-<script src="./js/products.js"></script>
-<script src="./js/currency.js"></script>
-<script src="./js/wishlist.js"></script>
+    <button
+        type="button"
+        class="notification-menu-overlay"
+        id="notification-menu-overlay"
+        aria-label="Close account menu"
+        hidden>
+    </button>
+
+    <!-- =================================
+         STORE FOOTER
+    ================================= -->
+
+    <footer id="footer" class="site-footer">
+
+        <div class="contact-footer-content">
+
+            <div>
+                <h3>YourShop</h3>
+                <p>Your destination for quality products and great deals.</p>
+            </div>
+
+            <div>
+                <h3>Quick Links</h3>
+                <a href="./index.html">Home</a>
+                <a href="./about.html">About Us</a>
+                <a href="./contact.html">Contact Us</a>
+            </div>
+
+            <div>
+                <h3>Customer Service</h3>
+                <a href="./faq.html">FAQs</a>
+                <a href="./shipping.html">Shipping</a>
+                <a href="./returns.html">Returns</a>
+                <a href="./privacy.html">Privacy Policy</a>
+                <a href="./terms.html">Terms & Conditions</a>
+            </div>
+
+        </div>
+
+        <div class="contact-footer-bottom">
+            <p>&copy; 2026 YourShop. All rights reserved.</p>
+        </div>
+
+    </footer>
+
+    <!-- =================================
+         ACCOUNT MENU JAVASCRIPT
+    ================================= -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const toggle = document.getElementById("notification-menu-toggle");
+            const sidebar = document.getElementById("notification-sidebar");
+            const overlay = document.getElementById("notification-menu-overlay");
+
+            if (!toggle || !sidebar || !overlay) return;
+
+            function openMenu() {
+
+                sidebar.classList.add("active");
+
+                overlay.hidden = false;
+
+                document.body.classList.add("notification-menu-open");
+
+                toggle.setAttribute("aria-expanded", "true");
+            }
+
+            function closeMenu() {
+
+                sidebar.classList.remove("active");
+
+                overlay.hidden = true;
+
+                document.body.classList.remove("notification-menu-open");
+
+                toggle.setAttribute("aria-expanded", "false");
+            }
+
+            toggle.addEventListener("click", () => {
+
+                if (sidebar.classList.contains("active")) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+
+            });
+
+            overlay.addEventListener("click", closeMenu);
+
+            document.addEventListener("keydown", event => {
+
+                if (event.key === "Escape") {
+                    closeMenu();
+                }
+
+            });
+
+            window.addEventListener("resize", () => {
+
+                if (window.innerWidth > 750) {
+                    closeMenu();
+                }
+
+            });
+
+        });
+    </script>
+
+    <!-- =================================
+         EXISTING YOURSHOP SCRIPTS
+    ================================= -->
+
+    <script src="./js/customer-logout.js"></script>
+    <script src="./js/products.js"></script>
+    <script src="./js/currency.js"></script>
+    <script src="./js/wishlist.js"></script>
 
 </body>
 </html>

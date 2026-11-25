@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,59 +15,126 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <style>
-        .dashboard-page {
+        /* =========================================
+           1. RESET AND FULL-WIDTH PAGE
+        ========================================= */
+
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-page,
+        .dashboard-page *,
+        .dashboard-menu-overlay {
+            box-sizing: border-box;
+        }
+
+        main.dashboard-page {
+            position: static !important;
+            left: auto !important;
+            transform: none !important;
+
+            display: block !important;
+            width: 100% !important;
+            max-width: none !important;
+            min-width: 0 !important;
+
             min-height: 85vh;
-            padding: 45px 5%;
+            margin: 0 !important;
+            padding: 40px 3% !important;
+
             background: #f4f7fc;
             font-family: 'Poppins', sans-serif;
+            overflow-x: clip;
         }
 
         .dashboard-container {
-            max-width: 1250px;
-            margin: auto;
+            display: block;
+            width: 100%;
+            max-width: none;
+            min-width: 0;
+            margin: 0;
         }
 
+        /* =========================================
+           2. DASHBOARD HEADING
+        ========================================= */
+
         .dashboard-heading {
-            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 25px;
         }
 
         .dashboard-heading h1 {
             color: #102a56;
             font-size: 28px;
+            line-height: 1.4;
+            margin: 0 0 5px;
         }
 
         .dashboard-heading p {
             color: #778196;
             font-size: 13px;
+            margin: 0;
         }
+
+        /* =========================================
+           3. MAIN DASHBOARD GRID
+        ========================================= */
 
         .dashboard-layout {
             display: grid;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 250px minmax(0, 1fr);
+            align-items: start;
             gap: 25px;
+
+            width: 100%;
+            max-width: none;
+            min-width: 0;
         }
 
         .dashboard-sidebar,
         .dashboard-content {
-            background: white;
+            min-width: 0;
+            background: #ffffff;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 5px 25px rgba(16, 42, 86, .05);
         }
 
+        .dashboard-content {
+            width: 100%;
+            max-width: none;
+        }
+
+        /* =========================================
+           4. CUSTOMER PROFILE
+        ========================================= */
+
         .dashboard-user {
             text-align: center;
             padding-bottom: 22px;
             border-bottom: 1px solid #edf0f5;
+            overflow-wrap: anywhere;
         }
 
         .dashboard-avatar {
-            width: 85px;
-            height: 85px;
-            margin: auto auto 12px;
-            border-radius: 50%;
             display: grid;
             place-items: center;
+
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 12px;
+
+            border-radius: 50%;
             background: #eaf1ff;
             color: #2563eb;
             font-size: 35px;
@@ -75,25 +143,53 @@
         .dashboard-user h3 {
             color: #102a56;
             font-size: 16px;
+            margin: 0 0 5px;
         }
 
         .dashboard-user p {
             color: #888;
             font-size: 12px;
+            margin: 0;
+            overflow-wrap: anywhere;
         }
 
+        /* =========================================
+           5. SIDEBAR NAVIGATION
+        ========================================= */
+
         .dashboard-nav {
-            display: grid;
-            gap: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
             margin-top: 20px;
         }
 
+        .dashboard-nav-label {
+            color: #9aa4b5;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 18px 0 5px;
+            padding-left: 12px;
+        }
+
+        .dashboard-nav-label:first-child {
+            margin-top: 0;
+        }
+
         .dashboard-nav a {
-            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            width: 100%;
+            padding: 11px 12px;
+
+            border-radius: 7px;
             text-decoration: none;
             color: #526078;
-            font-size: 13px;
-            border-radius: 7px;
+
+            font-size: 12px;
             transition: .2s;
         }
 
@@ -104,35 +200,83 @@
             font-weight: 600;
         }
 
+        .customer-logout-button {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+
+            border: 1px solid #fee2e2;
+            border-radius: 7px;
+
+            background: #fff5f5;
+            color: #dc2626;
+
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .customer-logout-button:hover {
+            background: #fee2e2;
+        }
+
+        /* =========================================
+           6. WELCOME CARD
+        ========================================= */
+
         .welcome-card {
+            width: 100%;
             padding: 25px;
+            margin-bottom: 23px;
+
             border-radius: 10px;
             color: white;
+
             background: linear-gradient(120deg, #102a56, #2563eb);
-            margin-bottom: 23px;
+            overflow-wrap: anywhere;
         }
 
         .welcome-card h2 {
             font-size: 21px;
-            margin-bottom: 7px;
+            margin: 0 0 7px;
         }
 
         .welcome-card p {
             font-size: 12px;
+            line-height: 1.7;
             opacity: .9;
+            margin: 0;
         }
+
+        /* =========================================
+           7. STATISTICS
+        ========================================= */
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 15px;
+
+            width: 100%;
             margin-bottom: 25px;
         }
 
         .stat-card {
+            min-width: 0;
             padding: 20px;
+
             border: 1px solid #edf0f5;
             border-radius: 10px;
+
+            overflow-wrap: anywhere;
         }
 
         .stat-card .stat-icon {
@@ -143,33 +287,159 @@
         .stat-card h3 {
             color: #102a56;
             font-size: 24px;
+            margin: 0 0 5px;
         }
 
         .stat-card p {
             color: #8992a3;
             font-size: 12px;
+            margin: 0;
         }
+
+        /* =========================================
+           8. SECTION HEADINGS
+        ========================================= */
 
         .dashboard-section-title {
             color: #102a56;
             font-size: 18px;
-            margin-bottom: 17px;
+            margin: 0 0 17px;
         }
+
+        /* =========================================
+           9. PURCHASED PRODUCTS
+        ========================================= */
+
+        #dashboard-purchased-products {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: start;
+            gap: 18px;
+
+            width: 100%;
+            min-width: 0;
+            margin-bottom: 15px;
+        }
+
+        #dashboard-purchased-products > * {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        #dashboard-purchased-products .purchased-product-card {
+            min-width: 0;
+            border: 1px solid #edf0f5;
+            border-radius: 10px;
+            background: #ffffff;
+            overflow: hidden;
+        }
+
+        #dashboard-purchased-products img {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: 160px;
+            object-fit: contain;
+            padding: 12px;
+            background: #f8faff;
+        }
+
+        .purchased-product-info {
+            min-width: 0;
+            padding: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .purchased-product-info h3 {
+            color: #102a56;
+            font-size: 12px;
+            margin: 0 0 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .purchased-product-info p {
+            color: #778196;
+            font-size: 11px;
+            margin: 0 0 6px;
+        }
+
+        .purchased-product-price {
+            color: #2563eb !important;
+            font-weight: 700;
+        }
+
+        .purchased-product-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            background: #eaf1ff;
+            color: #2563eb !important;
+            font-size: 10px !important;
+            font-weight: 600;
+        }
+
+        .purchased-product-link {
+            display: inline-block;
+            margin-top: 8px;
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           10. GENERAL LINKS
+        ========================================= */
+
+        .view-orders-link {
+            display: inline-block;
+            margin-top: 15px;
+
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .view-orders-link:hover {
+            text-decoration: underline;
+        }
+
+        .empty-recent {
+            text-align: center;
+            color: #8992a3;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        /* =========================================
+           11. QUICK ACCESS
+        ========================================= */
 
         .quick-links {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
+
+            width: 100%;
             margin-bottom: 28px;
         }
 
         .quick-link {
             display: block;
-            text-decoration: none;
+            min-width: 0;
+            padding: 17px;
+
             border: 1px solid #edf0f5;
             border-radius: 9px;
-            padding: 17px;
+
             color: #526078;
+            text-decoration: none;
+
+            overflow-wrap: anywhere;
             transition: .2s;
         }
 
@@ -179,7 +449,7 @@
             transform: translateY(-2px);
         }
 
-        .quick-link span {
+        .quick-link > span {
             display: block;
             font-size: 23px;
             margin-bottom: 8px;
@@ -198,23 +468,32 @@
             margin-top: 4px;
         }
 
+        /* =========================================
+           12. RECENT ORDERS TABLE
+        ========================================= */
+
         .recent-orders {
+            width: 100%;
+            max-width: 100%;
+
             border: 1px solid #edf0f5;
             border-radius: 9px;
+
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .recent-orders table {
             width: 100%;
-            border-collapse: collapse;
             min-width: 480px;
+            border-collapse: collapse;
         }
 
         .recent-orders th,
         .recent-orders td {
-            text-align: left;
             padding: 14px;
             border-bottom: 1px solid #edf0f5;
+            text-align: left;
             font-size: 12px;
         }
 
@@ -227,435 +506,709 @@
             color: #526078;
         }
 
-        .view-orders-link {
-            display: inline-block;
-            margin-top: 15px;
-            color: #2563eb;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-        }
+        /* =========================================
+           13. MOBILE MENU BUTTON
+        ========================================= */
 
-        .empty-recent {
-            text-align: center;
-            color: #8992a3;
-            padding: 25px;
+        .dashboard-menu-toggle {
+            display: none;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            padding: 10px 16px;
+            border: none;
+            border-radius: 7px;
+
+            background: #102a56;
+            color: #ffffff;
+
+            font-family: 'Poppins', sans-serif;
             font-size: 13px;
+            font-weight: 600;
+
+            cursor: pointer;
         }
 
-        @media (max-width: 900px) {
+        .dashboard-menu-overlay {
+            display: none;
+        }
+
+        /* =========================================
+           14. TABLET
+        ========================================= */
+
+        @media (max-width: 1100px) {
+
+            main.dashboard-page {
+                padding: 35px 3% !important;
+            }
+
             .dashboard-layout {
-                grid-template-columns: 1fr;
+                grid-template-columns: 220px minmax(0, 1fr);
+                gap: 18px;
+            }
+
+            .dashboard-sidebar,
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            #dashboard-purchased-products {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
+
+        /* =========================================
+           15. MOBILE RIGHT-SIDE DRAWER
+        ========================================= */
+
+        @media (max-width: 750px) {
+
+            .dashboard-menu-toggle {
+                display: inline-flex;
+            }
+
+            .dashboard-layout {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr);
+                gap: 0;
+            }
+
+            .dashboard-sidebar {
+                position: fixed !important;
+                top: 0 !important;
+                right: 0 !important;
+                left: auto !important;
+                bottom: 0 !important;
+
+                width: min(300px, 85vw) !important;
+                max-width: 85vw;
+
+                height: 100vh;
+                height: 100dvh;
+                min-height: 100dvh;
+
+                padding: 25px 20px;
+                margin: 0 !important;
+
+                overflow-x: hidden;
+                overflow-y: auto;
+
+                border-radius: 12px 0 0 12px;
+
+                z-index: 1001;
+
+                transform: translateX(105%);
+                visibility: hidden;
+
+                transition:
+                    transform .3s ease,
+                    visibility .3s ease;
+            }
+
+            .dashboard-sidebar.active {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .dashboard-menu-overlay:not([hidden]) {
+                display: block;
+
+                position: fixed;
+                inset: 0;
+
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+
+                border: none;
+                border-radius: 0;
+
+                background: rgba(10, 25, 50, .55);
+
+                z-index: 1000;
+                cursor: pointer;
+            }
+
+            body.dashboard-menu-open {
+                overflow: hidden;
+            }
+        }
+
+        /* =========================================
+           16. SMALL MOBILE
+        ========================================= */
 
         @media (max-width: 650px) {
+
+            main.dashboard-page {
+                padding: 25px 15px !important;
+            }
+
+            .dashboard-heading {
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .dashboard-heading h1 {
+                font-size: 23px;
+                line-height: 1.4;
+            }
+
+            .dashboard-heading p {
+                font-size: 11px;
+                line-height: 1.6;
+            }
+
+            .dashboard-content {
+                padding: 18px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .welcome-card h2 {
+                font-size: 19px;
+            }
+
             .stats-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-card h3 {
+                font-size: 21px;
+            }
+
+            .stat-card p {
+                font-size: 11px;
             }
 
             .quick-links {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .quick-link {
+                padding: 13px;
+            }
+
+            #dashboard-purchased-products {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            #dashboard-purchased-products img {
+                height: 140px;
+            }
+
+            .dashboard-section-title {
+                font-size: 16px;
             }
         }
+
+        /* =========================================
+           17. VERY SMALL MOBILE
+        ========================================= */
 
         @media (max-width: 420px) {
-            .stats-grid,
+
+            main.dashboard-page {
+                padding: 20px 12px !important;
+            }
+
+            .dashboard-content {
+                padding: 14px;
+            }
+
+            .dashboard-heading h1 {
+                font-size: 20px;
+            }
+
+            .dashboard-heading p {
+                font-size: 10px;
+            }
+
+            .dashboard-menu-toggle {
+                padding: 9px 11px;
+                font-size: 11px;
+            }
+
+            .stats-grid {
+                gap: 8px;
+            }
+
+            .stat-card {
+                padding: 12px 10px;
+            }
+
+            .stat-card .stat-icon {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+
+            .stat-card h3 {
+                font-size: 19px;
+            }
+
+            .stat-card p {
+                font-size: 10px;
+            }
+
             .quick-links {
-                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .quick-link {
+                padding: 12px 10px;
+            }
+
+            #dashboard-purchased-products {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            #dashboard-purchased-products img {
+                height: 180px;
             }
         }
 
-    
-/* ============================================
-   RECENTLY PURCHASED PRODUCTS
-============================================ */
+        /* =========================================
+           18. EXTRA SMALL MOBILE
+        ========================================= */
 
-#dashboard-purchased-products {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 15px;
-    align-items: start;
-}
+        @media (max-width: 350px) {
 
-/* Each product card */
-#dashboard-purchased-products > * {
-    min-width: 0;
-    max-width: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-}
+            .dashboard-heading {
+                align-items: flex-start;
+            }
 
-/* Product card styling */
-#dashboard-purchased-products .purchased-product-card {
-    border: 1px solid #edf0f5;
-    border-radius: 10px;
-    background: #fff;
-    overflow: hidden;
-}
+            .dashboard-heading h1 {
+                font-size: 18px;
+            }
 
-/* Product images */
-#dashboard-purchased-products img {
-    display: block;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 160px !important;
-    max-height: 160px;
-    object-fit: contain;
-    padding: 12px;
-    box-sizing: border-box;
-    background: #f8faff;
-}
+            .dashboard-menu-toggle {
+                padding: 8px;
+            }
 
-/* Product information */
-.purchased-product-info {
-    padding: 12px;
-    min-width: 0;
-}
+            .dashboard-menu-toggle span {
+                display: none;
+            }
 
-.purchased-product-info h3 {
-    font-size: 12px;
-    color: #102a56;
-    margin-bottom: 8px;
-    overflow-wrap: anywhere;
-}
-
-.purchased-product-info p {
-    color: #778196;
-    font-size: 11px;
-    margin-bottom: 6px;
-}
-
-.purchased-product-price {
-    color: #2563eb !important;
-    font-weight: 700;
-}
-
-.purchased-product-status {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 20px;
-    background: #eaf1ff;
-    color: #2563eb !important;
-    font-size: 10px !important;
-    font-weight: 600;
-}
-
-.purchased-product-link {
-    display: inline-block;
-    margin-top: 8px;
-    color: #2563eb;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-/* Tablet */
-@media (max-width: 900px) {
-    #dashboard-purchased-products {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-/* Mobile */
-@media (max-width: 500px) {
-    #dashboard-purchased-products {
-        grid-template-columns: 1fr;
-    }
-
-    #dashboard-purchased-products img {
-        height: 180px !important;
-        max-height: 180px;
-    }
-}
-
-
-/* Dashboard Navigation Section Labels */
-
-.dashboard-nav-label {
-    color: #9aa4b5;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin: 18px 0 5px;
-    padding-left: 12px;
-}
-
-.dashboard-nav-label:first-child {
-    margin-top: 0;
-}
-
-.dashboard-nav a {
-    display: block;
-}
-
-
-
+            .stats-grid,
+            .quick-links {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
     </style>
 </head>
 
 <body>
 
-<main class="dashboard-page">
+    <main class="dashboard-page">
 
-    <div class="dashboard-container">
+        <div class="dashboard-container">
 
-        <div class="dashboard-heading">
-            <h1>My Account Dashboard</h1>
-            <p>Manage your YourShop shopping experience.</p>
+            <!-- DASHBOARD HEADING -->
+
+            <div class="dashboard-heading">
+
+                <div>
+                    <h1>My Account Dashboard</h1>
+                    <p>Manage your YourShop shopping experience.</p>
+                </div>
+
+                <button
+                    type="button"
+                    class="dashboard-menu-toggle"
+                    id="dashboard-menu-toggle"
+                    aria-label="Open dashboard menu"
+                    aria-expanded="false">
+
+                    ☰
+                    <span>Menu</span>
+
+                </button>
+
+            </div>
+
+            <!-- DASHBOARD LAYOUT -->
+
+            <div class="dashboard-layout">
+
+                <!-- SIDEBAR -->
+
+                <aside class="dashboard-sidebar" id="dashboard-sidebar">
+
+                    <!-- CUSTOMER PROFILE -->
+
+                    <div class="dashboard-user">
+
+                        <div class="dashboard-avatar">👤</div>
+
+                        <h3 id="dashboard-customer-name">
+                            Welcome Customer
+                        </h3>
+
+                        <p id="dashboard-customer-email">
+                            customer@example.com
+                        </p>
+
+                    </div>
+
+                    <!-- SIDEBAR NAVIGATION -->
+
+                    <nav class="dashboard-nav">
+
+                        <p class="dashboard-nav-label">MY ACCOUNT</p>
+
+                        <a href="./customer-dashboard.html" class="active">
+                            📊 Dashboard
+                        </a>
+
+                        <a href="./customer-profile.html">
+                            👤 My Profile
+                        </a>
+
+                        <a href="./notifications.html">
+                            🔔 Notifications
+
+                            <span
+                                id="dashboard-notification-badge"
+                                style="background:#ef4444;color:white;padding:2px 7px;border-radius:20px;font-size:10px;margin-left:auto;">
+                                0
+                            </span>
+                        </a>
+
+                        <a href="./saved-addresses.html">
+                            📍 Saved Addresses
+                        </a>
+
+                        <p class="dashboard-nav-label">MY SHOPPING</p>
+
+                        <a href="./my-orders.html">
+                            📦 My Orders
+                        </a>
+
+                        <a href="./track-order.html">
+                            🚚 Track Order
+                        </a>
+
+                        <a href="./wishlist.html">
+                            ❤️ My Wishlist
+                        </a>
+
+                        <a href="./compare.html">
+                            ⚖️ Compare Products
+                        </a>
+
+                        <p class="dashboard-nav-label">HELP & SUPPORT</p>
+
+                        <a href="./support.html">
+                            🎧 Customer Support
+                        </a>
+
+                        <a href="./index.html">
+                            🏠 Back to Store
+                        </a>
+
+                        <button
+                            type="button"
+                            id="customer-logout-button"
+                            class="customer-logout-button">
+
+                            🚪 Logout
+
+                        </button>
+
+                    </nav>
+
+                </aside>
+
+                <!-- MAIN DASHBOARD CONTENT -->
+
+                <section class="dashboard-content">
+
+                    <!-- WELCOME -->
+
+                    <div class="welcome-card">
+
+                        <h2>
+                            Hello,
+                            <span id="welcome-customer-name">Customer</span>!
+                        </h2>
+
+                        <p>
+                            Welcome to your YourShop dashboard.
+                            Here's your shopping overview.
+                        </p>
+
+                    </div>
+
+                    <!-- STATISTICS -->
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <h3 id="dashboard-total-orders">0</h3>
+                            <p>Total Orders</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <h3 id="dashboard-pending-orders">0</h3>
+                            <p>Pending Orders</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <h3 id="dashboard-delivered-orders">0</h3>
+                            <p>Delivered Orders</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">📍</div>
+                            <h3 id="dashboard-address-count">0</h3>
+                            <p>Saved Addresses</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">❤️</div>
+                            <h3 id="dashboard-wishlist-count">0</h3>
+                            <p>Wishlist Items</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon">⚖️</div>
+                            <h3 id="dashboard-compare-count">0</h3>
+                            <p>Compare Items</p>
+                        </div>
+
+                    </div>
+
+                    <!-- RECENTLY PURCHASED PRODUCTS -->
+
+                    <h2 class="dashboard-section-title">
+                        Recently Purchased Products
+                    </h2>
+
+                    <div
+                        id="dashboard-purchased-products"
+                        class="purchased-products-grid">
+
+                        <p class="empty-recent">
+                            Loading purchased products...
+                        </p>
+
+                    </div>
+
+                    <a href="./my-orders.html" class="view-orders-link">
+                        View Purchase History →
+                    </a>
+
+                    <!-- QUICK ACCESS -->
+
+                    <h2 class="dashboard-section-title" style="margin-top:28px;">
+                        Quick Access
+                    </h2>
+
+                    <div class="quick-links">
+
+                        <a href="./notifications.html" class="quick-link">
+                            <span>🔔</span>
+                            <strong>Notifications</strong>
+                            <small>
+                                <span id="dashboard-unread-notifications">0</span>
+                                unread notifications
+                            </small>
+                        </a>
+
+                        <a href="./customer-profile.html" class="quick-link">
+                            <span>👤</span>
+                            <strong>My Profile</strong>
+                            <small>Manage personal details</small>
+                        </a>
+
+                        <a href="./my-orders.html" class="quick-link">
+                            <span>📦</span>
+                            <strong>My Orders</strong>
+                            <small>View shopping history</small>
+                        </a>
+
+                        <a href="./saved-addresses.html" class="quick-link">
+                            <span>📍</span>
+                            <strong>Addresses</strong>
+                            <small>Manage delivery addresses</small>
+                        </a>
+
+                        <a href="./wishlist.html" class="quick-link">
+                            <span>❤️</span>
+                            <strong>Wishlist</strong>
+                            <small>View saved products</small>
+                        </a>
+
+                        <a href="./track-order.html" class="quick-link">
+                            <span>🚚</span>
+                            <strong>Track Order</strong>
+                            <small>Check delivery progress</small>
+                        </a>
+
+                        <a href="./support.html" class="quick-link">
+                            <span>🎧</span>
+                            <strong>Support</strong>
+                            <small>Get help with your orders</small>
+                        </a>
+
+                    </div>
+
+                    <!-- RECENT NOTIFICATIONS -->
+
+                    <h2 class="dashboard-section-title">
+                        Recent Notifications
+                    </h2>
+
+                    <div
+                        id="dashboard-notification-list"
+                        style="display:grid;gap:12px;margin-bottom:25px;">
+
+                        <p class="empty-recent">
+                            Loading notifications...
+                        </p>
+
+                    </div>
+
+                    <a href="./notifications.html" class="view-orders-link">
+                        View All Notifications →
+                    </a>
+
+                    <!-- RECENT ORDERS -->
+
+                    <h2 class="dashboard-section-title" style="margin-top:28px;">
+                        Recent Orders
+                    </h2>
+
+                    <div class="recent-orders">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="dashboard-recent-orders">
+
+                                <tr>
+                                    <td colspan="4" class="empty-recent">
+                                        Loading orders...
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <a href="./my-orders.html" class="view-orders-link">
+                        View All Orders →
+                    </a>
+
+                </section>
+
+            </div>
+
+            <!-- MOBILE MENU OVERLAY -->
+
+            <button
+                type="button"
+                class="dashboard-menu-overlay"
+                id="dashboard-menu-overlay"
+                aria-label="Close dashboard menu"
+                hidden>
+            </button>
+
         </div>
 
-        <div class="dashboard-layout">
-
-            <aside class="dashboard-sidebar">
-
-                <div class="dashboard-user">
-                    <div class="dashboard-avatar">👤</div>
-                    <h3 id="dashboard-customer-name">Welcome Customer</h3>
-                    <p id="dashboard-customer-email">customer@example.com</p>
-                </div>
-
-<nav class="dashboard-nav">
-
-    <p class="dashboard-nav-label">MY ACCOUNT</p>
-
-    <a href="./customer-dashboard.html" class="active">
-        📊 Dashboard
-    </a>
-
-    <a href="./customer-profile.html">
-        👤 My Profile
-    </a>
-
-    <a href="./notifications.html">
-        🔔 Notifications
-        <span id="dashboard-notification-badge"
-              style="background:#ef4444;color:white;padding:2px 7px;border-radius:20px;font-size:10px;margin-left:5px;">
-            0
-        </span>
-    </a>
-
-    <a href="./saved-addresses.html">
-        📍 Saved Addresses
-    </a>
-
-    <p class="dashboard-nav-label">MY SHOPPING</p>
-
-    <a href="./my-orders.html">
-        📦 My Orders
-    </a>
-
-    <a href="./track-order.html">
-        🚚 Track Order
-    </a>
-
-    <a href="./wishlist.html">
-        ❤️ My Wishlist
-    </a>
-
-    <a href="./compare.html">
-        ⚖️ Compare Products
-    </a>
-
-    <p class="dashboard-nav-label">HELP & SUPPORT</p>
-
-    <a href="./support.html">
-        🎧 Customer Support
-    </a>
-
-<a href="./index.html">
-    🏠 Back to Store
-</a>
-
-<button type="button" id="customer-logout-button" class="customer-logout-button">
-    🚪 Logout
-</button>
-
-</nav>
-
-
-            </aside>
-
-            <section class="dashboard-content">
-
-                <div class="welcome-card">
-                    <h2>Hello, <span id="welcome-customer-name">Customer</span>!</h2>
-                    <p>Welcome to your YourShop dashboard. Here's your shopping overview.</p>
-                </div>
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📦</div>
-                        <h3 id="dashboard-total-orders">0</h3>
-                        <p>Total Orders</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">⏳</div>
-                        <h3 id="dashboard-pending-orders">0</h3>
-                        <p>Pending Orders</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">✅</div>
-                        <h3 id="dashboard-delivered-orders">0</h3>
-                        <p>Delivered Orders</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📍</div>
-                        <h3 id="dashboard-address-count">0</h3>
-                        <p>Saved Addresses</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">❤️</div>
-                        <h3 id="dashboard-wishlist-count">0</h3>
-                        <p>Wishlist Items</p>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">⚖️</div>
-                        <h3 id="dashboard-compare-count">0</h3>
-                        <p>Compare Items</p>
-                    </div>
-
-                </div>
-
-
-<!-- RECENTLY PURCHASED PRODUCTS -->
-
-<h2 class="dashboard-section-title">
-    Recently Purchased Products
-</h2>
-
-<div id="dashboard-purchased-products"
-     class="purchased-products-grid">
-
-    <p class="empty-recent">Loading purchased products...</p>
-
-</div>
-
-<a href="./my-orders.html" class="view-orders-link">
-    View Purchase History →
-</a>
-
-
-                <h2 class="dashboard-section-title">Quick Access</h2>
-
-                <div class="quick-links">
-                    <a href="./notifications.html" class="quick-link">
-    <span>🔔</span>
-    <strong>Notifications</strong>
-    <small>
-        <span id="dashboard-unread-notifications">0</span>
-        unread notifications
-    </small>
-</a>
-
-                    <a href="./customer-profile.html" class="quick-link">
-                        <span>👤</span>
-                        <strong>My Profile</strong>
-                        <small>Manage personal details</small>
-                    </a>
-
-                    <a href="./my-orders.html" class="quick-link">
-                        <span>📦</span>
-                        <strong>My Orders</strong>
-                        <small>View shopping history</small>
-                    </a>
-
-                    <a href="./saved-addresses.html" class="quick-link">
-                        <span>📍</span>
-                        <strong>Addresses</strong>
-                        <small>Manage delivery addresses</small>
-                    </a>
-
-                    <a href="./wishlist.html" class="quick-link">
-                        <span>❤️</span>
-                        <strong>Wishlist</strong>
-                        <small>View saved products</small>
-                    </a>
-
-                    <a href="./track-order.html" class="quick-link">
-                        <span>🚚</span>
-                        <strong>Track Order</strong>
-                        <small>Check delivery progress</small>
-                    </a>
-
-                    <a href="./support.html" class="quick-link">
-                        <span>🎧</span>
-                        <strong>Support</strong>
-                        <small>Get help with your orders</small>
-                    </a>
-
-                </div>
-                <!-- NOTIFICATIONS SECTION -->
-
-<h2 class="dashboard-section-title">
-    Recent Notifications
-</h2>
-
-<div id="dashboard-notification-list"
-     style="display:grid;gap:12px;margin-bottom:25px;">
-
-    <p class="empty-recent">
-        Loading notifications...
-    </p>
-
-</div>
-
-<a href="./notifications.html" class="view-orders-link">
-    View All Notifications →
-</a>
-
-                <h2 class="dashboard-section-title">Recent Orders</h2>
-
-                <div class="recent-orders">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="dashboard-recent-orders">
-                            <tr>
-                                <td colspan="4" class="empty-recent">
-                                    Loading orders...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <a href="./my-orders.html" class="view-orders-link">
-                    View All Orders →
-                </a>
-
-            </section>
-
-        </div>
-
-    </div>
-
-</main>
-
-
-
-<script src="./js/currency.js"></script>
-<script src="./js/customer-dashboard.js"></script>
-
-<script src="./js/customer-logout.js"></script>
-
+    </main>
+
+    <!-- JAVASCRIPT -->
+
+    <script src="./js/currency.js"></script>
+    <script src="./js/customer-dashboard.js"></script>
+    <script src="./js/customer-logout.js"></script>
+
+    <!-- MOBILE MENU SCRIPT -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const menuToggle = document.getElementById("dashboard-menu-toggle");
+            const sidebar = document.getElementById("dashboard-sidebar");
+            const overlay = document.getElementById("dashboard-menu-overlay");
+
+            if (!menuToggle || !sidebar || !overlay) {
+                return;
+            }
+
+            function openMenu() {
+                sidebar.classList.add("active");
+                overlay.hidden = false;
+                document.body.classList.add("dashboard-menu-open");
+
+                menuToggle.setAttribute("aria-expanded", "true");
+                menuToggle.setAttribute("aria-label", "Close dashboard menu");
+            }
+
+            function closeMenu() {
+                sidebar.classList.remove("active");
+                overlay.hidden = true;
+                document.body.classList.remove("dashboard-menu-open");
+
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-label", "Open dashboard menu");
+            }
+
+            menuToggle.addEventListener("click", function () {
+                if (sidebar.classList.contains("active")) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+
+            overlay.addEventListener("click", closeMenu);
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closeMenu();
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth > 750) {
+                    closeMenu();
+                }
+            });
+
+            sidebar.querySelectorAll("a").forEach(function (link) {
+                link.addEventListener("click", closeMenu);
+            });
+
+        });
+    </script>
 
 </body>
 </html>

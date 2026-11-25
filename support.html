@@ -17,18 +17,62 @@
 
 <body>
 
-    <header class="support-header">
-        <a href="./index.html" class="support-logo">
-            Your<span>Shop</span>
-        </a>
+<header class="support-header">
+    <a href="./index.html" class="support-logo">
+        Your<span>Shop</span>
+    </a>
 
-        <nav>
-            <a href="./index.html">Home</a>
-            <a href="./faq.html">FAQs</a>
-            <a href="./contact.html">Contact Us</a>
-            <a href="./track-order.html">Track Order</a>
-        </nav>
-    </header>
+    <nav>
+        <a href="./index.html">Home</a>
+        <a href="./faq.html">FAQs</a>
+        <a href="./contact.html">Contact Us</a>
+        <a href="./track-order.html">Track Order</a>
+    </nav>
+
+    <button
+        type="button"
+        class="dashboard-menu-toggle"
+        id="dashboard-menu-toggle"
+        aria-label="Open customer menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+</header>
+<aside class="dashboard-sidebar" id="dashboard-sidebar">
+
+    <div class="sidebar-header">
+        <h3>My Account</h3>
+    </div>
+
+    <nav class="dashboard-sidebar-nav">
+
+        <a href="./customer-dashboard.html">🏠 Dashboard</a>
+        <a href="./customer-profile.html">👤 My Profile</a>
+        <a href="./notifications.html">🔔 Notifications</a>
+        <a href="./saved-addresses.html">📍 Saved Addresses</a>
+        <a href="./my-orders.html">📦 My Orders</a>
+        <a href="./track-order.html">🚚 Track Order</a>
+        <a href="./wishlist.html">❤️ My Wishlist</a>
+        <a href="./compare.html">⚖️ Compare Products</a>
+        <a href="./support.html" class="active">🎧 Customer Support</a>
+
+        <a href="./index.html">🛍️ Back to Shopping</a>
+
+        <button type="button" id="customer-logout-button">
+            ↪ Logout
+        </button>
+
+    </nav>
+</aside>
+
+<button
+    type="button"
+    id="dashboard-menu-overlay"
+    class="dashboard-menu-overlay"
+    aria-label="Close customer menu"
+    hidden
+></button>
 
     <main class="support-container">
 
@@ -150,6 +194,45 @@
 
     <script src="./js/support.js"></script>
     <script src="./js/customer-support.js"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const menuToggle = document.getElementById("dashboard-menu-toggle");
+    const sidebar = document.getElementById("dashboard-sidebar");
+    const overlay = document.getElementById("dashboard-menu-overlay");
+
+    if (!menuToggle || !sidebar || !overlay) return;
+
+    function openMenu() {
+        sidebar.classList.add("active");
+        overlay.hidden = false;
+        document.body.classList.add("dashboard-menu-open");
+        menuToggle.setAttribute("aria-expanded", "true");
+    }
+
+    function closeMenu() {
+        sidebar.classList.remove("active");
+        overlay.hidden = true;
+        document.body.classList.remove("dashboard-menu-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+    }
+
+    menuToggle.addEventListener("click", () => {
+        sidebar.classList.contains("active") ? closeMenu() : openMenu();
+    });
+
+    overlay.addEventListener("click", closeMenu);
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeMenu();
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 750) closeMenu();
+    });
+
+});
+</script>
 
 </body>
 </html>

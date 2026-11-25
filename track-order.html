@@ -1,12 +1,15 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Track Your Order | YourShop</title>
 
     <link rel="icon" href="data:,">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,30 +27,192 @@
             color: #18243a;
         }
 
-        header {
+        /* HEADER */
+
+        .top-header {
             background: #102a56;
             color: white;
-            padding: 18px 7%;
+            padding: 17px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
         }
 
-        header h2 {
-            font-size: 23px;
+        .top-header h2 {
+            font-size: 22px;
         }
 
-        header a {
+        .top-header a {
             color: white;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        main {
-            width: 92%;
-            max-width: 1050px;
-            margin: 40px auto;
+        /* PAGE LAYOUT */
+
+        .account-layout {
+            width: 94%;
+            max-width: 1400px;
+            margin: 35px auto;
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        /* ACCOUNT SIDEBAR */
+
+        .notification-sidebar {
+            background: #fff;
+            padding: 23px 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(20, 40, 80, .04);
+            border: 1px solid #e8edf5;
+
+            display: flex;
+            flex-direction: column;
+            min-height: 620px;
+        }
+
+        .notification-user {
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .notification-avatar {
+            width: 68px;
+            height: 68px;
+            background: #eaf1ff;
+            color: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 10px;
+            font-size: 27px;
+        }
+
+        .notification-user h3 {
+            color: #102a56;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .notification-user p {
+            color: #8995a7;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .notification-nav {
+            margin-bottom: 20px;
+        }
+
+        .notification-nav-label {
+            color: #94a0b2;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 0 10px;
+            margin-bottom: 8px;
+        }
+
+        .notification-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 10px;
+            margin: 3px 0;
+            border-radius: 7px;
+            text-decoration: none;
+            color: #59677d;
+            font-size: 12px;
+            font-weight: 500;
+            transition: .2s ease;
+        }
+
+        .notification-nav a:hover,
+        .notification-nav a.active {
+            background: #eaf1ff;
+            color: #2563eb;
+        }
+
+        .notification-nav a.active {
+            font-weight: 600;
+        }
+
+        /* LOGOUT */
+
+        .customer-logout-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 10px;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: #d34b4b;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: left;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .customer-logout-button:hover {
+            background: #fff0f0;
+        }
+
+        /* BACK TO STORE - BOTTOM */
+
+        .store-bottom-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 10px;
+            margin-top: auto;
+            border-top: 1px solid #edf0f5;
+            border-radius: 7px;
+            text-decoration: none;
+            color: #59677d;
+            font-size: 12px;
+            font-weight: 500;
+            transition: .2s ease;
+        }
+
+        .store-bottom-link:hover {
+            background: #eaf1ff;
+            color: #2563eb;
+        }
+
+        /* MOBILE MENU BUTTON */
+
+        .notification-menu-toggle {
+            display: none;
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 9px 14px;
+            border-radius: 7px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 18px;
+        }
+
+        .notification-menu-overlay {
+            display: none;
+        }
+
+        /* MAIN CONTENT */
+
+        .account-main {
+            min-width: 0;
         }
 
         .page-heading {
@@ -55,20 +220,24 @@
         }
 
         .page-heading h1 {
-            font-size: 27px;
+            font-size: 26px;
             margin-bottom: 6px;
+            color: #102a56;
         }
 
         .page-heading p {
             color: #718096;
-            font-size: 14px;
+            font-size: 13px;
         }
+
+        /* TRACKING CARD */
 
         .tracking-card {
             background: white;
             padding: 28px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(20, 40, 80, .06);
+            border: 1px solid #e8edf5;
+            box-shadow: 0 4px 20px rgba(20, 40, 80, .05);
             margin-bottom: 22px;
         }
 
@@ -88,7 +257,7 @@
 
         .order-date {
             color: #7b8798;
-            font-size: 13px;
+            font-size: 12px;
             margin-top: 5px;
         }
 
@@ -97,7 +266,7 @@
             border-radius: 30px;
             background: #fff3d6;
             color: #946200;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: capitalize;
         }
@@ -128,9 +297,11 @@
         }
 
         .section-title {
-            font-size: 17px;
+            font-size: 16px;
             margin-bottom: 22px;
         }
+
+        /* ORDER TIMELINE */
 
         .timeline {
             display: flex;
@@ -199,7 +370,7 @@
             color: #2457a6;
             padding: 15px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 12px;
             margin-top: 25px;
         }
 
@@ -207,6 +378,8 @@
             background: #fff0f0;
             color: #b52b2b;
         }
+
+        /* ORDER DETAILS */
 
         .detail-grid {
             display: grid;
@@ -217,15 +390,17 @@
         .detail-item span {
             display: block;
             color: #8290a3;
-            font-size: 12px;
+            font-size: 11px;
             margin-bottom: 5px;
         }
 
         .detail-item strong {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             overflow-wrap: anywhere;
         }
+
+        /* PRODUCTS */
 
         .product-item {
             display: flex;
@@ -241,20 +416,22 @@
 
         .product-name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .product-quantity {
-            font-size: 12px;
+            font-size: 11px;
             color: #8290a3;
             margin-top: 5px;
         }
 
         .product-price {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             white-space: nowrap;
         }
+
+        /* LOADING AND ERROR */
 
         .loading,
         .error-state {
@@ -268,7 +445,7 @@
 
         .error-state p {
             color: #718096;
-            font-size: 14px;
+            font-size: 13px;
             margin-bottom: 20px;
         }
 
@@ -279,28 +456,105 @@
             padding: 11px 20px;
             border-radius: 7px;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
         }
 
-        @media (max-width: 600px) {
-            header {
-                padding: 15px 5%;
-            }
+        /* TABLET */
 
-            main {
-                margin: 25px auto;
+        @media (max-width: 900px) {
+            .account-layout {
+                grid-template-columns: 220px minmax(0, 1fr);
+                gap: 17px;
             }
 
             .tracking-card {
-                padding: 19px;
+                padding: 22px;
+            }
+        }
+
+        /* MOBILE RIGHT-SIDE DRAWER */
+
+        @media (max-width: 750px) {
+
+            .account-layout {
+                display: block;
+                width: 92%;
+                margin: 25px auto;
+            }
+
+            .notification-menu-toggle {
+                display: inline-block;
+            }
+
+            .notification-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: min(300px, 85vw);
+                height: 100dvh;
+                min-height: 100dvh;
+                overflow-y: auto;
+                z-index: 1001;
+                border-radius: 0;
+                padding: 25px 18px;
+
+                display: flex;
+                flex-direction: column;
+
+                transform: translateX(105%);
+                visibility: hidden;
+
+                transition: transform .3s ease, visibility .3s ease;
+                box-shadow: -5px 0 25px rgba(0, 0, 0, .12);
+            }
+
+            .notification-sidebar.active {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .notification-menu-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(10, 25, 50, .5);
+                z-index: 1000;
+            }
+
+            .notification-menu-overlay:not([hidden]) {
+                display: block;
+            }
+
+            body.notification-menu-open {
+                overflow: hidden;
             }
 
             .page-heading h1 {
                 font-size: 23px;
             }
 
+            .tracking-card {
+                padding: 19px;
+            }
+
             .timeline-label {
                 font-size: 9px;
+            }
+        }
+
+        /* SMALL MOBILE */
+
+        @media (max-width: 600px) {
+
+            .top-header {
+                padding: 15px 5%;
+            }
+
+            .top-header h2 {
+                font-size: 20px;
+            }
+
+            .top-header a {
+                font-size: 11px;
             }
 
             .detail-grid {
@@ -312,29 +566,230 @@
                 gap: 5px;
             }
         }
+
+        @media (max-width: 380px) {
+
+            .timeline {
+                gap: 3px;
+            }
+
+            .timeline-label {
+                font-size: 8px;
+            }
+
+            .timeline-dot {
+                width: 25px;
+                height: 25px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <header>
+    <!-- HEADER -->
+
+    <header class="top-header">
         <h2>YourShop</h2>
         <a href="./my-orders.html">← Back to My Orders</a>
     </header>
 
-    <main>
-        <div class="page-heading">
-            <h1>Track Your Order</h1>
-            <p>Follow your order from confirmation to delivery.</p>
-        </div>
+    <!-- MOBILE MENU OVERLAY -->
 
-        <div id="tracking-content">
-            <div class="tracking-card loading">
-                Loading your order...
+    <div
+        class="notification-menu-overlay"
+        id="notification-menu-overlay"
+        hidden>
+    </div>
+
+    <!-- ACCOUNT LAYOUT -->
+
+    <div class="account-layout">
+
+        <!-- ACCOUNT SIDEBAR -->
+
+        <aside class="notification-sidebar" id="notification-sidebar">
+
+            <div class="notification-user">
+                <div class="notification-avatar">♙</div>
+                <h3>My Account</h3>
+                <p>Manage your YourShop account</p>
             </div>
-        </div>
-    </main>
 
+            <!-- MY ACCOUNT -->
+
+            <nav class="notification-nav">
+
+                <p class="notification-nav-label">MY ACCOUNT</p>
+
+                <a href="./customer-dashboard.html">
+                    <span>▦</span> Dashboard
+                </a>
+
+                <a href="./customer-profile.html">
+                    <span>♙</span> My Profile
+                </a>
+
+                <a href="./notifications.html">
+                    <span>♧</span> Notifications
+                </a>
+
+                <a href="./saved-addresses.html">
+                    <span>⌖</span> Saved Addresses
+                </a>
+
+            </nav>
+
+            <!-- MY SHOPPING -->
+
+            <nav class="notification-nav">
+
+                <p class="notification-nav-label">MY SHOPPING</p>
+
+                <a href="./my-orders.html">
+                    <span>▤</span> My Orders
+                </a>
+
+                <a href="./track-order.html" class="active">
+                    <span>♧</span> Track Order
+                </a>
+
+                <a href="./wishlist.html">
+                    <span>♡</span> Wishlist
+                </a>
+
+                <a href="./compare.html">
+                    <span>⇄</span> Compare Products
+                </a>
+
+            </nav>
+
+            <!-- HELP & SUPPORT -->
+
+            <nav class="notification-nav">
+
+                <p class="notification-nav-label">HELP & SUPPORT</p>
+
+                <a href="./customer-support.html">
+                    <span>☏</span> Customer Support
+                </a>
+
+            </nav>
+
+            <!-- LOGOUT -->
+
+            <button
+                type="button"
+                class="customer-logout-button"
+                id="customer-logout-button">
+
+                <span>↪</span> Logout
+
+            </button>
+
+            <!-- BACK TO STORE - ALWAYS AT BOTTOM -->
+
+            <a href="./index.html" class="store-bottom-link">
+                <span>⌂</span> Back to Store
+            </a>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+
+        <main class="account-main">
+
+            <button
+                type="button"
+                class="notification-menu-toggle"
+                id="notification-menu-toggle"
+                aria-expanded="false"
+                aria-controls="notification-sidebar">
+
+                ☰ Menu
+
+            </button>
+
+            <div class="page-heading">
+                <h1>Track Your Order</h1>
+                <p>Follow your order from confirmation to delivery.</p>
+            </div>
+
+            <!-- KEEP THIS ID FOR EXISTING JAVASCRIPT -->
+
+            <div id="tracking-content">
+
+                <div class="tracking-card loading">
+                    Loading your order...
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- MOBILE MENU SCRIPT -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const menuButton = document.getElementById("notification-menu-toggle");
+            const sidebar = document.getElementById("notification-sidebar");
+            const overlay = document.getElementById("notification-menu-overlay");
+
+            function openMenu() {
+                sidebar.classList.add("active");
+                overlay.hidden = false;
+
+                document.body.classList.add("notification-menu-open");
+
+                menuButton.setAttribute("aria-expanded", "true");
+            }
+
+            function closeMenu() {
+                sidebar.classList.remove("active");
+                overlay.hidden = true;
+
+                document.body.classList.remove("notification-menu-open");
+
+                menuButton.setAttribute("aria-expanded", "false");
+            }
+
+            menuButton.addEventListener("click", () => {
+
+                if (sidebar.classList.contains("active")) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+
+            });
+
+            overlay.addEventListener("click", closeMenu);
+
+            document.addEventListener("keydown", (event) => {
+
+                if (event.key === "Escape") {
+                    closeMenu();
+                }
+
+            });
+
+            window.addEventListener("resize", () => {
+
+                if (window.innerWidth > 750) {
+                    closeMenu();
+                }
+
+            });
+
+        });
+    </script>
+
+    <!-- EXISTING CUSTOMER SCRIPTS -->
+
+    <script src="./js/customer-logout.js"></script>
     <script src="./js/track-order.js"></script>
 
 </body>

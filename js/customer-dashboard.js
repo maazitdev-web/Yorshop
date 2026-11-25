@@ -373,13 +373,77 @@ console.log(
         }).join("");
     }
 
-    // ======================================
-    // 11. INITIALIZE DASHBOARD
-    // ======================================
 
-    displayRecentOrders();
-    displayPurchasedProducts();
-    displayNotifications();
+displayRecentOrders();
+displayPurchasedProducts();
+displayNotifications();
 
-    console.log("YourShop customer dashboard loaded successfully.");
+// ======================================
+// 12. MOBILE DASHBOARD MENU
+// ======================================
+
+const menuToggle = getElement("dashboard-menu-toggle");
+const menuOverlay = getElement("dashboard-menu-overlay");
+const dashboardSidebar = document.querySelector(".dashboard-sidebar");
+
+function openDashboardMenu() {
+
+    if (!dashboardSidebar || !menuOverlay || !menuToggle) return;
+
+    dashboardSidebar.classList.add("active");
+    menuOverlay.hidden = false;
+    document.body.classList.add("dashboard-menu-open");
+
+    menuToggle.setAttribute("aria-expanded", "true");
+    menuToggle.setAttribute("aria-label", "Close dashboard menu");
+}
+
+function closeDashboardMenu() {
+
+    if (!dashboardSidebar || !menuOverlay || !menuToggle) return;
+
+    dashboardSidebar.classList.remove("active");
+    menuOverlay.hidden = true;
+    document.body.classList.remove("dashboard-menu-open");
+
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Open dashboard menu");
+}
+
+if (menuToggle && menuOverlay && dashboardSidebar) {
+
+    menuToggle.addEventListener("click", () => {
+
+        if (dashboardSidebar.classList.contains("active")) {
+            closeDashboardMenu();
+        } else {
+            openDashboardMenu();
+        }
+
+    });
+
+    menuOverlay.addEventListener("click", closeDashboardMenu);
+
+    // Close menu after selecting a navigation link
+    dashboardSidebar.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", closeDashboardMenu);
+    });
+
+    // Close menu with Escape key
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeDashboardMenu();
+        }
+    });
+
+    // Close mobile menu when returning to desktop width
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) {
+            closeDashboardMenu();
+        }
+    });
+}
+
+console.log("YourShop customer dashboard loaded successfully.");
+
 });
